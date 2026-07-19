@@ -169,7 +169,12 @@ import Layout from "../layouts/Layout.astro";
           headers: { "Content-Type": "application/json", "X-User-Id": userId },
           body: JSON.stringify({ message: msg, draft: draft, name: name, language: lang })
         });
-        var data = await res.json();
+        var data;
+        try {
+          data = await res.json();
+        } catch {
+          throw new Error("Server returned an invalid response. Please try again.");
+        }
         if (!res.ok) throw new Error(data.error || "Failed to generate replies.");
         return data.replies;
       }

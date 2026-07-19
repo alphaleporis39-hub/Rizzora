@@ -54,10 +54,21 @@ export const POST: APIRoute = async ({ request }) => {
 
   const today = new Date().toISOString().slice(0, 10);
   const key = `gen:${userId}:${today}`;
-  const count = await redis.incr(key);
-  if (count === 1) {
-    await redis.expire(key, DAILY_TTL);
+
+  let count: number;
+  try {
+    count = await redis.incr(key);
+    if (count === 1) {
+      await redis.expire(key, DAILY_TTL);
+    }
+  } catch (redisErr) {
+    console.error("Upstash Redis error:", redisErr);
+    return new Response(JSON.stringify({ error: "Usage tracking is temporarily unavailable. Please try again." }), {
+      status: 503,
+      headers: { "Content-Type": "application/json" },
+    });
   }
+
   if (count > DAILY_LIMIT) {
     return new Response(JSON.stringify({ error: "You've used all 20 free generations for today. Come back tomorrow!" }), {
       status: 429,
