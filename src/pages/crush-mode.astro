@@ -1,0 +1,500 @@
+﻿---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Crush Mode | Rizzora">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <h1 class="text-3xl font-extrabold text-white">Crush Mode 🎯</h1>
+      <p class="text-slate-400 mt-1">Get a respectful, personalized step-by-step strategy to express interest and build a genuine connection.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- ═══════ Form ═══════ -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="glass p-6 rounded-2xl border border-brand-border/40">
+          <h3 class="text-lg font-bold text-slate-100 border-b border-brand-border/40 pb-3 mb-6">Analyze Your Situation</h3>
+          <div class="space-y-5">
+            <!-- Crush Name -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-300 mb-1.5">Their Name <span class="text-slate-500 font-normal">(pre-filled if set during onboarding)</span></label>
+              <input id="cm-crush-name" type="text" maxlength="30" placeholder="e.g. Sarah" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-rose-500/50 focus:border-rose-500/50 transition" />
+            </div>
+
+            <!-- Situation -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-300 mb-1.5">Describe your current situation</label>
+              <textarea id="cm-situation" rows="3" placeholder="e.g. We met at a friend's party last week. We talked for about 20 minutes and she laughed at my jokes. We exchanged Instagram but I haven't texted yet." class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-rose-500/50 focus:border-rose-500/50 transition resize-none"></textarea>
+            </div>
+
+            <!-- Vibe / Interests -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-300 mb-1.5">Their vibe or interests <span class="text-slate-500 font-normal">(if known)</span></label>
+              <input id="cm-vibe" type="text" placeholder="e.g. Outgoing, likes indie music, plays tennis, works in design" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-rose-500/50 focus:border-rose-500/50 transition" />
+            </div>
+
+            <!-- Goal Selector -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-300 mb-2">What's your goal?</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="cm-goal-grid">
+                <button type="button" data-goal="start" class="cm-goal-btn text-left p-3 rounded-xl border border-brand-border/60 bg-slate-900/40 hover:bg-slate-800/60 transition text-sm text-slate-300 cursor-pointer">
+                  💬 <span class="font-semibold text-slate-200">Start a Conversation</span>
+                </button>
+                <button type="button" data-goal="build" class="cm-goal-btn text-left p-3 rounded-xl border border-brand-border/60 bg-slate-900/40 hover:bg-slate-800/60 transition text-sm text-slate-300 cursor-pointer">
+                  🤝 <span class="font-semibold text-slate-200">Build Connection</span>
+                </button>
+                <button type="button" data-goal="askout" class="cm-goal-btn text-left p-3 rounded-xl border border-brand-border/60 bg-slate-900/40 hover:bg-slate-800/60 transition text-sm text-slate-300 cursor-pointer">
+                  ☕ <span class="font-semibold text-slate-200">Ask Them Out</span>
+                </button>
+                <button type="button" data-goal="express" class="cm-goal-btn text-left p-3 rounded-xl border border-brand-border/60 bg-slate-900/40 hover:bg-slate-800/60 transition text-sm text-slate-300 cursor-pointer">
+                  💕 <span class="font-semibold text-slate-200">Express Interest</span>
+                </button>
+                <button type="button" data-goal="custom" class="cm-goal-btn sm:col-span-2 text-left p-3 rounded-xl border border-brand-border/60 bg-slate-900/40 hover:bg-slate-800/60 transition text-sm text-slate-300 cursor-pointer">
+                  ✏️ <span class="font-semibold text-slate-200">Custom Goal</span> <span class="text-slate-500">(describe below)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Custom Goal (hidden by default) -->
+            <div id="cm-custom-goal-wrap" class="hidden">
+              <label class="block text-sm font-semibold text-slate-300 mb-1.5">Describe your custom goal</label>
+              <input id="cm-custom-goal" type="text" placeholder="e.g. Reconnect after 2 weeks of no contact" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-rose-500/50 focus:border-rose-500/50 transition" />
+            </div>
+
+            <!-- Chat Screenshot Upload -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-300 mb-1.5">Chat Screenshot <span class="text-slate-500 font-normal">(optional)</span></label>
+              <div id="cm-upload-area" class="border-2 border-dashed border-brand-border rounded-xl p-6 text-center bg-slate-900/40 hover:border-rose-500/30 transition cursor-pointer">
+                <input id="cm-file-input" type="file" accept="image/*" class="hidden" />
+                <div id="cm-upload-prompt">
+                  <span class="text-3xl block mb-2">📸</span>
+                  <span class="text-sm font-semibold text-slate-300 block">Click to upload a chat screenshot</span>
+                  <span class="text-xs text-slate-500 mt-1 block">PNG, JPG up to 5MB · Optional but helps generate better advice</span>
+                </div>
+                <div id="cm-upload-preview" class="hidden relative">
+                  <img id="cm-preview-img" class="max-h-48 mx-auto rounded-lg border border-brand-border" alt="Chat screenshot preview" />
+                  <p id="cm-preview-name" class="text-xs text-slate-400 mt-2 truncate"></p>
+                  <button id="cm-remove-img" type="button" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-rose-500/80 hover:bg-rose-500 text-white flex items-center justify-center text-xs font-bold transition cursor-pointer">✕</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Generate Button -->
+            <button id="cm-generate-btn" type="button" class="w-full py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-xl transition-all duration-200 shadow-lg shadow-rose-500/20 hover:shadow-rose-500/30 cursor-pointer">
+              Generate Connection Strategy
+            </button>
+          </div>
+        </div>
+
+        <!-- ═══════ Response Area ═══════ -->
+        <div id="cm-response" class="hidden">
+          <div class="glass p-6 sm:p-8 rounded-2xl border border-brand-border/40">
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-brand-border/30">
+              <div class="w-10 h-10 rounded-full bg-linear-to-r from-rose-500 to-violet-500 flex items-center justify-center text-lg shadow-md shadow-rose-500/20">🎯</div>
+              <div>
+                <h2 class="text-lg font-bold text-white" id="cm-res-title">Your Strategy</h2>
+                <p class="text-xs text-slate-400" id="cm-res-subtitle"></p>
+              </div>
+            </div>
+
+            <div class="space-y-6" id="cm-res-body"></div>
+
+            <div class="mt-8 pt-6 border-t border-brand-border/30 flex flex-col sm:flex-row gap-3">
+              <a href="/what-should-i-text" class="flex-1 py-3 text-xs font-bold uppercase tracking-wider text-center text-white bg-linear-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 rounded-xl transition shadow-lg shadow-sky-500/20">
+                💬 Try "What Should I Text?"
+              </a>
+              <a href="/conversation-simulator" class="flex-1 py-3 text-xs font-bold uppercase tracking-wider text-center text-white bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-xl transition shadow-lg shadow-emerald-500/20">
+                🗣️ Practice in Simulator
+              </a>
+            </div>
+
+            <p class="text-[10px] text-slate-600 text-center mt-4">This is personalized mock advice. For real AI-powered analysis, connect to the Rizzora AI backend.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ Sidebar ═══════ -->
+      <div class="space-y-6">
+        <!-- Safety Guidelines -->
+        <div class="bg-rose-500/10 border border-rose-500/20 p-5 rounded-2xl">
+          <h4 class="text-sm font-bold text-rose-400 flex items-center gap-1.5">⚠️ Connection Guidelines</h4>
+          <ul class="text-xs text-rose-300/80 leading-relaxed mt-3 space-y-2">
+            <li>• Always respect their boundaries and pace.</li>
+            <li>• If they say no or seem uninterested, accept it gracefully.</li>
+            <li>• Be genuine - no manipulation, pressure, or games.</li>
+            <li>• Consent and comfort come first, always.</li>
+          </ul>
+        </div>
+
+        <!-- Tips -->
+        <div class="glass p-5 rounded-2xl border border-brand-border/40">
+          <h4 class="text-sm font-bold text-slate-200 mb-3">💡 Pro Tips</h4>
+          <ul class="text-xs text-slate-400 space-y-2.5 leading-relaxed">
+            <li class="flex items-start gap-2">
+              <span class="text-rose-400 mt-0.5">→</span>
+              <span><strong class="text-slate-300">Be specific.</strong> "Want to grab coffee at Blue Tokai Tuesday?" beats "wanna hang sometime?"</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-rose-400 mt-0.5">→</span>
+              <span><strong class="text-slate-300">Match their energy.</strong> If they text short replies, don't send paragraphs. Mirror their pace.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-rose-400 mt-0.5">→</span>
+              <span><strong class="text-slate-300">End on a high note.</strong> Leave conversations when they're fun, not when they fizzle out.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-rose-400 mt-0.5">→</span>
+              <span><strong class="text-slate-300">Hinglish is welcome.</strong> Mix Hindi and English naturally - authenticity beats formality.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Sample Strategy -->
+        <div class="glass p-5 rounded-2xl border border-brand-border/40">
+          <h4 class="text-sm font-bold text-slate-200 mb-3">📋 Sample Step-by-Step</h4>
+          <div class="space-y-3 text-xs">
+            <div class="flex items-start gap-2.5">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-[10px]">1</span>
+              <div>
+                <p class="font-bold text-slate-200">Initiate Gently</p>
+                <p class="text-slate-400 mt-0.5">Use a shared context - class, event, mutual friend - not a cold "hey."</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-[10px]">2</span>
+              <div>
+                <p class="font-bold text-slate-200">Find Common Ground</p>
+                <p class="text-slate-400 mt-0.5">Ask about their interests, listen actively, and give them space to respond.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-[10px]">3</span>
+              <div>
+                <p class="font-bold text-slate-200">Low-Pressure Invite</p>
+                <p class="text-slate-400 mt-0.5">Suggest something specific and casual. Make it easy to say yes or no.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      /* ─── Storage ─── */
+      var USER_KEY = "rizzora_user";
+      var ACT_KEY  = "rizzora_crush_mode";
+
+      function loadUser() {
+        try { var r = localStorage.getItem(USER_KEY); return r ? JSON.parse(r) : null; } catch { return null; }
+      }
+      function loadActivity() {
+        try { var r = localStorage.getItem(ACT_KEY); return r ? JSON.parse(r) : []; } catch { return []; }
+      }
+      function saveActivity(list) {
+        localStorage.setItem(ACT_KEY, JSON.stringify(list.slice(0, 20)));
+      }
+      function pushActivity(entry) {
+        var list = loadActivity();
+        list.unshift(entry);
+        saveActivity(list);
+      }
+
+      /* ─── DOM refs ─── */
+      var crushInput    = document.getElementById("cm-crush-name");
+      var situationEl   = document.getElementById("cm-situation");
+      var vibeEl        = document.getElementById("cm-vibe");
+      var goalBtns      = document.querySelectorAll(".cm-goal-btn");
+      var customWrap    = document.getElementById("cm-custom-goal-wrap");
+      var customGoalEl  = document.getElementById("cm-custom-goal");
+      var fileInput     = document.getElementById("cm-file-input");
+      var uploadArea    = document.getElementById("cm-upload-area");
+      var uploadPrompt  = document.getElementById("cm-upload-prompt");
+      var uploadPreview = document.getElementById("cm-upload-preview");
+      var previewImg    = document.getElementById("cm-preview-img");
+      var previewName   = document.getElementById("cm-preview-name");
+      var removeImgBtn  = document.getElementById("cm-remove-img");
+      var generateBtn   = document.getElementById("cm-generate-btn");
+      var responseArea  = document.getElementById("cm-response");
+      var resTitle      = document.getElementById("cm-res-title");
+      var resSubtitle   = document.getElementById("cm-res-subtitle");
+      var resBody       = document.getElementById("cm-res-body");
+
+      var selectedGoal = "";
+      var uploadedFile = null;
+
+      /* ─── Pre-fill crush name from onboarding ─── */
+      var user = loadUser();
+      if (user && user.crushName) crushInput.value = user.crushName;
+
+      /* ─── Goal selector ─── */
+      goalBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          goalBtns.forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          selectedGoal = btn.getAttribute("data-goal");
+          customWrap.classList.toggle("hidden", selectedGoal !== "custom");
+        });
+      });
+
+      /* ─── File upload ─── */
+      uploadArea.addEventListener("click", function (e) {
+        if (e.target === removeImgBtn || e.target.closest("#cm-remove-img")) return;
+        fileInput.click();
+      });
+      fileInput.addEventListener("change", function () {
+        if (!fileInput.files || !fileInput.files[0]) return;
+        var f = fileInput.files[0];
+        if (f.size > 5 * 1024 * 1024) { alert("File too large. Max 5MB."); fileInput.value = ""; return; }
+        uploadedFile = f;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          previewImg.src = e.target.result;
+          previewName.textContent = f.name;
+          uploadPrompt.classList.add("hidden");
+          uploadPreview.classList.remove("hidden");
+        };
+        reader.readAsDataURL(f);
+      });
+      removeImgBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        uploadedFile = null;
+        fileInput.value = "";
+        uploadPrompt.classList.remove("hidden");
+        uploadPreview.classList.add("hidden");
+      });
+
+      /* ─── Generate ─── */
+      generateBtn.addEventListener("click", function () {
+        var crushName  = crushInput.value.trim();
+        var situation  = situationEl.value.trim();
+        var vibe       = vibeEl.value.trim();
+        var goal       = selectedGoal;
+        var customGoal = customGoalEl.value.trim();
+
+        if (!situation) {
+          situationEl.classList.add("ring-2", "ring-red-500/50");
+          situationEl.focus();
+          setTimeout(function () { situationEl.classList.remove("ring-2", "ring-red-500/50"); }, 2000);
+          return;
+        }
+        if (!goal) {
+          document.getElementById("cm-goal-grid").classList.add("ring-2", "ring-red-500/50", "rounded-xl");
+          setTimeout(function () { document.getElementById("cm-goal-grid").classList.remove("ring-2", "ring-red-500/50"); }, 2000);
+          return;
+        }
+
+        var goalLabel = {
+          start: "Start a Conversation",
+          build: "Build Connection",
+          askout: "Ask Them Out",
+          express: "Express Interest",
+          custom: customGoal || "Custom Goal"
+        }[goal] || "Custom Goal";
+
+        generateBtn.disabled = true;
+        generateBtn.textContent = "Generating Strategy...";
+        generateBtn.classList.add("opacity-60", "cursor-not-allowed");
+
+        setTimeout(function () {
+          var plan = generatePlan(crushName, situation, vibe, goal, customGoal);
+          renderResponse(plan, crushName, goalLabel);
+
+          pushActivity({
+            type: "Crush Mode",
+            name: "Strategy: " + goalLabel,
+            detail: crushName ? "Plan for " + crushName : "Situation plan",
+            score: "Generated",
+            date: new Date().toLocaleString(),
+            crushName: crushName
+          });
+
+          generateBtn.disabled = false;
+          generateBtn.textContent = "Generate Connection Strategy";
+          generateBtn.classList.remove("opacity-60", "cursor-not-allowed");
+        }, 1200);
+      });
+
+      /* ─── Mock AI Response Generator ─── */
+      function q(s) { return String.fromCharCode(8220) + s + String.fromCharCode(8221); }
+
+      function generatePlan(crushName, situation, vibe, goal, customGoal) {
+        var who = crushName || "them";
+        var sL = situation.toLowerCase();
+        var vL = (vibe || "").toLowerCase();
+        var met = sL.indexOf("met") > -1 || sL.indexOf("talked") > -1 || sL.indexOf("party") > -1 || sL.indexOf("class") > -1 || sL.indexOf("date") > -1;
+        var num = sL.indexOf("number") > -1 || sL.indexOf("instagram") > -1 || sL.indexOf("whatsapp") > -1 || sL.indexOf("snap") > -1 || sL.indexOf("social") > -1;
+        var nc = sL.indexOf("not replied") > -1 || sL.indexOf("no reply") > -1 || sL.indexOf("left on read") > -1 || sL.indexOf("ghosted") > -1 || sL.indexOf("quiet period") > -1 || sL.indexOf("no contact") > -1;
+        var hl = /[a-z]+\s+(me|hai|hu|ki|ka|ke|nahi|kya|bol|samajh|ab|kal|phir|yaar|bhai|dost|boss|matlab)/i.test(situation);
+
+        var analysis;
+        if (nc) {
+          analysis = "It seems like there has been a quiet period between you and " + who + ". This could mean they are busy, unsure, or simply have not found the right moment to respond. The key here is patience and a natural re-entry, not pressure.";
+        } else if (met && num) {
+          analysis = "You have already met " + who + " and have a way to reach them - that is a great start! The connection exists, now it is about building on that initial spark. Reference something specific from your conversation.";
+        } else if (met) {
+          analysis = "You have met " + who + " in person, which gives you a natural conversation hook. Since you do not have their contact info yet, the next move is finding a natural, low-pressure moment to exchange details.";
+        } else {
+          analysis = "Your situation with " + who + " is still in the early stages. The best approach is to establish a natural connection through shared context before making any moves. Be patient, be genuine.";
+        }
+
+        var texts = [], avoid = [], signs = [], followup = "", nextMove = "";
+
+        if (goal === "start") {
+          nextMove = "Send a casual, context-rich first message within the next 24 hours. Reference something specific from your interaction.";
+          var t1, t2, t3;
+          if (hl) {
+            t1 = "Hey! Kal jo baat hui thi wo yaad aayi - Kya chal raha hai? Something funny happened today, reminds me of what you said about...";
+            t2 = "Just saw something that made me think of you - " + (vL.indexOf("music") > -1 ? "that playlist you mentioned, any new recs?" : "remember that thing we talked about?");
+            t3 = "Hey " + who + "! Random question - " + (vL.indexOf("food") > -1 ? "best momos place in town? Need a recommendation." : "have you watched anything good lately?");
+          } else {
+            t1 = "Hey " + who + "! Just wanted to say I really enjoyed our conversation at " + (sL.indexOf("party") > -1 ? "the party" : sL.indexOf("class") > -1 ? "class" : "the event") + ". What are you up to this week?";
+            t2 = "Random but - I just saw " + (vL.indexOf("music") > -1 ? "that band you mentioned and they are actually amazing" : "something that totally reminded me of our chat") + ". How is your week going?";
+            t3 = "Hey! Quick question - " + (vL.indexOf("food") > -1 ? "best coffee spot around? I need a good recommendation" : "any fun plans this weekend? I am looking for ideas");
+          }
+          texts = [q(t1), q(t2), q(t3)];
+          avoid = ["Do not send a generic hey or hi - it gives nothing to respond to.", "Avoid double or triple texting if they do not reply immediately.", "Do not bring up heavy or overly personal topics in the first message.", "Never start with compliments about physical appearance in an initial text."];
+          signs = ["They reply within a few hours with more than one word.", "They ask you questions back - showing genuine interest.", "They use emojis or exclamation marks, matching your energy.", "They bring up something from your previous conversation."];
+          followup = "If they respond positively, keep the conversation going for 2-3 exchanges before suggesting a specific plan like grabbing coffee sometime.";
+        } else if (goal === "build") {
+          nextMove = "Deepen the connection by sharing something personal (not heavy) and asking about their world. Show genuine curiosity, not interrogation.";
+          var b1, b2, b3;
+          if (hl) {
+            b1 = "I just had the funniest thing happen - reminded me of what you said about " + (vL.indexOf("music") > -1 ? "music" : vL.indexOf("sport") > -1 ? "sports" : "that topic") + ". Tell me more about that!";
+            b2 = "Real talk - tumhari wali baat mujhe bahut achi lagi. When did you first get into it?";
+            b3 = "Okay so I need your opinion on something - tumhe kya lagta hai?";
+          } else {
+            b1 = "I just had the funniest thing happen - reminded me of what you said about " + (vL.indexOf("music") > -1 ? "music" : vL.indexOf("sport") > -1 ? "sports" : "that topic") + ". Tell me more about that!";
+            b2 = "Real talk - what you said the other day really stuck with me. When did you first get into it?";
+            b3 = "Okay so I need your opinion on something - what do you think?";
+          }
+          texts = [q(b1), q(b2), q(b3)];
+          avoid = ["Do not dominate the conversation - aim for 50/50 talking and listening.", "Avoid controversial or divisive topics early on.", "Do not rush to meet up if the texting rhythm is still building.", "Never badmouth exes or past relationships to bond."];
+          signs = ["They start sharing personal stories and details unprompted.", "They text you first sometimes, not just responding.", "They remember small details you mentioned before.", "They suggest activities or reference future plans involving you."];
+          followup = "After a week of good texting rhythm, suggest a low-key hangout. Keep it casual and specific.";
+        } else if (goal === "askout") {
+          nextMove = "Be direct but casual. Suggest a specific activity, day, and time. Make it easy for them to say yes or gracefully decline.";
+          var day = ["Saturday", "Sunday", "Thursday", "Friday"][Math.floor(Math.random() * 4)];
+          var a1, a2, a3;
+          if (hl) {
+            a1 = who + ", free this " + day + "? Let us grab " + (vL.indexOf("food") > -1 ? "lunch at that place you mentioned" : "chai somewhere nice") + ". No pressure, just vibes.";
+            a2 = "Hey! So I was thinking - " + (vL.indexOf("activity") > -1 || vL.indexOf("sport") > -1 ? "we should try that thing you talked about" : "want to check out that new cafe") + " this week. Kya bolte ho?";
+            a3 = "Okay real talk - I want to hang out in person. Coffee chalein kabhi? I promise I am even funnier face to face.";
+          } else {
+            a1 = who + ", I would love to continue our conversation in person. Want to grab " + (vL.indexOf("food") > -1 ? "dinner at that place you mentioned" : "coffee this weekend") + "? I am free " + day + " afternoon.";
+            a2 = "Hey! Quick suggestion - " + (vL.indexOf("music") > -1 || vL.indexOf("art") > -1 ? "that exhibition or gig you mentioned, want to go together?" : "want to check out that new spot downtown?") + " I think we would have a great time.";
+            a3 = "I am going to be direct - I really enjoy talking to you and would love to hang out. Free this weekend for chai? My treat.";
+          }
+          texts = [q(a1), q(a2), q(a3)];
+          avoid = ["Do not be vague like we should hang out sometime - give a specific day.", "Do not propose an expensive or overly formal first meeting.", "Avoid asking in a group setting - keep it one-on-one.", "Do not pressure if they hesitate. If they do not say yes, gracefully move on."];
+          signs = ["They respond with enthusiasm and suggest an alternative if the day does not work.", "They ask about details (where, what time) - showing they are planning to come.", "They follow up themselves about the plan.", "They mention it to others or bring it up excitedly."];
+          followup = "After the hangout, text them within a few hours to confirm you had a great time. This shows interest without being overwhelming.";
+        } else if (goal === "express") {
+          nextMove = "Express your interest clearly but without pressure. Give them space to respond honestly. Vulnerability is attractive when it is genuine.";
+          var e1, e2, e3;
+          if (hl) {
+            e1 = who + ", I just wanted to be honest - I really enjoy talking to you and I would like to get to know you better. No pressure at all, just wanted you to know.";
+            e2 = "Hey so real talk - I think you are really cool and I like spending time with you (even if it is just texting). Kya tum bhi aisa feel karti ho? No worries either way.";
+            e3 = who + " - mujhe tumse baat karna bahut accha lagta hai. I think there is something special here. Want to explore that?";
+          } else {
+            e1 = who + ", I want to be upfront - I really enjoy talking to you and I am interested in getting to know you beyond texting. No pressure, I just wanted to be honest.";
+            e2 = "Hey! So I have been thinking - I really like the connection we have and I would love to see where it goes. What are your thoughts? Totally understand either way.";
+            e3 = "I am going to be vulnerable for a sec - I have a crush on you. I wanted to tell you because I respect you enough to be honest. No expectations, just wanted you to know.";
+          }
+          texts = [q(e1), q(e2), q(e3)];
+          avoid = ["Do not confess feelings after just one interaction - build some rapport first.", "Avoid ultimatums or pressure like tell me now or I need an answer.", "Do not express interest through friends - do it directly and personally.", "Never use extreme language prematurely."];
+          signs = ["They respond with equal vulnerability and openness.", "They say they feel the same or have been thinking the same thing.", "They suggest meeting up soon after your message.", "They become more affectionate or expressive in follow-up messages."];
+          followup = "Regardless of their response, respect it. If positive, suggest planning something soon. If uncertain, tell them there is no rush and you are here either way.";
+        } else {
+          nextMove = "Based on your custom goal, here is a thoughtful approach tailored to your specific situation with " + who + ".";
+          var c1, c2, c3;
+          if (hl) {
+            c1 = "Hey " + who + ", Kya haal hai? Maine socha ki hum baat karein about...";
+            c2 = "Sunno, ek cheez bolni thi - tumhe yaad hai woh? I think it would be cool to...";
+            c3 = who + ", simple hai - mujhe tumse baat karni hai. Kab free ho?";
+          } else {
+            c1 = "Hey " + who + "! How are you? I was thinking we could talk about...";
+            c2 = "Hey, just wanted to reach out - remember that? I think it would be cool to...";
+            c3 = who + ", keeping it simple - I would love to talk. When are you free?";
+          }
+          texts = [q(c1), q(c2), q(c3)];
+          avoid = ["Do not be pushy or send multiple messages without a response.", "Avoid making assumptions about their feelings or intentions.", "Do not share your plan with mutual friends before talking to them directly.", "Keep your first message light and genuine."];
+          signs = ["They respond positively and engage with your message.", "They ask follow-up questions showing genuine interest.", "They suggest continuing the conversation or meeting up.", "Their tone and energy match yours."];
+          followup = "After your initial message, keep things natural. If they respond well, continue the conversation and work toward your specific goal over the next few interactions.";
+        }
+
+        return { analysis: analysis, nextMove: nextMove, texts: texts, avoid: avoid, signs: signs, followup: followup };
+      }
+
+      /* ─── Render Response ─── */
+      function renderResponse(plan, crushName, goalLabel) {
+        var who = crushName || "them";
+        resTitle.textContent = "Your " + goalLabel + " Strategy" + (crushName ? " for " + crushName : "");
+        resSubtitle.textContent = "Personalized action plan based on your situation";
+
+        var html = '';
+
+        /* 1 - Situation Analysis */
+        html += '<div class="glass p-5 rounded-xl border border-brand-border/30">';
+        html += '<div class="flex items-center gap-2 mb-3"><span class="text-lg">📊</span><h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider">Situation Analysis</h3></div>';
+        html += '<p class="text-sm text-slate-300 leading-relaxed">' + plan.analysis + '</p>';
+        html += '</div>';
+
+        /* 2 - Recommended Next Move */
+        html += '<div class="glass p-5 rounded-xl border border-rose-500/20 bg-rose-500/5">';
+        html += '<div class="flex items-center gap-2 mb-3"><span class="text-lg">🎯</span><h3 class="text-sm font-bold text-rose-400 uppercase tracking-wider">Recommended Next Move</h3></div>';
+        html += '<p class="text-sm text-slate-200 leading-relaxed font-medium">' + plan.nextMove + '</p>';
+        html += '</div>';
+
+        /* 3 - What to Say */
+        html += '<div class="glass p-5 rounded-xl border border-brand-border/30">';
+        html += '<div class="flex items-center gap-2 mb-3"><span class="text-lg">💬</span><h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider">What to Say / Text</h3></div>';
+        html += '<div class="space-y-2.5">';
+        plan.texts.forEach(function (t) {
+          html += '<div class="bg-slate-900/50 p-3 rounded-lg border border-brand-border/20"><p class="text-sm text-slate-300 font-mono leading-relaxed">' + t + '</p></div>';
+        });
+        html += '</div></div>';
+
+        /* 4 - What to Avoid */
+        html += '<div class="glass p-5 rounded-xl border border-amber-500/20 bg-amber-500/5">';
+        html += '<div class="flex items-center gap-2 mb-3"><span class="text-lg">🚫</span><h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider">What to Avoid</h3></div>';
+        html += '<ul class="space-y-2">';
+        plan.avoid.forEach(function (a) {
+          html += '<li class="flex items-start gap-2 text-sm text-slate-300"><span class="text-amber-400 mt-0.5 flex-shrink-0">✕</span><span>' + a + '</span></li>';
+        });
+        html += '</ul></div>';
+
+        /* 5 - Signs to Observe */
+        html += '<div class="glass p-5 rounded-xl border border-emerald-500/20 bg-emerald-500/5">';
+        html += '<div class="flex items-center gap-2 mb-3"><span class="text-lg">👀</span><h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider">Positive Signs to Observe</h3></div>';
+        html += '<ul class="space-y-2">';
+        plan.signs.forEach(function (s) {
+          html += '<li class="flex items-start gap-2 text-sm text-slate-300"><span class="text-emerald-400 mt-0.5 flex-shrink-0">✓</span><span>' + s + '</span></li>';
+        });
+        html += '</ul></div>';
+
+        /* 6 - Follow-Up */
+        html += '<div class="glass p-5 rounded-xl border border-brand-border/30">';
+        html += '<div class="flex items-center gap-2 mb-3"><span class="text-lg">🔄</span><h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider">Suggested Follow-Up</h3></div>';
+        html += '<p class="text-sm text-slate-300 leading-relaxed">' + plan.followup + '</p>';
+        html += '</div>';
+
+        resBody.innerHTML = html;
+        responseArea.classList.remove("hidden");
+        responseArea.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    })();
+  </script>
+</Layout>

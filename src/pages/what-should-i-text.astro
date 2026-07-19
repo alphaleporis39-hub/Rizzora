@@ -1,0 +1,346 @@
+﻿---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="What Should I Text? | Rizzora">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div class="mb-8">
+      <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <h1 class="text-3xl font-extrabold text-white">What Should I Text? 💬</h1>
+      <p class="text-slate-400 mt-1">Stuck on a reply? Paste the message you received and get natural, respectful suggestions in English or Hinglish.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Form -->
+      <div class="lg:col-span-1 space-y-6">
+        <div class="glass p-6 rounded-2xl border border-brand-border/40">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 border-b border-brand-border/40 pb-3 mb-5">Context Sandbox</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1.5">Their Name <span class="text-slate-500 font-normal">(optional)</span></label>
+              <input id="wsti-name" type="text" maxlength="30" placeholder="e.g. Sarah" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-rose-500/50 transition" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1.5">Last Message Received</label>
+              <textarea id="wsti-message" rows="3" placeholder="e.g. Kal free ho kya, milte hai?" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-rose-500/50 transition resize-none"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1.5">Your Draft <span class="text-slate-500 font-normal">(optional)</span></label>
+              <textarea id="wsti-draft" rows="2" placeholder="e.g. Ha free hu. Kaha milna hai?" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-rose-500/50 transition resize-none"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-2">Language</label>
+              <div class="flex gap-2" id="wsti-lang-group">
+                <button type="button" data-lang="english" class="wsti-lang-btn flex-1 py-2 text-xs font-bold rounded-xl border transition cursor-pointer border-rose-500 bg-rose-500/10 text-rose-400">English</button>
+                <button type="button" data-lang="hinglish" class="wsti-lang-btn flex-1 py-2 text-xs font-bold rounded-xl border transition cursor-pointer border-brand-border/60 bg-slate-900/40 text-slate-300">Hinglish</button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1.5">Chat Screenshot <span class="text-slate-500 font-normal">(optional)</span></label>
+              <div id="wsti-upload-area" class="border-2 border-dashed border-brand-border rounded-xl p-4 text-center bg-slate-900/40 hover:border-rose-500/30 transition cursor-pointer">
+                <input id="wsti-file-input" type="file" accept="image/*" class="hidden" />
+                <div id="wsti-upload-prompt">
+                  <span class="text-2xl block mb-1">📸</span>
+                  <span class="text-xs text-slate-400">Click to upload</span>
+                </div>
+                <div id="wsti-upload-preview" class="hidden relative">
+                  <img id="wsti-preview-img" class="max-h-32 mx-auto rounded-lg border border-brand-border" alt="Preview" />
+                  <p id="wsti-preview-name" class="text-[10px] text-slate-400 mt-1 truncate"></p>
+                  <button id="wsti-remove-img" type="button" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-rose-500/80 hover:bg-rose-500 text-white flex items-center justify-center text-[10px] font-bold transition cursor-pointer">x</button>
+                </div>
+              </div>
+            </div>
+            <button id="wsti-generate-btn" type="button" class="w-full py-3 text-xs font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-xl transition-all duration-200 shadow-lg shadow-rose-500/20 hover:shadow-rose-500/30 cursor-pointer">
+              Generate Replies
+            </button>
+          </div>
+        </div>
+        <div class="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-xl">
+          <p class="text-xs text-indigo-300 leading-relaxed">Tip: Writing in Roman-script Hinglish (e.g. "kal ka timing kya hai?") is fully supported!</p>
+        </div>
+      </div>
+
+      <!-- Output -->
+      <div class="lg:col-span-2 space-y-6">
+        <div id="wsti-status" class="hidden bg-slate-900/40 border border-brand-border p-4 rounded-xl flex flex-wrap items-center justify-between gap-2">
+          <div class="text-xs text-slate-400">Replies for: <strong id="wsti-status-msg" class="text-slate-200"></strong></div>
+          <span class="text-[10px] font-semibold text-emerald-400 px-2 py-0.5 bg-emerald-500/10 rounded" id="wsti-status-badge">Generated</span>
+        </div>
+        <!-- Loading State -->
+        <div id="wsti-loading" class="hidden text-center py-16">
+          <div class="inline-flex items-center gap-3 px-6 py-4 glass rounded-2xl border border-brand-border/40">
+            <svg class="animate-spin h-5 w-5 text-rose-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+            <span class="text-sm font-semibold text-slate-200">Crafting your replies...</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-3">Analyzing context and generating natural options</p>
+        </div>
+        <!-- Error State -->
+        <div id="wsti-error" class="hidden text-center py-12">
+          <div class="inline-block p-4 glass rounded-2xl border border-red-500/20">
+            <span class="text-3xl block mb-2">⚠️</span>
+            <p class="text-sm font-semibold text-red-400" id="wsti-error-msg">Something went wrong</p>
+            <button id="wsti-retry-btn" class="mt-3 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white bg-rose-500/80 hover:bg-rose-500 rounded-lg transition cursor-pointer">Retry</button>
+          </div>
+        </div>
+        <div id="wsti-replies" class="space-y-4"></div>
+        <div id="wsti-empty" class="text-center py-16">
+          <span class="text-5xl block mb-4">💬</span>
+          <h3 class="text-lg font-bold text-slate-300">Your replies will appear here</h3>
+          <p class="text-sm text-slate-500 mt-2 max-w-md mx-auto">Enter the message you received, choose your language, and hit Generate to get three natural AI-powered reply options.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script is:inline>
+    (function () {
+      var ACT_KEY = "rizzora_wsti";
+      function loadActivity() { try { var r = localStorage.getItem(ACT_KEY); return r ? JSON.parse(r) : []; } catch { return []; } }
+      function saveActivity(list) { localStorage.setItem(ACT_KEY, JSON.stringify(list.slice(0, 20))); }
+      function pushActivity(entry) { var list = loadActivity(); list.unshift(entry); saveActivity(list); }
+
+      var msgEl = document.getElementById("wsti-message");
+      var draftEl = document.getElementById("wsti-draft");
+      var nameEl = document.getElementById("wsti-name");
+      var langBtns = document.querySelectorAll(".wsti-lang-btn");
+      var generateBtn = document.getElementById("wsti-generate-btn");
+      var repliesEl = document.getElementById("wsti-replies");
+      var emptyEl = document.getElementById("wsti-empty");
+      var statusEl = document.getElementById("wsti-status");
+      var statusMsg = document.getElementById("wsti-status-msg");
+      var loadingEl = document.getElementById("wsti-loading");
+      var errorEl = document.getElementById("wsti-error");
+      var errorMsg = document.getElementById("wsti-error-msg");
+      var retryBtn = document.getElementById("wsti-retry-btn");
+
+      var selectedLang = "english";
+      var lastRequest = null;
+
+      try {
+        var user = JSON.parse(localStorage.getItem("rizzora_user"));
+        if (user && user.crushName) nameEl.value = user.crushName;
+      } catch(e) {}
+
+      langBtns.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          langBtns.forEach(function(b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          selectedLang = btn.getAttribute("data-lang");
+        });
+      });
+
+      function showLoading() {
+        emptyEl.classList.add("hidden");
+        errorEl.classList.add("hidden");
+        repliesEl.innerHTML = "";
+        loadingEl.classList.remove("hidden");
+      }
+      function hideLoading() { loadingEl.classList.add("hidden"); }
+      function showError(msg) {
+        hideLoading();
+        errorMsg.textContent = msg || "Something went wrong. Please try again.";
+        errorEl.classList.remove("hidden");
+      }
+      function hideError() { errorEl.classList.add("hidden"); }
+
+      async function callGenerateAPI(msg, draft, name, lang) {
+        var res = await fetch("/api/generate-reply", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: msg, draft: draft, name: name, language: lang })
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to generate replies.");
+        return data.replies;
+      }
+
+      async function generate(msg, draft, name, lang) {
+        showLoading();
+        setBtnLoading(true);
+        try {
+          var replies = await callGenerateAPI(msg, draft, name, lang);
+          lastRequest = { msg: msg, draft: draft, name: name, lang: lang };
+          renderReplies([
+            { tone: "Safe & Genuine", emoji: "🛡️", desc: "Keeps conversation warm and natural. Shows genuine interest without pressure.", text: replies.safe },
+            { tone: "Playful", emoji: "🎈", desc: "Light, fun, and engaging. Adds humor and personality to keep things interesting.", text: replies.playful },
+            { tone: "Flirty / Coy", emoji: "✨", desc: "Warm and expressive with clear interest. Flirty but always respectful.", text: replies.flirty }
+          ], msg);
+          pushActivity({ type: "What Should I Text", name: "Replies generated", detail: msg.substring(0, 60) + (msg.length > 60 ? "..." : ""), score: "3 AI options", date: new Date().toLocaleString(), language: lang });
+        } catch (err) {
+          showError(err.message);
+        } finally {
+          hideLoading();
+          setBtnLoading(false);
+        }
+      }
+
+      function setBtnLoading(loading) {
+        generateBtn.disabled = loading;
+        generateBtn.textContent = loading ? "Generating..." : "Generate Replies";
+        generateBtn.classList.toggle("opacity-60", loading);
+        generateBtn.classList.toggle("cursor-not-allowed", loading);
+      }
+
+      generateBtn.addEventListener("click", function() {
+        var msg = msgEl.value.trim();
+        if (!msg || msg.length < 2) {
+          msgEl.classList.add("ring-2", "ring-red-500/50");
+          msgEl.focus();
+          setTimeout(function() { msgEl.classList.remove("ring-2", "ring-red-500/50"); }, 2000);
+          return;
+        }
+        if (msg.length > 1000) {
+          errorMsg.textContent = "Message is too long. Please keep it under 1000 characters.";
+          errorEl.classList.remove("hidden");
+          return;
+        }
+        hideError();
+        generate(msg, draftEl.value.trim(), nameEl.value.trim(), selectedLang);
+      });
+
+      retryBtn.addEventListener("click", function() {
+        if (lastRequest) {
+          hideError();
+          generate(lastRequest.msg, lastRequest.draft, lastRequest.name, lastRequest.lang);
+        }
+      });
+
+      msgEl.addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+          generateBtn.click();
+        }
+      });
+
+      function makeItMore(originalText, modifier, lang) {
+        var isHL = lang === "hinglish";
+        var m = modifier.toLowerCase();
+        if (m === "funny") {
+          return isHL ? originalText + " Aur agar ye kaam na kare toh main apna backup plan B le aunga - ek stand-up comedy set specifically tumhare liye. ;)" : originalText + " And if that does not work, I have a backup plan B - a stand-up comedy set written just for you. ;)";
+        } else if (m === "confident") {
+          return isHL ? originalText + " Main ye confidently bol raha hu kyunki mujhe lagta hai hum dono ke beech kuch special hai." : originalText + " I am saying this with confidence because I genuinely feel there is something special here.";
+        } else if (m === "romantic") {
+          return isHL ? originalText + " Aur sach bolu toh tumse baat karne ka har ek din ek naya reason mil jaata hai mujhe muskurane ka." : originalText + " And honestly, every conversation with you gives me a new reason to smile.";
+        } else if (m === "short") {
+          var words = originalText.split(" ");
+          return words.slice(0, Math.min(6, words.length)).join(" ") + (words.length > 6 ? "..." : "");
+        } else if (m === "casual") {
+          return originalText + " No big deal, just vibes. :)";
+        }
+        return originalText;
+      }
+
+      function renderReplies(replies, msg) {
+        emptyEl.classList.add("hidden");
+        hideError();
+        statusEl.classList.remove("hidden");
+        statusMsg.textContent = msg.substring(0, 80) + (msg.length > 80 ? "..." : "");
+        repliesEl.innerHTML = "";
+
+        replies.forEach(function(r, idx) {
+          var card = document.createElement("div");
+          card.className = "glass p-5 rounded-2xl border border-brand-border/60 hover:border-rose-500/20 transition duration-200";
+          card.setAttribute("data-idx", idx);
+          card.innerHTML =
+            '<div class="flex items-center justify-between mb-3">' +
+              '<div class="flex items-center gap-2">' +
+                '<span class="text-xl">' + r.emoji + '</span>' +
+                '<h4 class="text-sm font-bold text-slate-100">' + r.tone + '</h4>' +
+              '</div>' +
+            '</div>' +
+            '<p class="text-xs text-slate-400 mb-3">' + r.desc + '</p>' +
+            '<div class="p-3 bg-slate-950/60 rounded-xl border border-brand-border/40 text-xs font-mono text-slate-200 leading-relaxed" id="wsti-reply-text-' + idx + '">' +
+              r.text +
+            '</div>' +
+            '<div class="flex gap-2 mt-3">' +
+              '<button class="wsti-copy-btn flex-1 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 bg-slate-800/80 hover:bg-slate-800 rounded-lg transition active:scale-95 cursor-pointer" data-idx="' + idx + '">Copy</button>' +
+              '<button class="wsti-regen-btn flex-1 py-2 text-[10px] font-bold uppercase tracking-wider text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-lg transition active:scale-95 cursor-pointer" data-idx="' + idx + '">Regenerate</button>' +
+            '</div>' +
+            '<div class="mt-2">' +
+              '<div class="relative">' +
+                '<button class="wsti-more-btn w-full py-1.5 text-[10px] font-semibold text-slate-500 hover:text-slate-300 transition cursor-pointer text-left" data-idx="' + idx + '">Make it more... &#9662;</button>' +
+                '<div class="wsti-more-menu hidden absolute left-0 bottom-full mb-1 w-40 bg-slate-900 border border-brand-border rounded-xl shadow-2xl z-20 overflow-hidden" id="wsti-more-' + idx + '">' +
+                  '<button class="wsti-more-opt w-full text-left px-3 py-2 text-[10px] text-slate-300 hover:bg-slate-800 hover:text-rose-400 transition cursor-pointer" data-mod="funny">😂 Funny</button>' +
+                  '<button class="wsti-more-opt w-full text-left px-3 py-2 text-[10px] text-slate-300 hover:bg-slate-800 hover:text-rose-400 transition cursor-pointer" data-mod="confident">💪 Confident</button>' +
+                  '<button class="wsti-more-opt w-full text-left px-3 py-2 text-[10px] text-slate-300 hover:bg-slate-800 hover:text-rose-400 transition cursor-pointer" data-mod="romantic">💕 Romantic</button>' +
+                  '<button class="wsti-more-opt w-full text-left px-3 py-2 text-[10px] text-slate-300 hover:bg-slate-800 hover:text-rose-400 transition cursor-pointer" data-mod="short">⚡ Short</button>' +
+                  '<button class="wsti-more-opt w-full text-left px-3 py-2 text-[10px] text-slate-300 hover:bg-slate-800 hover:text-rose-400 transition cursor-pointer" data-mod="casual">😎 Casual</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          repliesEl.appendChild(card);
+        });
+
+        document.querySelectorAll(".wsti-copy-btn").forEach(function(btn) {
+          btn.addEventListener("click", function() {
+            var idx = btn.getAttribute("data-idx");
+            var textEl = document.getElementById("wsti-reply-text-" + idx);
+            navigator.clipboard.writeText(textEl.textContent.trim()).then(function() {
+              btn.textContent = "Copied!";
+              btn.classList.add("text-emerald-400");
+              setTimeout(function() { btn.textContent = "Copy"; btn.classList.remove("text-emerald-400"); }, 1500);
+            });
+          });
+        });
+
+        document.querySelectorAll(".wsti-regen-btn").forEach(function(btn) {
+          btn.addEventListener("click", async function() {
+            var idx = parseInt(btn.getAttribute("data-idx"));
+            var tones = ["safe", "playful", "flirty"];
+            var toneLabels = [
+              { tone: "Safe & Genuine", emoji: "🛡️", desc: "Keeps conversation warm and natural. Shows genuine interest without pressure." },
+              { tone: "Playful", emoji: "🎈", desc: "Light, fun, and engaging. Adds humor and personality to keep things interesting." },
+              { tone: "Flirty / Coy", emoji: "✨", desc: "Warm and expressive with clear interest. Flirty but always respectful." }
+            ];
+            btn.textContent = "Regenerating...";
+            btn.disabled = true;
+            try {
+              var replies = await callGenerateAPI(msgEl.value.trim(), draftEl.value.trim(), nameEl.value.trim(), selectedLang);
+              var toneKey = tones[idx];
+              var textEl = document.getElementById("wsti-reply-text-" + idx);
+              textEl.textContent = replies[toneKey];
+              btn.textContent = "Done!";
+              btn.classList.add("text-emerald-400");
+              setTimeout(function() { btn.textContent = "Regenerate"; btn.classList.remove("text-emerald-400"); btn.disabled = false; }, 1500);
+            } catch (err) {
+              btn.textContent = "Failed";
+              setTimeout(function() { btn.textContent = "Regenerate"; btn.disabled = false; }, 1500);
+            }
+          });
+        });
+
+        document.querySelectorAll(".wsti-more-btn").forEach(function(btn) {
+          btn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            var idx = btn.getAttribute("data-idx");
+            var menu = document.getElementById("wsti-more-" + idx);
+            document.querySelectorAll(".wsti-more-menu").forEach(function(m) { if (m !== menu) m.classList.add("hidden"); });
+            menu.classList.toggle("hidden");
+          });
+        });
+
+        document.querySelectorAll(".wsti-more-opt").forEach(function(opt) {
+          opt.addEventListener("click", function() {
+            var card = opt.closest("[data-idx]");
+            var idx = card.getAttribute("data-idx");
+            var textEl = document.getElementById("wsti-reply-text-" + idx);
+            var mod = opt.getAttribute("data-mod");
+            textEl.textContent = makeItMore(textEl.textContent, mod, selectedLang);
+            document.getElementById("wsti-more-" + idx).classList.add("hidden");
+          });
+        });
+
+        document.addEventListener("click", function() {
+          document.querySelectorAll(".wsti-more-menu").forEach(function(m) { m.classList.add("hidden"); });
+        });
+      }
+    })();
+  </script>
+</Layout>

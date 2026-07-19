@@ -1,17 +1,185 @@
 ---
+export const prerender = true;
 
+import Layout from "../layouts/Layout.astro";
+
+// Features subset for showcase on landing
+const featuresShowcase = [
+  {
+    title: "Crush Mode",
+    description: "Got a crush? Get a step-by-step, genuine connection strategy tailored to your situation.",
+    icon: "🎯",
+    link: "/crush-mode"
+  },
+  {
+    title: "What Should I Text?",
+    description: "Get suggestions for any situation in Safe, Playful, Flirty, or Coy styles—in English and Hinglish.",
+    icon: "💬",
+    link: "/what-should-i-text"
+  },
+  {
+    title: "Dating Conversation Simulator",
+    description: "Practice dating conversations interactively. Improve flow, humor, listening, and respect.",
+    icon: "🗣️",
+    link: "/conversation-simulator"
+  },
+  {
+    title: "Interest Check",
+    description: "Analyze signal combinations and behaviors to gauge compatibility and respectful next moves.",
+    icon: "🔍",
+    link: "/interest-check"
+  },
+  {
+    title: "First Date Planner",
+    description: "Find date ideas by budget/preferences, conversation starters, and tips for awkward moments.",
+    icon: "🗺️",
+    link: "/date-planner"
+  },
+  {
+    title: "30-Day Dating Challenge",
+    description: "Build confidence daily with small, actionable challenges and streak milestones.",
+    icon: "🔥",
+    link: "/challenge"
+  }
+];
+
+const steps = [
+  {
+    num: "01",
+    title: "Select your situation",
+    desc: "Tell us about a message you received, a date you are planning, or a crush you want to get to know."
+  },
+  {
+    num: "02",
+    title: "Practice & Refine",
+    desc: "Use our interactive simulator to practice real conversation flows, or rewrite boring texts to be natural."
+  },
+  {
+    num: "03",
+    title: "Get Contextual Feedback",
+    desc: "Get instant respect, flow, and confidence metrics. Learn how to communicate authentically."
+  },
+  {
+    num: "04",
+    title: "Unlock Real Connections",
+    desc: "Build genuine dating confidence and say goodbye to dry texts and nervous first dates."
+  }
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Rizzora | Dating Communication & Confidence">
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden pt-20 pb-16 lg:pt-32 lg:pb-28">
+    <!-- Background glow elements -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-brand-secondary/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      <div class="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 bg-brand-border/40 border border-brand-border/60 rounded-full px-4 py-1.5 mb-6">
+        <span class="text-xs font-semibold text-rose-400">🔥 Dating Confidence Platform</span>
+        <span class="text-slate-600">&bull;</span>
+        <span class="text-xs text-slate-300">English & Hinglish Support</span>
+      </div>
+      
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight text-white">
+        Say Goodbye to Dry Texts & <span class="gradient-text">Awkward Silence</span>
+      </h1>
+      
+      <p class="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
+        Rizzora helps you master dating communication, rewrite dull messages, practice conversations, and build dating confidence for genuine connections.
+      </p>
+
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/dashboard" class="w-full sm:w-auto px-8 py-4 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-brand-primary to-brand-secondary hover:from-brand-primary-hover hover:to-brand-secondary-hover rounded-full transition shadow-xl shadow-brand-primary/30">
+          Get Started Free
+        </a>
+        <a href="#features" class="w-full sm:w-auto px-8 py-4 text-sm font-bold uppercase tracking-wider text-slate-200 hover:text-white glass glass-hover rounded-full transition">
+          Explore Features
+        </a>
+      </div>
+
+      <!-- Hero Mockup/Indicator -->
+      <div class="mt-16 max-w-5xl mx-auto rounded-2xl border border-brand-border/60 p-2 bg-slate-900/30 backdrop-blur-xs">
+        <div class="glass rounded-xl overflow-hidden aspect-video md:aspect-[21/9] flex flex-col items-center justify-center p-8 text-center">
+          <span class="text-5xl mb-4">💬</span>
+          <h3 class="text-xl font-bold text-slate-100">Interactive Chat & Texting Sandbox</h3>
+          <p class="text-sm text-slate-400 max-w-md mt-2">
+            Practice real conversation starters or translate awkward prompts. Hinglish queries like <span class="text-rose-400 font-mono">"Kal usne reply nahi kiya, ab kya likhu?"</span> supported instantly.
+          </p>
+          <a href="/dashboard" class="mt-6 text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1">
+            Open Interactive Dashboard
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid Section -->
+  <section id="features" class="py-16 sm:py-24 bg-slate-950/30 border-y border-brand-border/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Features Built for Real Confidence</h2>
+        <p class="mt-4 text-slate-400 text-base sm:text-lg">
+          No manipulative tactics or fake games. Rizzora focuses on respect, self-confidence, listening, and expressive dating communication.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {featuresShowcase.map((feat) => (
+          <div class="glass glass-hover p-6 rounded-2xl flex flex-col justify-between h-full">
+            <div>
+              <div class="text-3xl mb-4">{feat.icon}</div>
+              <h3 class="text-lg font-bold text-slate-100">{feat.title}</h3>
+              <p class="mt-2 text-sm text-slate-400 leading-relaxed">{feat.description}</p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-brand-border/20">
+              <a href={feat.link} class="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center gap-1 transition">
+                Try Feature
+                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">How Rizzora Works</h2>
+        <p class="mt-4 text-slate-400 text-base sm:text-lg">
+          A structured, actionable pathway designed to build lasting dating communication skills step-by-step.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {steps.map((step) => (
+          <div class="relative bg-slate-900/40 border border-brand-border/40 p-6 rounded-2xl">
+            <span class="absolute top-4 right-4 text-3xl font-black text-rose-500/20">{step.num}</span>
+            <h3 class="text-lg font-bold text-slate-100 mt-2">{step.title}</h3>
+            <p class="mt-2 text-sm text-slate-400 leading-relaxed">{step.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Section -->
+  <section class="py-16 sm:py-24 bg-linear-to-b from-brand-dark to-slate-950 relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-brand-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center glass-accent p-8 sm:p-12 rounded-3xl border border-rose-500/20">
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Stop Guessing. Communicate Honestly.</h2>
+      <p class="mt-4 text-base sm:text-lg text-slate-300 max-w-xl mx-auto">
+        Build genuine connections, respect boundaries, and express your interest with clear, natural, and confident conversations.
+      </p>
+      <div class="mt-8">
+        <a href="/dashboard" class="inline-block px-8 py-4 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-brand-primary to-brand-secondary hover:from-brand-primary-hover hover:to-brand-secondary-hover rounded-full transition shadow-xl shadow-brand-primary/30">
+          Go To Dashboard
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

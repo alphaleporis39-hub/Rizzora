@@ -1,0 +1,735 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+
+const stats = {
+  level: 3,
+  levelTitle: "Empathetic Communicator",
+  xp: 2450,
+  nextLevelXp: 3000,
+  streak: 5,
+  rizzScore: 82,
+};
+
+const dailyGoals = [
+  { id: 1, title: "Complete 1 Conversation Simulation", done: true, xp: 100 },
+  { id: 2, title: "Rewrite 1 dry message in Flirt Coach", done: false, xp: 50 },
+  { id: 3, title: "Complete today's Confidence Challenge", done: false, xp: 100 },
+];
+
+const recentActivity = [
+  { id: 1, type: "Practice", name: "Conversation Simulator", detail: "Coffee Date scenario", score: "88%", date: "Today, 11:30 AM" },
+  { id: 2, type: "Rewrite", name: "Flirt Coach", detail: "Dry message draft optimized", score: "Natural style", date: "Yesterday, 6:15 PM" },
+  { id: 3, type: "Analysis", name: "Interest Check", detail: "Signal check for 'Sarah'", score: "Estimated 65%", date: "2 days ago" },
+];
+
+const dashboardFeatures = [
+  { name: "Crush Mode", href: "/crush-mode", icon: "🎯", color: "from-rose-500/10 to-rose-500/20", border: "border-rose-500/20", label: "Strategic Planning" },
+  { name: "What Should I Text?", href: "/what-should-i-text", icon: "💬", color: "from-sky-500/10 to-sky-500/20", border: "border-sky-500/20", label: "Draft Repliers" },
+  { name: "Flirt Coach", href: "/flirt-coach", icon: "⚡", color: "from-amber-500/10 to-amber-500/20", border: "border-amber-500/20", label: "Rewrite Tool" },
+  { name: "Conversation Simulator", href: "/conversation-simulator", icon: "🗣️", color: "from-emerald-500/10 to-emerald-500/20", border: "border-emerald-500/20", label: "Interactive Practice" },
+  { name: "Interest Check", href: "/interest-check", icon: "🔍", color: "from-indigo-500/10 to-indigo-500/20", border: "border-indigo-500/20", label: "Signal Estimator" },
+  { name: "First Date Planner", href: "/date-planner", icon: "🗺️", color: "from-purple-500/10 to-purple-500/20", border: "border-purple-500/20", label: "Planner & Tips" },
+  { name: "Dating Profile Coach", href: "/profile-coach", icon: "✨", color: "from-pink-500/10 to-pink-500/20", border: "border-pink-500/20", label: "Bio & Prompts" },
+  { name: "30-Day Challenge", href: "/challenge", icon: "🔥", color: "from-orange-500/10 to-orange-500/20", border: "border-orange-500/20", label: "Confidence Building" },
+];
+---
+
+<Layout title="Dashboard | Rizzora">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" id="dashboard-content">
+
+    <!-- Dashboard Header (personalized via JS) -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-brand-border/40">
+      <div>
+        <h1 class="text-3xl font-extrabold text-white" id="dash-greeting">Welcome back! 👋</h1>
+        <p class="text-slate-400 mt-1" id="dash-subtitle">Ready to make genuine connections and level up your dating confidence today?</p>
+      </div>
+      <div class="mt-4 md:mt-0 flex flex-wrap gap-3">
+        <div class="glass px-4 py-2 rounded-full flex items-center space-x-2">
+          <span class="text-amber-400 font-bold">🔥 {stats.streak} Day Streak</span>
+        </div>
+        <div class="glass px-4 py-2 rounded-full flex items-center space-x-2">
+          <span class="text-rose-400 font-bold">🎯 Rizz Score: {stats.rizzScore}/100</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Left & Center Column -->
+      <div class="lg:col-span-2 space-y-8">
+
+        <!-- Recommended Next Action -->
+        <div class="glass-accent p-6 rounded-2xl border border-rose-500/20 relative overflow-hidden">
+          <div class="absolute right-0 top-0 translate-x-12 -translate-y-12 w-32 h-32 bg-brand-primary/10 rounded-full blur-2xl"></div>
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-400 px-2 py-0.5 bg-rose-500/10 rounded-md">Recommended Action</span>
+          <h2 class="text-xl font-bold text-slate-100 mt-3" id="action-title">Practice a Coffee Date Simulation</h2>
+          <p class="text-sm text-slate-300 mt-2 max-w-xl">
+            You have a mock scenario waiting! Practice making respectful banter, flow, and listening on a casual coffee date.
+          </p>
+          <div class="mt-4">
+            <a href="/conversation-simulator" class="inline-block px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white bg-linear-to-r from-brand-primary to-brand-secondary rounded-full shadow-lg shadow-brand-primary/20 hover:scale-105 transition-all duration-200">
+              Start Practice (+100 XP)
+            </a>
+          </div>
+        </div>
+
+        <!-- Current Goal -->
+        <div class="glass p-6 rounded-2xl">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-slate-100">Current Goal</h3>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-400 px-2 py-0.5 bg-rose-500/10 rounded-full">Week 2</span>
+          </div>
+          <div class="bg-slate-900/40 p-4 rounded-xl border border-brand-border/30">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl mt-0.5">💬</span>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-bold text-slate-200">Master the art of playful texting</h4>
+                <p class="text-xs text-slate-400 mt-1">Complete 3 more Flirt Coach rewrites and practice 2 conversation simulations to unlock the next milestone.</p>
+                <div class="mt-3">
+                  <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                    <span>Progress</span>
+                    <span>3 of 5 tasks</span>
+                  </div>
+                  <div class="w-full bg-slate-800 rounded-full h-1.5">
+                    <div class="bg-rose-500 h-1.5 rounded-full" style="width: 60%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dating Journey Progress -->
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-lg font-bold text-slate-100 mb-4">Your Dating Confidence Journey</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-slate-900/60 p-4 rounded-xl border border-brand-border/40 relative">
+              <span class="absolute top-2 right-2 text-[10px] font-semibold text-emerald-400 px-1.5 py-0.5 bg-emerald-500/10 rounded">Completed</span>
+              <span class="text-xs text-slate-500">Phase 1</span>
+              <h4 class="text-sm font-bold text-slate-200 mt-1">Conquering dry texting</h4>
+              <p class="text-xs text-slate-400 mt-1">Mastering initial greetings & playful conversation starters.</p>
+            </div>
+            <div class="bg-slate-900/60 p-4 rounded-xl border border-brand-border/80 relative ring-1 ring-brand-primary/30">
+              <span class="absolute top-2 right-2 text-[10px] font-semibold text-rose-400 px-1.5 py-0.5 bg-rose-500/10 rounded">In Progress</span>
+              <span class="text-xs text-slate-500">Phase 2</span>
+              <h4 class="text-sm font-bold text-slate-200 mt-1">Active Listening & Flow</h4>
+              <p class="text-xs text-slate-400 mt-1">Transitioning from texting to date preparation.</p>
+            </div>
+            <div class="bg-slate-900/40 p-4 rounded-xl border border-brand-border/20 opacity-60">
+              <span class="text-xs text-slate-500">Phase 3</span>
+              <h4 class="text-sm font-bold text-slate-300 mt-1">Expressing Intimacy</h4>
+              <p class="text-xs text-slate-400 mt-1">Expressing genuine interest respectfully and avoiding mixed signals.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Access Feature Grid -->
+        <div>
+          <h3 class="text-lg font-bold text-slate-100 mb-4">Quick Feature Access</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {dashboardFeatures.map((feat) => (
+              <a href={feat.href} class={`flex items-start p-4 rounded-xl border ${feat.border} bg-linear-to-br ${feat.color} hover:bg-slate-800/40 transition duration-200`}>
+                <span class="text-3xl mr-4">{feat.icon}</span>
+                <div>
+                  <h4 class="text-sm font-bold text-slate-200">{feat.name}</h4>
+                  <span class="text-xs text-slate-400 mt-0.5 block">{feat.label}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Sidebar -->
+      <div class="space-y-8">
+
+        <!-- Level & XP Widget -->
+        <div class="glass p-6 rounded-2xl text-center">
+          <div class="w-20 h-20 mx-auto rounded-full bg-linear-to-r from-brand-primary to-brand-secondary flex items-center justify-center text-2xl font-bold shadow-lg shadow-brand-primary/20">
+            Lvl {stats.level}
+          </div>
+          <h3 class="text-lg font-bold text-slate-100 mt-4">{stats.levelTitle}</h3>
+          <p class="text-xs text-slate-400 mt-1">Mastering active listening and social flow</p>
+
+          <div class="mt-6">
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span>{stats.xp} XP</span>
+              <span>{stats.nextLevelXp} XP to Level 4</span>
+            </div>
+            <div class="w-full bg-slate-900 rounded-full h-2">
+              <div class="bg-linear-to-r from-brand-primary to-brand-secondary h-2 rounded-full" style={`width: ${(stats.xp / stats.nextLevelXp) * 100}%`}></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Goals -->
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-base font-bold text-slate-100 mb-4">Daily Focus Checklist</h3>
+          <ul class="space-y-3">
+            {dailyGoals.map((goal) => (
+              <li class="flex items-start justify-between text-sm">
+                <div class="flex items-start space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={goal.done}
+                    disabled
+                    class="mt-1 h-4 w-4 rounded border-brand-border text-rose-500 focus:ring-rose-500 bg-slate-950 accent-rose-500 cursor-not-allowed"
+                  />
+                  <span class={`leading-tight ${goal.done ? "text-slate-500 line-through" : "text-slate-300"}`}>
+                    {goal.title}
+                  </span>
+                </div>
+                <span class="text-xs text-slate-500">+{goal.xp} XP</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-base font-bold text-slate-100 mb-4">Recent Activity</h3>
+          <div class="flow-root">
+            <ul class="-mb-8" id="dash-activity-list">
+              {recentActivity.map((activity, idx) => (
+                <li>
+                  <div class="relative pb-8">
+                    {idx !== recentActivity.length - 1 && (
+                      <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>
+                    )}
+                    <div class="relative flex space-x-3">
+                      <div>
+                        <span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">
+                          {activity.type === "Practice" ? "🗣️" : activity.type === "Rewrite" ? "⚡" : "🔍"}
+                        </span>
+                      </div>
+                      <div class="flex-grow pt-0.5">
+                        <div class="flex justify-between items-start">
+                          <p class="text-xs font-bold text-slate-200">{activity.name}</p>
+                          <span class="text-[10px] text-slate-500">{activity.date}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-0.5">{activity.detail}</p>
+                        {activity.score && (
+                          <span class="inline-block mt-1 text-[10px] font-semibold text-rose-400 px-1.5 py-0.2 bg-rose-500/10 rounded">
+                            {activity.score}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div class="mt-2 pt-4 border-t border-brand-border/20 text-center">
+            <a href="/progress" class="text-xs font-semibold text-rose-400 hover:underline">
+              View Detailed Progress History
+            </a>
+          </div>
+        </div>
+
+        <!-- Crush Name Card (shown if set) -->
+        <div class="glass p-6 rounded-2xl hidden" id="crush-card">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-linear-to-r from-pink-500/20 to-rose-500/20 border border-pink-500/30 flex items-center justify-center text-lg">
+              💕
+            </div>
+            <div>
+              <p class="text-xs text-slate-400">Working up the courage to talk to</p>
+              <h4 class="text-sm font-bold text-pink-400" id="crush-name-display">—</h4>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- ONBOARDING OVERLAY (hidden by default, shown via JS on first visit) -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="onboarding-overlay" class="hidden fixed inset-0 z-[100] bg-brand-dark/95 backdrop-blur-sm flex items-center justify-center px-4">
+    <div class="w-full max-w-md">
+
+      <!-- Step 1: Welcome -->
+      <div id="onb-step-1" class="glass rounded-3xl border border-brand-border/60 p-8 sm:p-10 text-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-linear-to-r from-rose-500 to-violet-500 flex items-center justify-center text-3xl mb-6 shadow-lg shadow-rose-500/20">
+          ✨
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">Welcome to Rizzora</h2>
+        <p class="text-slate-400 mt-3 text-sm leading-relaxed">
+          Your personal dating communication & confidence coach. Let's set up your profile to personalize your experience.
+        </p>
+        <button id="onb-start-btn" type="button" class="mt-8 w-full py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition-all duration-200 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 cursor-pointer">
+          Get Started
+        </button>
+      </div>
+
+      <!-- Step 2: Your Name -->
+      <div id="onb-step-2" class="glass rounded-3xl border border-brand-border/60 p-8 sm:p-10 hidden">
+        <div class="text-center mb-8">
+          <div class="w-14 h-14 mx-auto rounded-full bg-slate-800 border border-brand-border flex items-center justify-center text-2xl mb-4">👋</div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-white">What's your name?</h2>
+          <p class="text-slate-400 mt-2 text-sm">We'll use this to personalize your dashboard.</p>
+        </div>
+        <input
+          id="onb-name-input"
+          type="text"
+          placeholder="e.g. Alex"
+          maxlength="30"
+          class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition"
+        />
+        <div class="flex gap-3 mt-6">
+          <button id="onb-name-next" type="button" class="flex-1 py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-xl transition-all duration-200 shadow-lg shadow-rose-500/20 cursor-pointer">
+            Next
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Crush's Name (Optional) -->
+      <div id="onb-step-3" class="glass rounded-3xl border border-brand-border/60 p-8 sm:p-10 hidden">
+        <div class="text-center mb-8">
+          <div class="w-14 h-14 mx-auto rounded-full bg-slate-800 border border-brand-border flex items-center justify-center text-2xl mb-4">💕</div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-white">Got a crush?</h2>
+          <p class="text-slate-400 mt-2 text-sm">Optionally add their name for personalized simulator scenarios.</p>
+        </div>
+        <input
+          id="onb-crush-input"
+          type="text"
+          placeholder="e.g. Sarah (optional)"
+          maxlength="30"
+          class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500/50 transition"
+        />
+        <div class="flex gap-3 mt-6">
+          <button id="onb-crush-skip" type="button" class="flex-1 py-3.5 text-sm font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-xl transition cursor-pointer">
+            Skip
+          </button>
+          <button id="onb-crush-save" type="button" class="flex-1 py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-xl transition-all duration-200 shadow-lg shadow-rose-500/20 cursor-pointer">
+            Save & Continue
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      const STORAGE_KEY = "rizzora_user";
+      const overlay = document.getElementById("onboarding-overlay");
+      const dashboardContent = document.getElementById("dashboard-content");
+      const steps = [
+        document.getElementById("onb-step-1"),
+        document.getElementById("onb-step-2"),
+        document.getElementById("onb-step-3"),
+      ];
+
+      function loadUser() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch { return null; }
+      }
+
+      function saveUser(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+
+      function showStep(idx) {
+        steps.forEach(function (s, i) {
+          s.classList.toggle("hidden", i !== idx);
+        });
+      }
+
+      function personalizeDashboard(user) {
+        if (!user || !user.name) return;
+        var el = document.getElementById("dash-greeting");
+        if (el) el.textContent = "Welcome back, " + user.name + "! 👋";
+        var sub = document.getElementById("dash-subtitle");
+        if (sub) sub.textContent = "Ready to make genuine connections and level up your dating confidence today?";
+        if (user.crushName) {
+          var cc = document.getElementById("crush-card");
+          var cn = document.getElementById("crush-name-display");
+          if (cc) cc.classList.remove("hidden");
+          if (cn) cn.textContent = user.crushName;
+        }
+        loadDynamicStats(user);
+        loadCrushModeActivity();
+        loadWSTIActivity();
+        loadFlirtCoachActivity();
+        loadSimulatorActivity();
+        loadRizzScoreActivity();
+        loadInterestCheckActivity();
+        loadDatePlannerActivity();
+        loadProfileCoachActivity();
+        loadChallengeActivity();
+      }
+
+      function loadDynamicStats(user) {
+        try {
+          var xp = user.xp || 2450;
+          var lastScore = user.lastScore || 82;
+          var level = 1;
+          var thresholds = [0, 500, 1500, 3000, 5000, 8000, 12000];
+          var titles = ["Curious Learner", "Growing Communicator", "Empathetic Communicator", "Smooth Operator", "Confident Connector", "Rizz Master", "Dating Legend"];
+          for (var i = thresholds.length - 1; i >= 0; i--) {
+            if (xp >= thresholds[i]) { level = i + 1; break; }
+          }
+          var nextXp = thresholds[Math.min(level, thresholds.length - 1)];
+          if (level < thresholds.length) nextXp = thresholds[level]; else nextXp = thresholds[thresholds.length - 1] + 5000;
+          var streak = user.streak || 5;
+          try {
+            var scores = JSON.parse(localStorage.getItem("rizzora_score_history") || "[]");
+            if (scores.length > 0) {
+              var today = new Date().toDateString();
+              var lastDate = new Date(scores[0].date).toDateString();
+              if (today === lastDate) streak = Math.max(streak, 1);
+            }
+          } catch (e) {}
+          var el = document.querySelector("#dash-greeting");
+          var streakEl = document.querySelector(".text-amber-400");
+          var rizzEl = document.querySelector(".text-rose-400");
+          if (streakEl) streakEl.textContent = streak + " Day Streak";
+          if (rizzEl) rizzEl.textContent = "Rizz Score: " + lastScore + "/100";
+        } catch (e) {}
+      }
+
+      function loadCrushModeActivity() {
+        try {
+          var raw = localStorage.getItem("rizzora_crush_mode");
+          if (!raw) return;
+          var activities = JSON.parse(raw);
+          if (!activities || !activities.length) return;
+          var feed = document.querySelector("#dash-activity-list");
+          if (!feed) return;
+          var existingCount = feed.children.length;
+          activities.slice(0, 3).forEach(function (a, idx) {
+            var li = document.createElement("li");
+            var isLast = idx === activities.slice(0, 3).length - 1 && existingCount === 0;
+            li.innerHTML =
+              '<div class="relative pb-8">' +
+              (!isLast ? '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>' : '') +
+              '<div class="relative flex space-x-3">' +
+              '<div><span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">🎯</span></div>' +
+              '<div class="flex-grow pt-0.5">' +
+              '<div class="flex justify-between items-start">' +
+              '<p class="text-xs font-bold text-slate-200">' + (a.name || "Crush Mode") + '</p>' +
+              '<span class="text-[10px] text-slate-500">' + (a.date || "") + '</span>' +
+              '</div>' +
+              '<p class="text-xs text-slate-400 mt-0.5">' + (a.detail || "") + '</p>' +
+              (a.score ? '<span class="inline-block mt-1 text-[10px] font-semibold text-rose-400 px-1.5 py-0.2 bg-rose-500/10 rounded">' + a.score + '</span>' : '') +
+              '</div></div></div>';
+            feed.insertBefore(li, feed.firstChild);
+          });
+        } catch (e) {}
+      }
+
+      function loadWSTIActivity() {
+        try {
+          var raw = localStorage.getItem("rizzora_wsti");
+          if (!raw) return;
+          var activities = JSON.parse(raw);
+          if (!activities || !activities.length) return;
+          var feed = document.querySelector("#dash-activity-list");
+          if (!feed) return;
+          activities.slice(0, 2).forEach(function (a) {
+            var li = document.createElement("li");
+            li.innerHTML =
+              '<div class="relative pb-8">' +
+              '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>' +
+              '<div class="relative flex space-x-3">' +
+              '<div><span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">💬</span></div>' +
+              '<div class="flex-grow pt-0.5">' +
+              '<div class="flex justify-between items-start">' +
+              '<p class="text-xs font-bold text-slate-200">' + (a.name || "What Should I Text") + '</p>' +
+              '<span class="text-[10px] text-slate-500">' + (a.date || "") + '</span>' +
+              '</div>' +
+              '<p class="text-xs text-slate-400 mt-0.5">' + (a.detail || "") + '</p>' +
+              (a.score ? '<span class="inline-block mt-1 text-[10px] font-semibold text-rose-400 px-1.5 py-0.2 bg-rose-500/10 rounded">' + a.score + '</span>' : '') +
+              '</div></div></div>';
+            feed.insertBefore(li, feed.firstChild);
+          });
+        } catch (e) {}
+      }
+
+      function loadFlirtCoachActivity() {
+        try {
+          var raw = localStorage.getItem("rizzora_flirt_coach");
+          if (!raw) return;
+          var activities = JSON.parse(raw);
+          if (!activities || !activities.length) return;
+          var feed = document.querySelector("#dash-activity-list");
+          if (!feed) return;
+          activities.slice(0, 2).forEach(function (a) {
+            var li = document.createElement("li");
+            li.innerHTML =
+              '<div class="relative pb-8">' +
+              '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>' +
+              '<div class="relative flex space-x-3">' +
+              '<div><span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">⚡</span></div>' +
+              '<div class="flex-grow pt-0.5">' +
+              '<div class="flex justify-between items-start">' +
+              '<p class="text-xs font-bold text-slate-200">' + (a.name || "Flirt Coach") + '</p>' +
+              '<span class="text-[10px] text-slate-500">' + (a.date || "") + '</span>' +
+              '</div>' +
+              '<p class="text-xs text-slate-400 mt-0.5">' + (a.detail || "") + '</p>' +
+              (a.score ? '<span class="inline-block mt-1 text-[10px] font-semibold text-rose-400 px-1.5 py-0.2 bg-rose-500/10 rounded">' + a.score + '</span>' : '') +
+              '</div></div></div>';
+            feed.insertBefore(li, feed.firstChild);
+          });
+        } catch (e) {}
+      }
+
+      function loadSimulatorActivity() {
+        try {
+          var raw = localStorage.getItem("rizzora_simulator");
+          if (!raw) return;
+          var activities = JSON.parse(raw);
+          if (!activities || !activities.length) return;
+          var feed = document.querySelector("#dash-activity-list");
+          if (!feed) return;
+          activities.slice(0, 2).forEach(function (a) {
+            var li = document.createElement("li");
+            li.innerHTML =
+              '<div class="relative pb-8">' +
+              '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>' +
+              '<div class="relative flex space-x-3">' +
+              '<div><span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">🗣️</span></div>' +
+              '<div class="flex-grow pt-0.5">' +
+              '<div class="flex justify-between items-start">' +
+              '<p class="text-xs font-bold text-slate-200">' + (a.name || "Conversation Simulator") + '</p>' +
+              '<span class="text-[10px] text-slate-500">' + (a.date || "") + '</span>' +
+              '</div>' +
+              '<p class="text-xs text-slate-400 mt-0.5">' + (a.detail || "") + '</p>' +
+              (a.score ? '<span class="inline-block mt-1 text-[10px] font-semibold text-rose-400 px-1.5 py-0.2 bg-rose-500/10 rounded">' + a.score + '</span>' : '') +
+              '</div></div></div>';
+            feed.insertBefore(li, feed.firstChild);
+          });
+        } catch (e) {}
+      }
+
+      function loadRizzScoreActivity() {
+        try {
+          var raw = localStorage.getItem("rizzora_score_history");
+          if (!raw) return;
+          var scores = JSON.parse(raw);
+          if (!scores || !scores.length) return;
+          var feed = document.querySelector("#dash-activity-list");
+          if (!feed) return;
+          scores.slice(0, 2).forEach(function (s) {
+            var li = document.createElement("li");
+            li.innerHTML =
+              '<div class="relative pb-8">' +
+              '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>' +
+              '<div class="relative flex space-x-3">' +
+              '<div><span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">🎯</span></div>' +
+              '<div class="flex-grow pt-0.5">' +
+              '<div class="flex justify-between items-start">' +
+              '<p class="text-xs font-bold text-slate-200">Rizz Score: ' + (s.overall || 0) + '%</p>' +
+              '<span class="text-[10px] text-slate-500">' + (s.date || "") + '</span>' +
+              '</div>' +
+              '<p class="text-xs text-slate-400 mt-0.5">' + (s.level || "Beginner") + ' | ' + (s.scenario || "") + '</p>' +
+              '<span class="inline-block mt-1 text-[10px] font-semibold text-amber-400 px-1.5 py-0.2 bg-amber-500/10 rounded">+' + (s.xp || 0) + ' XP</span>' +
+              '</div></div></div>';
+            feed.insertBefore(li, feed.firstChild);
+          });
+        } catch (e) {}
+      }
+
+      function loadInterestCheckActivity() {
+        try {
+          var raw = localStorage.getItem("rizzora_interest_check");
+          if (!raw) return;
+          var activities = JSON.parse(raw);
+          if (!activities || !activities.length) return;
+          var feed = document.querySelector("#dash-activity-list");
+          if (!feed) return;
+          activities.slice(0, 2).forEach(function (a) {
+            var li = document.createElement("li");
+            li.innerHTML =
+              '<div class="relative pb-8">' +
+              '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>' +
+              '<div class="relative flex space-x-3">' +
+              '<div><span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">&#128064;</span></div>' +
+              '<div class="flex-grow pt-0.5">' +
+              '<div class="flex justify-between items-start">' +
+              '<p class="text-xs font-bold text-slate-200">' + (a.name || "Interest Check") + '</p>' +
+              '<span class="text-[10px] text-slate-500">' + (a.date || "") + '</span>' +
+              '</div>' +
+              '<p class="text-xs text-slate-400 mt-0.5">' + (a.detail || "") + '</p>' +
+              (a.score ? '<span class="inline-block mt-1 text-[10px] font-semibold text-rose-400 px-1.5 py-0.2 bg-rose-500/10 rounded">' + a.score + '</span>' : '') +
+              '</div></div></div>';
+            feed.insertBefore(li, feed.firstChild);
+          });
+        } catch (e) {}
+      }
+
+      function loadDatePlannerActivity() {
+        try {
+          var raw = localStorage.getItem("rizzora_date_plans");
+          if (!raw) return;
+          var plans = JSON.parse(raw);
+          if (!plans || !plans.length) return;
+          var feed = document.querySelector("#dash-activity-list");
+          if (!feed) return;
+          plans.slice(0, 2).forEach(function (p) {
+            var li = document.createElement("li");
+            var typeLabels = { first_date: "First Date", casual: "Casual Meet", coffee: "Coffee", food: "Food", activity: "Activity", romantic: "Romantic", surprise: "Surprise" };
+            li.innerHTML =
+              '<div class="relative pb-8">' +
+              '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>' +
+              '<div class="relative flex space-x-3">' +
+              '<div><span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">&#127752;</span></div>' +
+              '<div class="flex-grow pt-0.5">' +
+              '<div class="flex justify-between items-start">' +
+              '<p class="text-xs font-bold text-slate-200">Date Plan: ' + (p.dateName || "Planned") + '</p>' +
+              '<span class="text-[10px] text-slate-500">' + (p.date || "") + '</span>' +
+              '</div>' +
+              '<p class="text-xs text-slate-400 mt-0.5">' + (typeLabels[p.dateType] || "Date") + ' | ' + (p.city || "") + '</p>' +
+              '<span class="inline-block mt-1 text-[10px] font-semibold text-amber-400 px-1.5 py-0.2 bg-amber-500/10 rounded">+60 XP</span>' +
+              '</div></div></div>';
+            feed.insertBefore(li, feed.firstChild);
+          });
+        } catch (e) {}
+      }
+
+      function loadProfileCoachActivity() {
+        try {
+          var raw = localStorage.getItem("rizzora_profile_scores");
+          if (!raw) return;
+          var scores = JSON.parse(raw);
+          if (!scores || !scores.length) return;
+          var feed = document.querySelector("#dash-activity-list");
+          if (!feed) return;
+          scores.slice(0, 2).forEach(function (s) {
+            var li = document.createElement("li");
+            li.innerHTML =
+              '<div class="relative pb-8">' +
+              '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>' +
+              '<div class="relative flex space-x-3">' +
+              '<div><span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">&#9889;</span></div>' +
+              '<div class="flex-grow pt-0.5">' +
+              '<div class="flex justify-between items-start">' +
+              '<p class="text-xs font-bold text-slate-200">Profile Score: ' + (s.score || 0) + '%</p>' +
+              '<span class="text-[10px] text-slate-500">' + (s.date || "") + '</span>' +
+              '</div>' +
+              '<p class="text-xs text-slate-400 mt-0.5">' + (s.platform || "General") + ' | ' + (s.vibe || "genuine") + ' vibe</p>' +
+              '<span class="inline-block mt-1 text-[10px] font-semibold text-amber-400 px-1.5 py-0.2 bg-amber-500/10 rounded">+50 XP</span>' +
+              '</div></div></div>';
+            feed.insertBefore(li, feed.firstChild);
+          });
+        } catch (e) {}
+      }
+
+      function loadChallengeActivity() {
+        try {
+          var raw = localStorage.getItem("rizzora_challenge");
+          if (!raw) return;
+          var ch = JSON.parse(raw);
+          if (!ch || !ch.completedDays || !ch.completedDays.length) return;
+          var feed = document.querySelector("#dash-activity-list");
+          if (!feed) return;
+          var li = document.createElement("li");
+          li.innerHTML =
+            '<div class="relative pb-8">' +
+            '<span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-brand-border/40" aria-hidden="true"></span>' +
+            '<div class="relative flex space-x-3">' +
+            '<div><span class="h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center text-xs">&#128293;</span></div>' +
+            '<div class="flex-grow pt-0.5">' +
+            '<div class="flex justify-between items-start">' +
+            '<p class="text-xs font-bold text-slate-200">30-Day Challenge: Day ' + ch.completedDays.length + '/30</p>' +
+            '<span class="text-[10px] text-slate-500">Active</span>' +
+            '</div>' +
+            '<p class="text-xs text-slate-400 mt-0.5">Streak: ' + (ch.streak || 0) + ' days | XP: ' + (ch.totalXP || 0) + '</p>' +
+            '<span class="inline-block mt-1 text-[10px] font-semibold text-amber-400 px-1.5 py-0.2 bg-amber-500/10 rounded">' + (ch.completedDays.length * 3) + '% complete</span>' +
+            '</div></div></div>';
+          feed.insertBefore(li, feed.firstChild);
+        } catch (e) {}
+      }
+
+      // --- Initialize ---
+      var user = loadUser();
+      if (user && user.name) {
+        // Returning user — show dashboard directly
+        if (overlay) overlay.classList.add("hidden");
+        if (dashboardContent) dashboardContent.classList.remove("hidden");
+        personalizeDashboard(user);
+      } else {
+        // First visit — show onboarding, hide dashboard content until complete
+        if (dashboardContent) dashboardContent.classList.add("hidden");
+        if (overlay) overlay.classList.remove("hidden");
+        showStep(0);
+      }
+
+      // --- Step 1: Get Started ---
+      document.getElementById("onb-start-btn").addEventListener("click", function () {
+        showStep(1);
+        setTimeout(function () {
+          document.getElementById("onb-name-input").focus();
+        }, 100);
+      });
+
+      // --- Step 2: Name ---
+      document.getElementById("onb-name-next").addEventListener("click", function () {
+        var name = document.getElementById("onb-name-input").value.trim();
+        if (!name) {
+          document.getElementById("onb-name-input").classList.add("ring-2", "ring-red-500/50");
+          document.getElementById("onb-name-input").focus();
+          setTimeout(function () {
+            document.getElementById("onb-name-input").classList.remove("ring-2", "ring-red-500/50");
+          }, 1500);
+          return;
+        }
+        saveUser({ name: name, crushName: "" });
+        showStep(2);
+        setTimeout(function () {
+          document.getElementById("onb-crush-input").focus();
+        }, 100);
+      });
+
+      document.getElementById("onb-name-input").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          document.getElementById("onb-name-next").click();
+        }
+      });
+
+      // --- Step 3: Crush ---
+      document.getElementById("onb-crush-skip").addEventListener("click", function () {
+        finishOnboarding();
+      });
+
+      document.getElementById("onb-crush-save").addEventListener("click", function () {
+        var crushName = document.getElementById("onb-crush-input").value.trim();
+        var user = loadUser();
+        if (user) {
+          user.crushName = crushName;
+          saveUser(user);
+        }
+        finishOnboarding();
+      });
+
+      document.getElementById("onb-crush-input").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          document.getElementById("onb-crush-save").click();
+        }
+      });
+
+      function finishOnboarding() {
+        // Fade out overlay
+        overlay.style.transition = "opacity 0.3s ease";
+        overlay.style.opacity = "0";
+        setTimeout(function () {
+          overlay.classList.add("hidden");
+          overlay.style.opacity = "";
+          overlay.style.transition = "";
+          // Show and personalize dashboard
+          dashboardContent.classList.remove("hidden");
+          personalizeDashboard(loadUser());
+        }, 300);
+      }
+    })();
+  </script>
+</Layout>

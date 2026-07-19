@@ -1,0 +1,540 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Flirt Coach | Rizzora">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+    <!-- Header -->
+    <div class="mb-6 sm:mb-8">
+      <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Flirt Coach</h1>
+      <p class="text-slate-400 mt-1 text-sm sm:text-base">Transform dry, awkward, or overly intense messages into natural, confident alternatives.</p>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
+
+      <!-- LEFT: Input Panel -->
+      <div class="lg:col-span-2 space-y-5">
+
+        <!-- Message Input -->
+        <div class="glass p-5 sm:p-6 rounded-2xl space-y-4">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 border-b border-brand-border/40 pb-2">Your Message</h3>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Paste or type your message</label>
+            <textarea id="fc-message" rows="5" maxlength="500" placeholder='e.g. "why didnt you reply to me?" or "hey" or "you are so beautiful I cannot stop thinking about you"' class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition resize-none"></textarea>
+            <div class="flex justify-between mt-1">
+              <span class="text-[10px] text-slate-500" id="fc-char-count">0 / 500</span>
+              <span class="text-[10px] text-slate-500">Be honest, we won't judge</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Language Toggle -->
+        <div class="glass p-5 sm:p-6 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">Language</h3>
+          <div class="flex gap-2">
+            <button data-lang="english" class="fc-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">English</button>
+            <button data-lang="hinglish" class="fc-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-slate-600 cursor-pointer transition">Hinglish</button>
+          </div>
+        </div>
+
+        <!-- Style Selector -->
+        <div class="glass p-5 sm:p-6 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">Choose Style</h3>
+          <div class="grid grid-cols-2 gap-2" id="fc-style-grid">
+            <button data-style="playful" class="fc-style-btn text-left p-3 rounded-xl border-2 border-rose-500 bg-rose-500/10 transition cursor-pointer">
+              <span class="text-sm font-bold text-rose-400 block">Playful</span>
+              <span class="text-[10px] text-slate-400">Light, fun, teasing</span>
+            </button>
+            <button data-style="confident" class="fc-style-btn text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Confident</span>
+              <span class="text-[10px] text-slate-400">Direct, assured, smooth</span>
+            </button>
+            <button data-style="flirty" class="fc-style-btn text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Flirty / Coy</span>
+              <span class="text-[10px] text-slate-400">Warm, expressive, magnetic</span>
+            </button>
+            <button data-style="funny" class="fc-style-btn text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Funny</span>
+              <span class="text-[10px] text-slate-400">Humor-driven, witty</span>
+            </button>
+            <button data-style="subtle" class="fc-style-btn col-span-2 text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Subtle</span>
+              <span class="text-[10px] text-slate-400">Low-key, easy, no pressure</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <button id="fc-generate-btn" class="w-full py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition-all duration-200 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 cursor-pointer active:scale-95">
+          Rewrite My Message
+        </button>
+      </div>
+
+      <!-- RIGHT: Output Panel -->
+      <div class="lg:col-span-3 space-y-5">
+
+        <!-- Flirt Meter (shown after generate) -->
+        <div id="fc-meter" class="glass p-5 sm:p-6 rounded-2xl hidden">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4">Flirt Meter</h3>
+
+          <!-- Original analysis -->
+          <div class="mb-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs text-slate-400">Your original</span>
+              <span id="fc-orig-label" class="text-xs font-bold text-amber-400"></span>
+            </div>
+            <div class="relative h-3 bg-slate-800 rounded-full overflow-hidden">
+              <div class="absolute inset-0 flex">
+                <div class="flex-1 bg-red-500/60"></div>
+                <div class="flex-1 bg-amber-500/60"></div>
+                <div class="flex-1 bg-emerald-500/60"></div>
+                <div class="flex-1 bg-blue-500/60"></div>
+                <div class="flex-1 bg-red-600/60"></div>
+              </div>
+              <div id="fc-orig-dot" class="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-2 border-slate-900 shadow-lg transition-all duration-700 ease-out"></div>
+            </div>
+            <div class="flex justify-between mt-1">
+              <span class="text-[9px] text-slate-500">Too Dry</span>
+              <span class="text-[9px] text-slate-500">Natural</span>
+              <span class="text-[9px] text-slate-500">Playful</span>
+              <span class="text-[9px] text-slate-500">Too Intense</span>
+            </div>
+          </div>
+
+          <!-- Improved analysis -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs text-slate-400">After rewrite</span>
+              <span id="fc-new-label" class="text-xs font-bold text-emerald-400"></span>
+            </div>
+            <div class="relative h-3 bg-slate-800 rounded-full overflow-hidden">
+              <div class="absolute inset-0 flex">
+                <div class="flex-1 bg-red-500/60"></div>
+                <div class="flex-1 bg-amber-500/60"></div>
+                <div class="flex-1 bg-emerald-500/60"></div>
+                <div class="flex-1 bg-blue-500/60"></div>
+                <div class="flex-1 bg-red-600/60"></div>
+              </div>
+              <div id="fc-new-dot" class="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white border-2 border-slate-900 shadow-lg transition-all duration-700 ease-out"></div>
+            </div>
+            <div class="flex justify-between mt-1">
+              <span class="text-[9px] text-slate-500">Too Dry</span>
+              <span class="text-[9px] text-slate-500">Natural</span>
+              <span class="text-[9px] text-slate-500">Playful</span>
+              <span class="text-[9px] text-slate-500">Too Intense</span>
+            </div>
+          </div>
+
+          <!-- Suggestion -->
+          <div id="fc-suggestion" class="mt-4 p-3 bg-slate-900/60 rounded-xl border border-brand-border/40 text-xs text-slate-300"></div>
+        </div>
+
+        <!-- Rewrite Results -->
+        <div id="fc-output" class="space-y-4">
+          <div id="fc-empty" class="glass p-10 sm:p-14 rounded-2xl text-center border border-dashed border-brand-border/60">
+            <div class="text-5xl mb-4">✏️</div>
+            <h3 class="text-lg font-bold text-slate-300">Drop your message</h3>
+            <p class="text-sm text-slate-500 mt-2 max-w-xs mx-auto">Paste a boring, awkward, dry, or overly intense message and we'll rewrite it into something better.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Layout>
+
+  <script is:inline>
+    (function () {
+      var ACT_KEY = "rizzora_flirt_coach";
+      function loadActivity() { try { var r = localStorage.getItem(ACT_KEY); return r ? JSON.parse(r) : []; } catch { return []; } }
+      function saveActivity(list) { localStorage.setItem(ACT_KEY, JSON.stringify(list.slice(0, 30))); }
+      function pushActivity(entry) { var list = loadActivity(); list.unshift(entry); saveActivity(list); }
+      function q(a, b, c) { var s = String.fromCharCode(a); if (b) s += String.fromCharCode(b); if (c) s += String.fromCharCode(c); return s; }
+
+      var msgEl = document.getElementById("fc-message");
+      var charCount = document.getElementById("fc-char-count");
+      var generateBtn = document.getElementById("fc-generate-btn");
+      var meterEl = document.getElementById("fc-meter");
+      var outputEl = document.getElementById("fc-output");
+      var emptyEl = document.getElementById("fc-empty");
+      var origDot = document.getElementById("fc-orig-dot");
+      var origLabel = document.getElementById("fc-orig-label");
+      var newDot = document.getElementById("fc-new-dot");
+      var newLabel = document.getElementById("fc-new-label");
+      var suggestionEl = document.getElementById("fc-suggestion");
+
+      var selectedLang = "english";
+      var selectedStyle = "playful";
+
+      // Char count
+      msgEl.addEventListener("input", function() {
+        charCount.textContent = msgEl.value.length + " / 500";
+      });
+
+      // Language toggle
+      document.querySelectorAll(".fc-lang-btn").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          document.querySelectorAll(".fc-lang-btn").forEach(function(b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          selectedLang = btn.getAttribute("data-lang");
+        });
+      });
+
+      // Style selector
+      document.querySelectorAll(".fc-style-btn").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          document.querySelectorAll(".fc-style-btn").forEach(function(b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40");
+            var label = b.querySelector("span:first-child");
+            if (label) { label.classList.remove("text-rose-400"); label.classList.add("text-slate-300"); }
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40");
+          var label = btn.querySelector("span:first-child");
+          if (label) { label.classList.add("text-rose-400"); label.classList.remove("text-slate-300"); }
+          selectedStyle = btn.getAttribute("data-style");
+        });
+      });
+
+      // Generate
+      generateBtn.addEventListener("click", function() {
+        var msg = msgEl.value.trim();
+        if (!msg) {
+          msgEl.classList.add("ring-2", "ring-red-500/50");
+          msgEl.focus();
+          setTimeout(function() { msgEl.classList.remove("ring-2", "ring-red-500/50"); }, 2000);
+          return;
+        }
+        generateBtn.disabled = true;
+        generateBtn.textContent = "Rewriting...";
+        generateBtn.classList.add("opacity-60", "cursor-not-allowed");
+
+        setTimeout(function() {
+          var analysis = analyzeMessage(msg);
+          var rewrites = generateRewrites(msg, selectedStyle, selectedLang);
+          showMeter(analysis, rewrites);
+          renderRewrites(rewrites, msg, analysis);
+          pushActivity({
+            type: "Flirt Coach",
+            name: "Message rewritten",
+            detail: msg.substring(0, 50) + (msg.length > 50 ? "..." : ""),
+            score: selectedStyle.charAt(0).toUpperCase() + selectedStyle.slice(1) + " style",
+            date: new Date().toLocaleString(),
+            style: selectedStyle,
+            language: selectedLang
+          });
+          generateBtn.disabled = false;
+          generateBtn.textContent = "Rewrite My Message";
+          generateBtn.classList.remove("opacity-60", "cursor-not-allowed");
+        }, 1200);
+      });
+      function analyzeMessage(msg) {
+        var m = msg.toLowerCase();
+        var len = msg.length;
+        var score = 50;
+        var category = "natural";
+        var suggestions = [];
+
+        if (len < 8) { score -= 25; category = "dry"; suggestions.push("Try adding a question or observation to spark conversation."); }
+        else if (len < 15 && m.indexOf("?") === -1) { score -= 15; category = "dry"; suggestions.push("Short messages without questions can feel cold."); }
+
+        if (m.indexOf("?") > -1) { score += 10; }
+        if (m.indexOf("...") > -1 || m.indexOf("!!") > -1) { score += 5; }
+
+        var intenseWords = ["love", "cant stop", "cannot stop", "beautiful", "gorgeous", "stunning", "obsessed", "always think", "need you", "miss you so much"];
+        var intenseCount = 0;
+        intenseWords.forEach(function(w) { if (m.indexOf(w) > -1) intenseCount++; });
+        if (intenseCount >= 2) { score += 25; category = "intense"; suggestions.push("Too many strong words at once can feel overwhelming."); }
+        else if (intenseCount === 1) { score += 10; }
+
+        var dryWords = ["ok", "hey", "hello", "sup", "nm", "k", "lol", "haha", "cool"];
+        var dryCount = 0;
+        for (var dw = 0; dw < dryWords.length; dw++) { if (m === dryWords[dw] || (m.indexOf(dryWords[dw]) === 0 && m.length < 10)) dryCount++; }
+        if (dryCount > 0 && len < 12) { score -= 20; category = "dry"; suggestions.push("Give them something to respond to, not just a greeting."); }
+
+        if (m.indexOf("reply") > -1 || m.indexOf("ignore") > -1 || m.indexOf("why didnt") > -1 || m.indexOf("why not") > -1) {
+          score -= 10; category = "demanding";
+          suggestions.push("Demanding replies can create pressure. Try a lighter approach.");
+        }
+
+        if (m.indexOf("?") > -1 && (m.indexOf("kya kar") > -1 || m.indexOf("kaise") > -1 || m.indexOf("what") > -1 || m.indexOf("how") > -1)) {
+          score += 5;
+        }
+
+        score = Math.max(5, Math.min(95, score));
+
+        if (score < 25) { category = "dry"; suggestions.push("Your message feels too brief or low-energy. Add some personality!"); }
+        else if (score < 45) { category = "somewhat dry"; suggestions.push("A small tweak could make this much more engaging."); }
+        else if (score < 65) { category = "natural"; suggestions.push("Solid foundation! Adding a playful touch would make it even better."); }
+        else if (score < 80) { category = "playful"; suggestions.push("Great energy! This message invites a fun response."); }
+        else { category = "intense"; suggestions.push("Dial it back slightly to keep things comfortable and natural."); }
+
+        if (suggestions.length === 0) suggestions.push("Your message is in a good zone! Small tweaks can make it even better.");
+
+        return { score: score, category: category, suggestions: suggestions };
+      }
+      function generateRewrites(msg, style, lang) {
+        var m = msg.toLowerCase();
+        var isHL = lang === "hinglish";
+        var results = [];
+        var len = msg.length;
+
+        var isShort = len < 12;
+        var isDemanding = m.indexOf("reply") > -1 || m.indexOf("ignore") > -1 || m.indexOf("why didnt") > -1;
+        var isQuestion = m.indexOf("?") > -1;
+        var isGreeting = m === "hey" || m === "hello" || m === "hi" || m === "sup" || m === "kya haal" || m === "kaise ho";
+        var isIntense = m.indexOf("love") > -1 || m.indexOf("beautiful") > -1 || m.indexOf("gorgeous") > -1 || m.indexOf("obsessed") > -1;
+
+        if (style === "playful") {
+          if (isGreeting) {
+            results.push({ text: isHL ? "Heyy! Tumhara din kaisa ja raha hai? Koi mast plan hua ya boring mode on hai?" : "Hey! How is your day going so far? Anything fun or just the usual grind?", why: "Adds a playful question that gives them two ways to respond, making it easy to keep the conversation going." });
+            results.push({ text: isHL ? "Hola! Main soch raha tha tumhare baare mein... ki tum probably abhi bhi cute ho. Confirm karo?" : "Hey! I was just thinking about you... probably still being adorable. Can you confirm?", why: "Uses a teasing compliment wrapped in humor. Flirty without being pushy." });
+            results.push({ text: isHL ? "Hey! Tumhe ek important sawaal puchna hai... pizza ya pasta? Ye batayega ki hum compatible hain ya nahi." : "Hey! I have a very important question... pizza or pasta? This will determine if we are compatible or not.", why: "Turns a boring greeting into a fun, lighthearted conversation starter with a playful challenge." });
+          } else if (isShort) {
+            results.push({ text: isHL ? msg + " Hmm, curious! Tumhara matlab kya tha? Main context nahi samjha. 😄" : msg + " Hmm, curious! What did you mean by that? I need more context. 😄", why: "Acknowledges the short message with a playful prompt for more, showing interest without pressure." });
+            results.push({ text: isHL ? "Accha! Aur batao... kya chal raha hai tumhari duniya mein? Main interested hu. 👀" : "Noted! Tell me more... what is happening in your world? I am all ears. 👀", why: "Redirects a dry message into an open invitation for them to share, with a fun emoji." });
+            results.push({ text: isHL ? "Interesting! Tumhare paas aur words hain ya ye ek riddle hai? Main solve karna chahta hu. ;)" : "Interesting! Do you have more words or is this a riddle? I am up for solving it. ;)", why: "Playfully teases them about the short message while keeping it light and encouraging more." });
+          } else if (isDemanding) {
+            results.push({ text: isHL ? "Hey, main samajh sakta hu. Busy ho toh koi baat nahi, jab free ho tab baat karte hain! 😊" : "Hey, I get it. If you are busy, no worries at all! Let's catch up when you are free. 😊", why: "Replaces demand with understanding. Shows maturity and gives them space, which is naturally attractive." });
+            results.push({ text: isHL ? "No rush! Main bas check kar raha tha ki sab theek hai. Tumhare reply ka wait karunga. 😊" : "Just checking in! No rush on the reply. Hope you are having a good one. 😊", why: "Removes all pressure while still showing you care. Confident and comfortable." });
+            results.push({ text: isHL ? "Hey! Tumhare din mein kuch accha hua ya abhi tak boring hai? Mujhe gossip chahiye. 😄" : "Hey! Did anything good happen today or is it still boring? I need some gossip. 😄", why: "Pivots away from the demanding tone into a fun, engaging question that invites sharing." });
+          } else {
+            results.push({ text: isHL ? msg + " Par sach mein, iske baare mein kya sochte ho? Interesting laga mujhe." : msg + " But seriously, what do you think about that? I am curious.", why: "Adds a playful follow-up question that deepens the conversation naturally." });
+            results.push({ text: isHL ? "Haan! Aur sunao... kya plans hain? Main excited hu sunne ke liye." : "Love that! Tell me more... what are the plans? I am excited to hear.", why: "Builds on the original message with enthusiastic interest that feels genuine." });
+            results.push({ text: isHL ? msg + " Btw, tumhara weekend kaisa gaya? Kuch mast kiya ya chill mode tha?" : msg + " By the way, how was your weekend? Anything fun or just chill mode?", why: "Smoothly transitions into a new topic with a casual, playful question." });
+          }
+        } else if (style === "confident") {
+          if (isGreeting) {
+            results.push({ text: isHL ? "Hey! Tumhara din accha ja raha hai, I can tell. Batao kya chal raha hai." : "Hey! I can tell you are having a good day. Tell me what is going on.", why: "Confident assumption shows social awareness and invites them to share without asking directly." });
+            results.push({ text: isHL ? "Hey! Main abhi free hu, tum bhi free ho toh baat karte hain. Sound good?" : "Hey! I am free right now and thought of you. Let's chat. Sound good?", why: "Direct and clear without being pushy. Shows initiative and confidence." });
+            results.push({ text: isHL ? "Hey! Tumhe dekh ke mood accha ho gaya. Ab batao kya plan hai." : "Hey! You just made my day better. Now tell me what is the plan.", why: "Confident compliment followed by a smooth redirect to conversation." });
+          } else if (isShort) {
+            results.push({ text: isHL ? "Got it. Yahan kuch interesting share karo, bore mat karo mujhe. 😄" : "Got it. Now share something interesting. Do not bore me. 😄", why: "Playfully challenges them while showing you expect more, which is confidently attractive." });
+            results.push({ text: isHL ? "Short and sweet. Par main aur details chahta hu. Batao, kya scene hai?" : "Short and sweet. But I want more details. What is the scene?", why: "Acknowledges their message while confidently asking for more, setting a standard." });
+            results.push({ text: isHL ? "Hmm, interesting. Tumhare paas aur bolna hai ya ye ek test hai? Main ready hu." : "Hmm, interesting. Got more to say or is this a test? I am ready.", why: "Confidently reads between the lines and shows you are not intimidated by short replies." });
+          } else if (isDemanding) {
+            results.push({ text: isHL ? "I get it. Tum busy ho, ye hai. Baad mein baat karte hain jab tum ready ho." : "I get it. You are busy. That is cool. Let us talk later when you are ready.", why: "Confidently acknowledges the situation without drama. Shows emotional maturity." });
+            results.push({ text: isHL ? "No pressure. Main yahan hu, jab chahe baat karte hain." : "No pressure at all. I am here whenever you want to talk.", why: "Projects zero neediness. Confident people do not chase; they attract." });
+            results.push({ text: isHL ? "Theek hai. Tumhare liye time nikalna mere liye important hai. Jab bhi ready ho, bata dena." : "All good. Making time for you matters to me. Just let me know when you are up for it.", why: "Shows you value them while maintaining your own frame. Balanced and confident." });
+          } else {
+            results.push({ text: isHL ? msg + " Ye solid hai. Ab zara aur batao, kya sochte ho iske baare mein?" : msg + " This is solid. Now tell me, what is your take on that?", why: "Validates the original while confidently steering the conversation deeper." });
+            results.push({ text: isHL ? "Accha ye hai. Main agree karta hu. Par ek aur cheez batao..." : "I hear you. I agree on that. But here is one more thing...", why: "Shows active listening while confidently introducing a new angle." });
+            results.push({ text: isHL ? "Nice! Tumhara yeh wala version accha hai. Ab aur interesting batao." : "Nice! I like this version of you. Now tell me something even more interesting.", why: "Confidently compliments while setting the bar higher for the conversation." });
+          }
+        } else if (style === "flirty") {
+          if (isGreeting) {
+            results.push({ text: isHL ? "Hey! Tumhara message dekh ke smile aa gayi. Ab bhi aa rahi hai. 😊" : "Hey! Your message just made me smile. Still smiling, actually. 😊", why: "Expresses genuine warmth without being over the top. The vulnerability is attractive." });
+            results.push({ text: isHL ? "Hey you! Mujhe laga ki aaj tumhara text aayega. Guess I manifested it. 😄" : "Hey you! I was literally just thinking you would text. Guess I manifested it. 😄", why: "Flirty without being intense. Shows you were thinking about them in a casual way." });
+            results.push({ text: isHL ? "Hey! Abhi tak tumhare baare mein soch raha tha. Perfect timing. 😊" : "Hey! I was literally just thinking about you. Perfect timing. 😊", why: "Creates a romantic-feeling moment while staying casual and natural." });
+          } else if (isShort) {
+            results.push({ text: isHL ? "Hmm, ye padh ke aur curiosity badh gayi. Tumhe aur jaanna hai mujhe." : "Hmm, reading this just made me more curious about you. I want to know more.", why: "Turns a short message into a flirty compliment about their mysteriousness." });
+            results.push({ text: isHL ? "Tumhare messages always smile dila dete hain. Chahe kitne bhi chhote ho. 😊" : "Your messages always make me smile, no matter how short they are. 😊", why: "Sweet and flirty while acknowledging their brief style. Makes them feel valued." });
+            results.push({ text: isHL ? "Short and mysterious. Tumhe pata hai ye attractive hai, right?" : "Short and mysterious. You know that is attractive, right?", why: "Compliments them in a flirty way that builds confidence and connection." });
+          } else if (isDemanding) {
+            results.push({ text: isHL ? "Aww, miss kar rahe ho mujhe? That is actually sweet. Main bhi. 😊" : "Aww, you miss me? That is actually sweet. Me too, by the way. 😊", why: "Reframes the demand as affection. Turns a negative into a flirty moment." });
+            results.push({ text: isHL ? "Hey! Tumhare bina boring hai din. Ab jaldi se baat karte hain. 😊" : "Hey! My day is boring without you. Let us fix that. 😊", why: "Expresses missing them in a playful, flirty way that feels natural." });
+            results.push({ text: isHL ? "I was waiting for your text too. Great minds think alike, huh? 😊" : "I was actually waiting for your text too. Great minds think alike, huh? 😊", why: "Creates a mutual moment that feels romantic without being intense." });
+          } else {
+            results.push({ text: isHL ? msg + " Tumhe pata hai, tumhari baatein mujhe always smile deti hain. 😊" : msg + " You know what, your messages always make me smile. 😊", why: "Adds a genuine, flirty compliment that feels warm and personal." });
+            results.push({ text: isHL ? "Accha! Main imagine kar raha tha tumhe ye padhte hue. Tumhari smile zaroor aa rahi hogi. 😊" : "Love that! I can picture you saying this. You must be smiling right now. 😊", why: "Creates a vivid, flirty image that deepens the connection." });
+            results.push({ text: isHL ? "Haan! Tumhare saath ye conversation aur bhi acchi ho rahi hai. Keep going. 😊" : "Yes! This conversation keeps getting better with you. Keep going. 😊", why: "Affirming and flirty, showing genuine enjoyment of the interaction." });
+          }
+        } else if (style === "funny") {
+          if (isGreeting) {
+            results.push({ text: isHL ? "Hey! Maine socha tum bhool gayi mujhe, par nahi. Tumhara hi intezar tha. Main stalk nahi kar raha, promise. 😂" : "Hey! I thought you forgot about me, but nope. Was just waiting. Not stalking, I promise. 😂", why: "Self-deprecating humor makes you relatable and approachable. Shows you do not take yourself too seriously." });
+            results.push({ text: isHL ? "Hey! Tumhe dekh ke laga ki aaj ka din accha jaayega. Aur ab confirm ho gaya. 😂" : "Hey! Seeing your name just made my day better. Confirmed: today is a good day. 😂", why: "Humorous compliment that feels natural and fun." });
+            results.push({ text: isHL ? "Hey! Main expert ban gaya hu tumhare messages ka wait karne mein. Koi certification milega kya? 😂" : "Hey! I have become a professional at waiting for your texts. Do I get a certificate? 😂", why: "Self-aware humor about texting dynamics. Light and funny." });
+          } else if (isShort) {
+            results.push({ text: isHL ? msg + " Wow, itna content. Main overwhelmed ho gaya. Ruko zara, popcorn late hu. 😂" : msg + " Wow, so much content. I am overwhelmed. Hold on, let me grab some popcorn. 😂", why: "Sarcastic humor about short messages without being mean. Shows wit." });
+            results.push({ text: isHL ? "Ye padh ke laga ki tumhare phone ka autocorrect bhi bore ho raha hai. 😂" : "Reading this, even your phone's autocorrect is getting bored. 😂", why: "Teasing humor that is playful and shows quick thinking." });
+            results.push({ text: isHL ? "Itna effort dekh ke impressed hu. Tumhare phone ne bhi mehnat ki lag rahi hai. 😂" : "So much effort. I can see your phone worked really hard for this. 😂", why: "Ironic compliment about brevity. Shows confidence through humor." });
+          } else if (isDemanding) {
+            results.push({ text: isHL ? "Haha, relax! Main koi ghost nahi hu, wapas aaunga. Pinky promise. 😂" : "Haha, relax! I am not a ghost, I will come back. Pinky promise. 😂", why: "Defuses tension with humor. Shows you can handle pressure with grace." });
+            results.push({ text: isHL ? "Hey! Main alive hu, promise. Bas ek meeting mein tha jo kabhi khatam nahi hoti. 😂" : "Hey! I am alive, I promise. Was just in a meeting that never ends. 😂", why: "Funny excuse that humanizes you and makes the situation lighthearted." });
+            results.push({ text: isHL ? "Don't worry, main escape plan bana raha tha tumse baat karne ke liye. Mission successful. 😂" : "Do not worry, I was plotting my escape to talk to you. Mission successful. 😂", why: "Funny and dramatic framing that turns a demanding situation into a joke." });
+          } else {
+            results.push({ text: isHL ? msg + " Aur ye dialogue ke saath, hero of the movie ban gaye hum. 😂" : msg + " And with that, we have entered the main character energy. 😂", why: "Self-aware humor about the conversation itself. Makes it meta and fun." });
+            results.push({ text: isHL ? "Interesting! Agar ye ek movie ka dialogue hota, toh Oscars mil jaate. 😂" : "Interesting! If this were a movie line, it would win an Oscar. 😂", why: "Exaggerated compliment that is clearly humorous and flattering." });
+            results.push({ text: isHL ? "Accha! Tumhare saath ye conversation comedy show ban rahi hai. Love it. 😂" : "Nice! This conversation with you is turning into a comedy show. Love it. 😂", why: "Reframes the chat as entertainment, showing you are having fun." });
+          }
+        } else if (style === "subtle") {
+          if (isGreeting) {
+            results.push({ text: isHL ? "Hey! Kya chal raha hai?" : "Hey! What is going on?", why: "Simple and clean. No pressure, no intensity. Just a natural opener." });
+            results.push({ text: isHL ? "Hey. Tumhara din kaisa hai?" : "Hey. How is your day going?", why: "Minimal and easy. Lets them respond at their own pace." });
+            results.push({ text: isHL ? "Hi! Kuch interesting ho raha hai ya chill mode?" : "Hi! Anything interesting happening or just chill mode?", why: "Low-key question that gives them an easy out and an easy in." });
+          } else if (isShort) {
+            results.push({ text: isHL ? "Hmm." : "Hmm.", why: "Mirrors their energy. Sometimes less is more." });
+            results.push({ text: isHL ? "Ok. Aur batao." : "Ok. Tell me more.", why: "Subtle nudge for more without being demanding." });
+            results.push({ text: isHL ? "Got it." : "Got it.", why: "Acknowledges without pressure. Lets them lead." });
+          } else if (isDemanding) {
+            results.push({ text: isHL ? "No worries. Jab free ho tab baat karte hain." : "No worries. Let us talk when you are free.", why: "Zero pressure. Shows you are comfortable and not needy." });
+            results.push({ text: isHL ? "Theek hai. Main yahan hu." : "All good. I am here.", why: "Simple reassurance without any intensity." });
+            results.push({ text: isHL ? "Koi baat nahi." : "No problem.", why: "The most subtle response. Lets them come to you." });
+          } else {
+            results.push({ text: isHL ? msg : msg, why: "Your message is already well-balanced. No major changes needed." });
+            results.push({ text: isHL ? msg + " Tum kya sochte ho?" : msg + " What do you think?", why: "Adds a gentle question without changing the tone." });
+            results.push({ text: isHL ? msg + " Hmm, interesting." : msg + " Hmm, interesting.", why: "Minimal addition that shows engagement without overdoing it." });
+          }
+        }
+        return results;
+      }
+      function showMeter(analysis, rewrites) {
+        meterEl.classList.remove("hidden");
+        emptyEl.classList.add("hidden");
+
+        var origPct = analysis.score;
+        origDot.style.left = origPct + "%";
+        origLabel.textContent = analysis.category.charAt(0).toUpperCase() + analysis.category.slice(1);
+        if (origPct < 25) origLabel.className = "text-xs font-bold text-red-400";
+        else if (origPct < 50) origLabel.className = "text-xs font-bold text-amber-400";
+        else if (origPct < 75) origLabel.className = "text-xs font-bold text-emerald-400";
+        else origLabel.className = "text-xs font-bold text-blue-400";
+
+        var bestScore = 50;
+        rewrites.forEach(function(r) {
+          var s = 50;
+          var t = r.text.toLowerCase();
+          if (t.indexOf("?") > -1) s += 8;
+          if (t.length > 20) s += 5;
+          if (t.indexOf("no rush") > -1 || t.indexOf("no pressure") > -1 || t.indexOf("koi baat nahi") > -1) s += 5;
+          if (t.indexOf("love") === -1 && t.indexOf("need") === -1 && t.indexOf("obsessed") === -1) s += 3;
+          if (s > bestScore) bestScore = s;
+        });
+        bestScore = Math.min(bestScore, 78);
+        newDot.style.left = bestScore + "%";
+        newLabel.textContent = "Natural & Playful";
+        newLabel.className = "text-xs font-bold text-emerald-400";
+
+        var sug = analysis.suggestions[0] || "Your message is in a good zone! Small tweaks can make it even better.";
+        suggestionEl.innerHTML = '<span class="text-rose-400 font-bold">Tip:</span> ' + sug;
+      }
+
+      function renderRewrites(rewrites, origMsg, analysis) {
+        outputEl.innerHTML = "";
+        rewrites.forEach(function(r, idx) {
+          var card = document.createElement("div");
+          card.className = "glass p-5 sm:p-6 rounded-2xl border border-brand-border/60 hover:border-rose-500/20 transition duration-200";
+          card.setAttribute("data-idx", idx);
+          card.innerHTML =
+            '<div class="mb-4">' +
+              '<span class="text-[10px] font-bold uppercase tracking-wider text-rose-400">Alternative ' + (idx + 1) + '</span>' +
+            '</div>' +
+            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">' +
+              '<div class="p-3 bg-red-500/5 rounded-xl border border-red-500/10">' +
+                '<span class="text-[10px] uppercase font-bold text-red-400 block mb-1">Original</span>' +
+                '<p class="text-xs text-slate-400 font-mono leading-relaxed">' + escapeHtml(origMsg) + '</p>' +
+              '</div>' +
+              '<div class="p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10">' +
+                '<span class="text-[10px] uppercase font-bold text-emerald-400 block mb-1">Rewritten</span>' +
+                '<p class="text-xs text-slate-200 font-bold leading-relaxed" id="fc-rewrite-text-' + idx + '">' + r.text + '</p>' +
+              '</div>' +
+            '</div>' +
+            '<div class="p-3 bg-slate-900/60 rounded-xl border border-brand-border/40 mb-4">' +
+              '<span class="text-[10px] font-bold text-violet-400 uppercase tracking-wider">Why this works:</span>' +
+              '<p class="text-xs text-slate-300 mt-1 leading-relaxed">' + r.why + '</p>' +
+            '</div>' +
+            '<div class="flex gap-2">' +
+              '<button class="fc-copy-btn flex-1 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 bg-slate-800/80 hover:bg-slate-800 rounded-lg transition active:scale-95 cursor-pointer" data-idx="' + idx + '">Copy</button>' +
+              '<button class="fc-regen-btn flex-1 py-2 text-[10px] font-bold uppercase tracking-wider text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-lg transition active:scale-95 cursor-pointer" data-idx="' + idx + '">Regenerate</button>' +
+            '</div>' +
+            '<div class="mt-2">' +
+              '<div class="relative">' +
+                '<button class="fc-more-btn w-full py-1.5 text-[10px] font-semibold text-slate-500 hover:text-slate-300 transition cursor-pointer text-left" data-idx="' + idx + '">Make it more... &#9662;</button>' +
+                '<div class="fc-more-menu hidden absolute left-0 bottom-full mb-1 w-40 bg-slate-900 border border-brand-border rounded-xl shadow-2xl z-20 overflow-hidden" id="fc-more-' + idx + '">' +
+                  '<button class="fc-more-opt w-full text-left px-3 py-2 text-[10px] text-slate-300 hover:bg-slate-800 hover:text-rose-400 transition cursor-pointer" data-mod="confident">💪 More Confident</button>' +
+                  '<button class="fc-more-opt w-full text-left px-3 py-2 text-[10px] text-slate-300 hover:bg-slate-800 hover:text-rose-400 transition cursor-pointer" data-mod="playful">🎈 More Playful</button>' +
+                  '<button class="fc-more-opt w-full text-left px-3 py-2 text-[10px] text-slate-300 hover:bg-slate-800 hover:text-rose-400 transition cursor-pointer" data-mod="subtle">🤫 More Subtle</button>' +
+                  '<button class="fc-more-opt w-full text-left px-3 py-2 text-[10px] text-slate-300 hover:bg-slate-800 hover:text-rose-400 transition cursor-pointer" data-mod="funny">😂 Funnier</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          outputEl.appendChild(card);
+        });
+
+        document.querySelectorAll(".fc-copy-btn").forEach(function(btn) {
+          btn.addEventListener("click", function() {
+            var idx = btn.getAttribute("data-idx");
+            var textEl = document.getElementById("fc-rewrite-text-" + idx);
+            navigator.clipboard.writeText(textEl.textContent.trim()).then(function() {
+              btn.textContent = "Copied!";
+              btn.classList.add("text-emerald-400");
+              setTimeout(function() { btn.textContent = "Copy"; btn.classList.remove("text-emerald-400"); }, 1500);
+            });
+          });
+        });
+
+        document.querySelectorAll(".fc-regen-btn").forEach(function(btn) {
+          btn.addEventListener("click", function() {
+            var idx = parseInt(btn.getAttribute("data-idx"));
+            var newRewrites = generateRewrites(msgEl.value.trim(), selectedStyle, selectedLang);
+            var textEl = document.getElementById("fc-rewrite-text-" + idx);
+            textEl.textContent = newRewrites[idx].text;
+            btn.textContent = "Regenerated!";
+            btn.classList.add("text-emerald-400");
+            setTimeout(function() { btn.textContent = "Regenerate"; btn.classList.remove("text-emerald-400"); }, 1500);
+          });
+        });
+
+        document.querySelectorAll(".fc-more-btn").forEach(function(btn) {
+          btn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            var idx = btn.getAttribute("data-idx");
+            var menu = document.getElementById("fc-more-" + idx);
+            document.querySelectorAll(".fc-more-menu").forEach(function(m) { if (m !== menu) m.classList.add("hidden"); });
+            menu.classList.toggle("hidden");
+          });
+        });
+
+        document.querySelectorAll(".fc-more-opt").forEach(function(opt) {
+          opt.addEventListener("click", function() {
+            var card = opt.closest("[data-idx]");
+            var idx = card.getAttribute("data-idx");
+            var textEl = document.getElementById("fc-rewrite-text-" + idx);
+            var mod = opt.getAttribute("data-mod");
+            textEl.textContent = makeMore(textEl.textContent, mod, selectedLang);
+            var menu = document.getElementById("fc-more-" + idx);
+            menu.classList.add("hidden");
+          });
+        });
+
+        document.addEventListener("click", function() {
+          document.querySelectorAll(".fc-more-menu").forEach(function(m) { m.classList.add("hidden"); });
+        });
+      }
+
+      function makeMore(text, modifier, lang) {
+        var isHL = lang === "hinglish";
+        if (modifier === "confident") {
+          return isHL ? text + " Main ye confidently bol raha hu kyunki mujhe lagta hai ye sahi hai." : text + " I am saying this with full confidence because I genuinely mean it.";
+        } else if (modifier === "playful") {
+          return isHL ? text + " ;)" : text + " ;)";
+        } else if (modifier === "subtle") {
+          var words = text.split(" ");
+          return words.slice(0, Math.min(8, words.length)).join(" ") + (words.length > 8 ? "..." : "");
+        } else if (modifier === "funny") {
+          return isHL ? text + " Aur agar ye kaam na kare toh main apna stand-up comedy set launch karunga. 😂" : text + " And if that does not work, I will launch my stand-up comedy career. 😂";
+        }
+        return text;
+      }
+
+      function escapeHtml(str) {
+        var div = document.createElement("div");
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+    })();
+  </script>
+</Layout>

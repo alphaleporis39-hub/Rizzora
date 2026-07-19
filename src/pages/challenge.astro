@@ -1,0 +1,739 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="30-Day Dating & Confidence Challenge | Rizzora">
+  <div class="max-w-5xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="mb-6">
+      <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-white">30-Day Dating & Confidence Challenge 🔥</h1>
+          <p class="text-slate-400 mt-1 text-xs sm:text-sm">Stretch your comfort zone, master conversations, build real confidence.</p>
+        </div>
+        <button id="ch-share-btn" class="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white bg-linear-to-r from-pink-500 to-violet-500 rounded-xl hover:scale-105 transition shrink-0 cursor-pointer">
+          Share Progress
+        </button>
+      </div>
+      <!-- Progress bar -->
+      <div class="mt-4 flex items-center gap-3">
+        <div class="flex-1 h-2.5 bg-slate-800 rounded-full overflow-hidden">
+          <div id="ch-progress-bar" class="h-full bg-linear-to-r from-rose-500 to-violet-500 rounded-full transition-all duration-700" style="width:0%"></div>
+        </div>
+        <span id="ch-progress-text" class="text-xs font-bold text-slate-300 shrink-0">0%</span>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-6">
+      <div class="glass p-3 rounded-xl text-center">
+        <div class="text-[10px] text-slate-400 mb-1">Day</div>
+        <div id="ch-stat-day" class="text-lg font-extrabold text-white">1</div>
+        <div class="text-[10px] text-slate-500">of 30</div>
+      </div>
+      <div class="glass p-3 rounded-xl text-center">
+        <div class="text-[10px] text-slate-400 mb-1">Streak 🔥</div>
+        <div id="ch-stat-streak" class="text-lg font-extrabold text-amber-400">0</div>
+        <div class="text-[10px] text-slate-500">days</div>
+      </div>
+      <div class="glass p-3 rounded-xl text-center">
+        <div class="text-[10px] text-slate-400 mb-1">XP Earned</div>
+        <div id="ch-stat-xp" class="text-lg font-extrabold text-emerald-400">0</div>
+        <div class="text-[10px] text-slate-500">total</div>
+      </div>
+      <div class="glass p-3 rounded-xl text-center">
+        <div class="text-[10px] text-slate-400 mb-1">Level</div>
+        <div id="ch-stat-level" class="text-lg font-extrabold text-violet-400">1</div>
+        <div class="text-[10px] text-slate-500">rank</div>
+      </div>
+      <div class="glass p-3 rounded-xl text-center">
+        <div class="text-[10px] text-slate-400 mb-1">Badges</div>
+        <div id="ch-stat-badges" class="text-lg font-extrabold text-pink-400">0</div>
+        <div class="text-[10px] text-slate-500">earned</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column: Today + Bonus + Roadmap -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Today's Challenge Card -->
+        <div id="ch-today-card" class="glass-accent p-6 rounded-2xl border border-rose-500/20 relative overflow-hidden">
+          <div class="absolute right-0 top-0 translate-x-12 -translate-y-12 w-32 h-32 bg-brand-primary/10 rounded-full blur-2xl"></div>
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-rose-400">Today's Mission</span>
+            <div class="flex items-center gap-2">
+              <span id="ch-today-difficulty" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Easy</span>
+              <span id="ch-today-xp" class="text-xs font-black text-amber-400">+100 XP</span>
+            </div>
+          </div>
+          <h2 id="ch-today-title" class="text-lg sm:text-xl font-extrabold text-slate-100">Day 1: Start a Casual Conversation</h2>
+          <p id="ch-today-category" class="text-[10px] font-semibold text-violet-400 mt-1 uppercase tracking-wider">Category</p>
+          <p id="ch-today-desc" class="text-sm text-slate-300 mt-3 leading-relaxed">Description here</p>
+          <div id="ch-today-tips" class="mt-4 p-3 bg-slate-950/40 rounded-xl border border-brand-border/40 text-xs text-slate-400">
+            <span class="font-bold text-slate-300">Coach Tips:</span> <span id="ch-today-tips-text">Tips here</span>
+          </div>
+          <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            <button id="ch-complete-btn" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white bg-linear-to-r from-brand-primary to-brand-secondary rounded-xl hover:scale-105 transition cursor-pointer">
+              Mark as Complete
+            </button>
+            <button id="ch-skip-btn" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-slate-400 bg-slate-800 rounded-xl hover:bg-slate-700 transition cursor-pointer">
+              Skip to Tomorrow
+            </button>
+          </div>
+        </div>
+
+        <!-- Daily Bonus Challenge -->
+        <div id="ch-bonus-card" class="glass p-5 rounded-2xl border border-amber-500/20">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-400">⭐ Daily Bonus Challenge</span>
+            <span class="text-xs font-black text-amber-400">+75 XP</span>
+          </div>
+          <p id="ch-bonus-text" class="text-sm text-slate-300 leading-relaxed">Bonus challenge description</p>
+          <div class="mt-3 flex items-center justify-between">
+            <span id="ch-bonus-status" class="text-[10px] text-slate-500">Available today</span>
+            <button id="ch-bonus-btn" class="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition cursor-pointer">
+              Claim Bonus
+            </button>
+          </div>
+        </div>
+
+        <!-- Streak Recovery -->
+        <div id="ch-recovery-card" class="glass p-5 rounded-2xl border border-violet-500/20 hidden">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-violet-400">🔄 Streak Recovery</span>
+            <span class="text-xs text-slate-400">Cost: <span class="font-bold text-violet-400">200 XP</span></span>
+          </div>
+          <p class="text-sm text-slate-300 leading-relaxed">You missed a day! Recover your streak and keep your momentum going.</p>
+          <div class="mt-3 flex items-center justify-between">
+            <span id="ch-recovery-cost" class="text-[10px] text-slate-500">200 XP will be deducted</span>
+            <button id="ch-recovery-btn" class="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-violet-400 bg-violet-500/10 border border-violet-500/30 rounded-lg hover:bg-violet-500/20 transition cursor-pointer">
+              Recover Streak
+            </button>
+          </div>
+        </div>
+
+        <!-- 30-Day Roadmap -->
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 border-b border-brand-border/40 pb-2">30-Day Challenge Map</h3>
+          <div id="ch-roadmap-grid" class="grid grid-cols-6 sm:grid-cols-10 gap-2"></div>
+          <div class="mt-4 flex flex-wrap justify-between items-center text-[10px] text-slate-400 pt-3 border-t border-brand-border/20 gap-2">
+            <div class="flex items-center gap-1"><span class="w-3 h-3 bg-rose-500/30 border border-rose-500 rounded-sm"></span> Done</div>
+            <div class="flex items-center gap-1"><span class="w-3 h-3 bg-brand-primary rounded-sm"></span> Today</div>
+            <div class="flex items-center gap-1"><span class="w-3 h-3 bg-amber-500/30 border border-amber-500 rounded-sm"></span> Bonus</div>
+            <div class="flex items-center gap-1"><span class="w-3 h-3 bg-slate-800 border border-brand-border/40 rounded-sm"></span> Locked</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Milestones + Badges + Leaderboard -->
+      <div class="lg:col-span-1 space-y-6">
+        <!-- Milestones -->
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 border-b border-brand-border/40 pb-2">🏆 Milestones</h3>
+          <div id="ch-milestones" class="space-y-2"></div>
+        </div>
+
+        <!-- Achievement Badges -->
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 border-b border-brand-border/40 pb-2">🎖️ Achievement Badges</h3>
+          <div id="ch-badges" class="grid grid-cols-3 gap-3"></div>
+        </div>
+
+        <!-- Level Progress -->
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 border-b border-brand-border/40 pb-2">📊 Level Progress</h3>
+          <div class="text-center mb-3">
+            <div id="ch-level-badge" class="text-4xl mb-1">🌱</div>
+            <div id="ch-level-name" class="text-sm font-bold text-slate-200">Beginner</div>
+            <div id="ch-level-sub" class="text-[10px] text-slate-400">Level 1</div>
+          </div>
+          <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div id="ch-level-bar" class="h-full bg-linear-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-700" style="width:0%"></div>
+          </div>
+          <div id="ch-level-xp" class="text-center text-[10px] text-slate-500 mt-1">0 / 500 XP</div>
+        </div>
+
+        <!-- Motivation -->
+        <div class="glass p-5 rounded-2xl border border-pink-500/20">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-pink-400 mb-3">💪 Daily Motivation</h3>
+          <p id="ch-motivation" class="text-xs text-slate-300 italic leading-relaxed">"Confidence is not about being loud. It is about being comfortable with who you are."</p>
+          <p id="ch-motivation-author" class="text-[10px] text-slate-500 mt-2 text-right">-- Rizzora</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div id="ch-complete-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+      <div class="glass p-6 sm:p-8 rounded-2xl border border-emerald-500/30 max-w-sm w-full text-center">
+        <div class="text-5xl mb-4">🎉</div>
+        <h2 class="text-xl font-extrabold text-white mb-2">Challenge Complete!</h2>
+        <p id="ch-complete-msg" class="text-sm text-slate-300 mb-4">Great work today!</p>
+        <div class="text-3xl font-black text-amber-400 mb-4">+<span id="ch-complete-xp">100</span> XP</div>
+        <div id="ch-complete-streak" class="text-xs text-slate-400 mb-6">Current streak: 1 day 🔥</div>
+        <button id="ch-complete-close" class="px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-emerald-500 rounded-xl hover:bg-emerald-600 transition cursor-pointer">
+          Continue
+        </button>
+      </div>
+    </div>
+
+    <!-- Milestone Modal -->
+    <div id="ch-milestone-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+      <div class="glass p-6 sm:p-8 rounded-2xl border border-amber-500/30 max-w-sm w-full text-center">
+        <div class="text-5xl mb-4" id="ch-milestone-emoji">🏅</div>
+        <h2 class="text-xl font-extrabold text-white mb-2" id="ch-milestone-title">Milestone Unlocked!</h2>
+        <p id="ch-milestone-msg" class="text-sm text-slate-300 mb-4">You earned a new badge!</p>
+        <button id="ch-milestone-close" class="px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-amber-500 rounded-xl hover:bg-amber-600 transition cursor-pointer">
+          Awesome!
+        </button>
+      </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="ch-share-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+      <div class="glass p-6 rounded-2xl border border-pink-500/30 max-w-md w-full">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-extrabold text-white">Share Your Progress</h2>
+          <button id="ch-share-close" class="text-slate-400 hover:text-white transition cursor-pointer">✕</button>
+        </div>
+        <div id="ch-share-card" class="bg-linear-to-br from-slate-900 to-slate-800 rounded-xl p-6 border border-brand-border/40 text-center mb-4">
+          <div class="text-3xl mb-2">🔥</div>
+          <h3 class="text-lg font-extrabold text-white">30-Day Challenge Progress</h3>
+          <div class="text-4xl font-black text-amber-400 my-3"><span id="ch-share-days">0</span>/30 Days</div>
+          <div class="flex justify-center gap-4 text-xs text-slate-300">
+            <span>🔥 <span id="ch-share-streak">0</span> streak</span>
+            <span>⭐ <span id="ch-share-xp">0</span> XP</span>
+            <span>🎖️ <span id="ch-share-badges">0</span> badges</span>
+          </div>
+          <p class="text-[10px] text-slate-500 mt-4">Building confidence with Rizzora</p>
+        </div>
+        <div class="flex gap-3">
+          <button id="ch-share-download" class="flex-1 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-pink-500 rounded-xl hover:bg-pink-600 transition cursor-pointer">
+            Download Card
+          </button>
+          <button id="ch-share-copy" class="flex-1 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-violet-500 rounded-xl hover:bg-violet-600 transition cursor-pointer">
+            Copy Stats
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      function q(s) { return String.fromCharCode(34) + s + String.fromCharCode(34); }
+      var USER_KEY = "rizzora_user";
+      var CH_KEY = "rizzora_challenge";
+
+      function loadJSON(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+      function saveJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+      var CHALLENGES = [
+        { day: 1, title: "Start a Casual Conversation", desc: "Say hi to someone you normally wouldn't talk to -- a classmate, colleague, barista, or someone in a queue. Ask a simple question like 'How's your day going?' or comment on something around you.", tips: "Keep it low-pressure. You are not trying to impress anyone. Just practice being social. Smile naturally.", difficulty: "easy", category: "Conversation", xp: 100 },
+        { day: 2, title: "Give a Genuine Compliment", desc: "Compliment someone on something specific and meaningful -- their style, a skill, or their energy. E.g. 'That's a really cool jacket, where did you get it?' or 'You explained that really well.'", tips: "Be specific and sincere. Do not compliment just looks. Notice something they chose or did. Then move on.", difficulty: "easy", category: "Confidence", xp: 100 },
+        { day: 3, title: "Make Eye Contact and Smile", desc: "Practice maintaining comfortable eye contact with people you interact with today. Hold it for 2-3 seconds, then smile naturally and look away.", tips: "This builds presence. You are not staring -- just being present. Practice with friends, cashiers, or anyone you greet.", difficulty: "easy", category: "Confidence", xp: 100 },
+        { day: 4, title: "Ask Open-Ended Questions", desc: "In any conversation today, ask at least 2 open-ended questions that start with 'What', 'How', or 'Why'. E.g. 'What made you choose that?' or 'How did that make you feel?'", tips: "Open-ended questions invite real conversation. Show genuine curiosity, not interrogation.", difficulty: "easy", category: "Conversation", xp: 120 },
+        { day: 5, title: "Active Listening Practice", desc: "In your next conversation, focus entirely on listening. Do not think about what to say next. Summarize what they said before responding: 'So you mean...?' or 'That sounds like...'", tips: "Active listening is the most underrated social skill. People love feeling heard. Practice today.", difficulty: "easy", category: "Conversation", xp: 120 },
+        { day: 6, title: "Handle a Small Rejection", desc: "Ask for something small and accept 'no' gracefully. Ask someone for their seat, ask for a discount, or ask a friend to hang out when they are busy. Practice being okay with a no.", tips: "Rejection is not personal. The goal is to get comfortable hearing no. Smile and say 'No worries!' It gets easier.", difficulty: "medium", category: "Handling Rejection", xp: 150 },
+        { day: 7, title: "Share Something Personal", desc: "Share a genuine thought, opinion, or small story with someone today. Not surface-level small talk -- something real about what you think, feel, or enjoy.", tips: "Vulnerability is strength. You do not need to share deep secrets. Just be authentic instead of guarded.", difficulty: "medium", category: "Confidence", xp: 150 },
+        { day: 8, title: "Practice Flirty Banter", desc: "Have a lighthearted, playful exchange with someone. Tease gently about something fun, use witty observations, or make a playful comment about the situation you are both in.", tips: "Banter is about matching energy and having fun. Never target insecurities. Keep it light and smile.", difficulty: "medium", category: "Flirting", xp: 150 },
+        { day: 9, title: "Read Social Signals", desc: "Observe people around you today. Can you tell who is open to conversation and who is not? Notice body language, eye contact, and energy. Practice reading the room before approaching.", tips: "Respect is non-negotiable. If someone looks busy, uncomfortable, or avoids eye contact -- leave them be. Social awareness is key.", difficulty: "medium", category: "Social Skills", xp: 150 },
+        { day: 10, title: "Start a Conversation with a Stranger", desc: "Approach someone in a social setting (cafe, park, event) and start a genuine conversation. Comment on something shared -- the event, the food, the weather -- and see where it goes.", tips: "Keep it natural. You are not performing. Just be curious and friendly. If they engage, great. If not, move on gracefully.", difficulty: "medium", category: "Social Skills", xp: 180 },
+        { day: 11, title: "Use Humor in Conversation", desc: "Make someone laugh today -- a friend, colleague, or stranger. Use observational humor, a playful comment, or a funny story. The goal is to make them smile, not to perform stand-up.", tips: "Humor is connection. The best humor comes from shared moments, not scripted jokes. Be playful.", difficulty: "medium", category: "Flirting", xp: 180 },
+        { day: 12, title: "Set a Boundary", desc: "Say no to something you do not want to do today. Politely decline an invitation, disagree with an opinion, or express a preference clearly. Practice being honest without being rude.", tips: "Boundaries are confidence in action. You can say no with kindness. 'Thanks, but I will pass' is enough.", difficulty: "medium", category: "Confidence", xp: 180 },
+        { day: 13, title: "Body Language Awareness", desc: "Notice your body language today. Are you crossing your arms, looking down at your phone, hunching? Practice open posture -- uncrossed arms, relaxed shoulders, genuine smile.", tips: "Your body language tells people how to treat you before you speak. Stand tall, take up space, look up.", difficulty: "easy", category: "Confidence", xp: 120 },
+        { day: 14, title: "Write an Authentic Bio", desc: "Write or rewrite a dating profile bio. Make it specific, genuine, and memorable. Avoid generic phrases like 'I love to travel.' Instead, write what you actually love about it.", tips: "Specific details make you memorable. Show personality, not a resume. Have fun with it.", difficulty: "medium", category: "Texting", xp: 150 },
+        { day: 15, title: "Send a Thoughtful Message", desc: "Text someone (friend or date) with a thoughtful, specific message. Reference something they told you before. E.g. 'How did that meeting go?' or 'Did you try that recipe?'", tips: "Thoughtful messages show you listen and care. It is the opposite of generic 'hey' texts. Be specific.", difficulty: "easy", category: "Texting", xp: 120 },
+        { day: 16, title: "Practice the 'Callback' Technique", desc: "In a conversation or text, reference something from an earlier conversation. 'Remember when you said...?' This shows you were listening and creates connection.", tips: "Callbacks make people feel special. It shows you pay attention and value what they share.", difficulty: "medium", category: "Texting", xp: 150 },
+        { day: 17, title: "Handle Awkward Silence", desc: "Let a conversation have a natural pause today. Do not rush to fill it. Sit with the silence for 5 seconds. Then ask a genuine question or make a comment about the moment.", tips: "Silence is only awkward if you make it. Comfortable silence is a sign of real connection. Breathe.", difficulty: "medium", category: "Conversation", xp: 150 },
+        { day: 18, title: "Practice the 'Callback' Flirt", desc: "In a conversation, reference something playful from earlier. 'You mentioned you like coffee -- I just found the best cafe, you would love it.' Callbacks create inside jokes.", tips: "Flirty callbacks make conversations feel special and create shared moments. Keep it light.", difficulty: "hard", category: "Flirting", xp: 200 },
+        { day: 19, title: "Navigate a Disagreement", desc: "Have a respectful disagreement with someone today. Express your opinion calmly, listen to theirs, and do not try to 'win'. The goal is to be honest while staying respectful.", tips: "Mature disagreement is attractive. You can disagree without being disagreeable. Stay calm, be curious.", difficulty: "hard", category: "Social Skills", xp: 200 },
+        { day: 20, title: "Ask for What You Want", desc: "Ask for something you want today -- a promotion, a date, help with something, or a favor. Be clear and direct. No hints, no passive-aggression. Just ask.", tips: "Direct communication is confidence. The worst they can say is no, and you already practiced handling that.", difficulty: "hard", category: "Confidence", xp: 200 },
+        { day: 21, title: "Plan a Real Date", desc: "Plan an actual date or social outing. Pick a place, choose an activity, and invite someone. It can be coffee, a walk, a museum visit -- anything where you can talk and connect.", tips: "A good date is about connection, not performance. Pick something you both enjoy. Keep it simple.", difficulty: "hard", category: "Dating", xp: 250 },
+        { day: 22, title: "Practice Vulnerability", desc: "Share something real about yourself with someone -- a fear, a dream, or something that matters to you. Not a surface fact, but something that shows who you really are.", tips: "Vulnerability is the fastest way to real connection. Start small. You do not need to share everything.", difficulty: "hard", category: "Confidence", xp: 200 },
+        { day: 23, title: "Read and Respond to Text Energy", desc: "Check your recent texts. Match the energy of the person you are texting -- if they are playful, be playful. If they are serious, be thoughtful. Do not over-text.", tips: "Texting is about rhythm. Match their energy, respond thoughtfully, and do not send 5 messages when they send 1.", difficulty: "medium", category: "Texting", xp: 150 },
+        { day: 24, title: "Give a Meaningful Compliment", desc: "Give someone a compliment that goes deeper than appearance. Compliment their character, their humor, their kindness, or how they made you feel.", tips: "Meaningful compliments stay with people. 'You make people feel comfortable' is more powerful than 'nice shirt.'", difficulty: "medium", category: "Flirting", xp: 180 },
+        { day: 25, title: "Handle Mixed Signals", desc: "Reflect on a time you received mixed signals. Write down what happened, what you felt, and what a mature response would be. Practice emotional regulation.", tips: "Mixed signals are confusing. The mature response is to communicate directly: 'I am getting mixed signals, can we talk about it?'", difficulty: "hard", category: "Handling Rejection", xp: 200 },
+        { day: 26, title: "Be Comfortable Alone", desc: "Spend time alone in public today -- eat at a cafe alone, walk in a park, go to a movie. Practice being comfortable without needing company.", tips: "Confidence starts with being comfortable with yourself. If you cannot enjoy your own company, you cannot truly connect with others.", difficulty: "medium", category: "Confidence", xp: 150 },
+        { day: 27, title: "Practice the 'Exit' Gracefully", desc: "End a conversation gracefully today. Do not ghost or sneak away. Say 'It was great talking to you, I will catch you later' or a simple honest exit.", tips: "How you leave a conversation matters as much as how you start it. Be kind, be clear, be warm.", difficulty: "easy", category: "Social Skills", xp: 120 },
+        { day: 28, title: "Write a Rizz-Heavy Opener", desc: "Using what you have learned, write 3 different conversation openers for a dating app or real-life situation. Make them specific, genuine, and personality-driven.", tips: "Great openers reference something specific about the person or situation. Show you are paying attention.", difficulty: "medium", category: "Texting", xp: 150 },
+        { day: 29, title: "Reflect and Journal", desc: "Write about your journey over the past 29 days. What did you learn about yourself? What was hardest? What are you most proud of? What do you want to keep working on?", tips: "Reflection turns experience into growth. Be honest with yourself. You have come further than you think.", difficulty: "easy", category: "Confidence", xp: 150 },
+        { day: 30, title: "Celebrate and Set Goals", desc: "Celebrate completing the challenge! Review your progress, acknowledge your growth, and set 3 goals for the next 30 days. Share your achievement if you feel comfortable.", tips: "You did it. This is not the end -- it is the beginning. Keep building. You are more confident than 30 days ago.", difficulty: "easy", category: "Confidence", xp: 300 }
+      ];
+
+      var BONUS_CHALLENGES = [
+        "Start a conversation with someone who looks like they need cheering up.",
+        "Write down 5 things you genuinely like about yourself.",
+        "Practice a 2-minute elevator pitch about who you are and what you love.",
+        "Send a thoughtful message to someone you haven't talked to in a while.",
+        "Go 1 hour without checking your phone in social situations.",
+        "Compliment someone's personality instead of their appearance.",
+        "Practice speaking 10% slower than usual in conversations today.",
+        "Write a list of 10 qualities you want in a partner.",
+        "Have a conversation where you ask 3 follow-up questions.",
+        "Do something that scares you a little today."
+      ];
+
+      var MILESTONES = [
+        { day: 5, title: "Compliment Initiator", emoji: "💬", msg: "You started conversations and gave genuine compliments. Foundation laid." },
+        { day: 10, title: "Social Navigator", emoji: "🧭", msg: "10 days in. You can read a room and start conversations with confidence." },
+        { day: 15, title: "Text Wizard", emoji: "✨", msg: "Halfway there! Your texts are thoughtful and your banter is on point." },
+        { day: 20, title: "Confidence Builder", emoji: "💪", msg: "20 days strong. You set boundaries and ask for what you want." },
+        { day: 25, title: "Connection Master", emoji: "🔗", msg: "You handle rejection, practice vulnerability, and build real connections." },
+        { day: 30, title: "Rizz Master", emoji: "👑", msg: "Challenge complete! You are confident, genuine, and socially skilled." }
+      ];
+
+      var BADGES = [
+        { id: "first_chat", title: "First Chat", emoji: "💬", condition: function (s) { return s.completedDays.length >= 1; } },
+        { id: "streak_3", title: "3-Day Streak", emoji: "🔥", condition: function (s) { return s.longestStreak >= 3; } },
+        { id: "streak_7", title: "7-Day Warrior", emoji: "⚡", condition: function (s) { return s.longestStreak >= 7; } },
+        { id: "streak_14", title: "14-Day Legend", emoji: "🌟", condition: function (s) { return s.longestStreak >= 14; } },
+        { id: "streak_30", title: "30-Day Champion", emoji: "👑", condition: function (s) { return s.longestStreak >= 30; } },
+        { id: "bonus_1", title: "Bonus Hunter", emoji: "⭐", condition: function (s) { return s.bonusDays.length >= 1; } },
+        { id: "bonus_5", title: "Bonus Master", emoji: "🏆", condition: function (s) { return s.bonusDays.length >= 5; } },
+        { id: "halfway", title: "Halfway There", emoji: "🎯", condition: function (s) { return s.completedDays.length >= 15; } },
+        { id: "all_easy", title: "Easy Street", emoji: "😊", condition: function (s) { return s.completedDays.length >= 7; } }
+      ];
+
+      var LEVELS = [
+        { level: 1, name: "Beginner", emoji: "🌱", xp: 0 },
+        { level: 2, name: "Learner", emoji: "📚", xp: 500 },
+        { level: 3, name: "Practicer", emoji: "🎯", xp: 1200 },
+        { level: 4, name: "Skilled", emoji: "⚡", xp: 2200 },
+        { level: 5, name: "Confident", emoji: "💪", xp: 3500 },
+        { level: 6, name: "Smooth", emoji: "😎", xp: 5000 },
+        { level: 7, name: "Rizzler", emoji: "🔥", xp: 7000 },
+        { level: 8, name: "Rizz Master", emoji: "👑", xp: 10000 }
+      ];
+
+      var MOTIVATIONS = [
+        { text: "Confidence is not about being loud. It is about being comfortable with who you are.", author: "Rizzora" },
+        { text: "Every conversation is a chance to make someone's day better.", author: "Rizzora" },
+        { text: "The best rizz is authenticity. Be yourself, and the right people will stay.", author: "Rizzora" },
+        { text: "Rejection is redirection. Every no brings you closer to the right yes.", author: "Rizzora" },
+        { text: "Genuine interest in others is the most attractive quality.", author: "Rizzora" },
+        { text: "Growth happens outside your comfort zone. Keep stretching.", author: "Rizzora" },
+        { text: "You do not need to be perfect. You just need to be present.", author: "Rizzora" },
+        { text: "Small daily courage builds extraordinary confidence over time.", author: "Rizzora" },
+        { text: "The goal is not to impress everyone. It is to connect with the right ones.", author: "Rizzora" },
+        { text: "You are worthy of love and connection exactly as you are.", author: "Rizzora" }
+      ];
+
+      function defaultState() {
+        return {
+          completedDays: [],
+          currentDay: 1,
+          streak: 0,
+          longestStreak: 0,
+          lastCompletedDate: null,
+          totalXP: 0,
+          bonusDays: [],
+          lastBonusDate: null,
+          skippedDays: [],
+          badgesUnlocked: [],
+          milestonesUnlocked: []
+        };
+      }
+
+      var state = loadJSON(CH_KEY);
+      if (!state || !state.completedDays) state = defaultState();
+
+      function getTodayStr() { return new Date().toISOString().split("T")[0]; }
+      function getYesterdayStr() { var d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().split("T")[0]; }
+
+      function recalcStreak() {
+        if (!state.lastCompletedDate) { state.streak = 0; return; }
+        var today = getTodayStr();
+        var yesterday = getYesterdayStr();
+        if (state.lastCompletedDate === today) { return; }
+        if (state.lastCompletedDate === yesterday) { return; }
+        state.streak = 0;
+      }
+
+      recalcStreak();
+
+      function getLevel(xp) {
+        var lvl = LEVELS[0];
+        for (var i = LEVELS.length - 1; i >= 0; i--) {
+          if (xp >= LEVELS[i].xp) { lvl = LEVELS[i]; break; }
+        }
+        var nextLvl = LEVELS[lvl.level] || null;
+        var progress = 0;
+        if (nextLvl) { progress = Math.min(100, Math.round(((xp - lvl.xp) / (nextLvl.xp - lvl.xp)) * 100)); }
+        else { progress = 100; }
+        return { current: lvl, next: nextLvl, progress: progress };
+      }
+
+      function getDifficultyColor(d) {
+        if (d === "easy") return { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/20" };
+        if (d === "medium") return { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20" };
+        return { bg: "bg-red-500/10", text: "text-red-400", border: "border-red-500/20" };
+      }
+
+      function renderStats() {
+        var completed = state.completedDays.length;
+        var pct = Math.round((completed / 30) * 100);
+        document.getElementById("ch-progress-bar").style.width = pct + "%";
+        document.getElementById("ch-progress-text").textContent = pct + "%";
+        document.getElementById("ch-stat-day").textContent = state.currentDay;
+        document.getElementById("ch-stat-streak").textContent = state.streak;
+        document.getElementById("ch-stat-xp").textContent = state.totalXP;
+        var lvl = getLevel(state.totalXP);
+        document.getElementById("ch-stat-level").textContent = lvl.current.level;
+        document.getElementById("ch-stat-badges").textContent = state.badgesUnlocked.length;
+        document.getElementById("ch-level-badge").textContent = lvl.current.emoji;
+        document.getElementById("ch-level-name").textContent = lvl.current.name;
+        document.getElementById("ch-level-sub").textContent = "Level " + lvl.current.level;
+        document.getElementById("ch-level-bar").style.width = lvl.progress + "%";
+        var nextXp = lvl.next ? lvl.next.xp : lvl.current.xp;
+        document.getElementById("ch-level-xp").textContent = state.totalXP + " / " + nextXp + " XP";
+      }
+
+      function renderToday() {
+        if (state.currentDay > 30) {
+          document.getElementById("ch-today-card").innerHTML =
+            '<div class="text-center py-8">' +
+            '<div class="text-5xl mb-4">🏆</div>' +
+            '<h2 class="text-xl font-extrabold text-white mb-2">Challenge Complete!</h2>' +
+            '<p class="text-sm text-slate-300 mb-4">You have completed all 30 days. Incredible journey.</p>' +
+            '<p class="text-xs text-slate-400">Total XP: <span class="font-bold text-amber-400">' + state.totalXP + '</span> | Longest Streak: <span class="font-bold text-amber-400">' + state.longestStreak + ' days</span></p>' +
+            '</div>';
+          return;
+        }
+        var c = CHALLENGES[state.currentDay - 1];
+        var dc = getDifficultyColor(c.difficulty);
+        document.getElementById("ch-today-difficulty").textContent = c.difficulty.charAt(0).toUpperCase() + c.difficulty.slice(1);
+        document.getElementById("ch-today-difficulty").className = "text-[10px] font-bold uppercase px-2 py-0.5 rounded-full " + dc.bg + " " + dc.text + " border " + dc.border;
+        document.getElementById("ch-today-xp").textContent = "+" + c.xp + " XP";
+        document.getElementById("ch-today-title").textContent = "Day " + c.day + ": " + c.title;
+        document.getElementById("ch-today-category").textContent = c.category;
+        document.getElementById("ch-today-desc").textContent = c.desc;
+        document.getElementById("ch-today-tips-text").textContent = c.tips;
+      }
+
+      function renderBonus() {
+        var today = getTodayStr();
+        var taken = state.bonusDays.indexOf(today) > -1;
+        var bonusIdx = (state.currentDay - 1) % BONUS_CHALLENGES.length;
+        document.getElementById("ch-bonus-text").textContent = BONUS_CHALLENGES[bonusIdx];
+        if (taken) {
+          document.getElementById("ch-bonus-status").textContent = "Completed today!";
+          document.getElementById("ch-bonus-status").className = "text-[10px] text-emerald-400";
+          document.getElementById("ch-bonus-btn").textContent = "Claimed ✓";
+          document.getElementById("ch-bonus-btn").disabled = true;
+          document.getElementById("ch-bonus-btn").className = "px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 rounded-lg cursor-default";
+        } else {
+          document.getElementById("ch-bonus-status").textContent = "Available today";
+          document.getElementById("ch-bonus-status").className = "text-[10px] text-slate-500";
+          document.getElementById("ch-bonus-btn").textContent = "Claim Bonus";
+          document.getElementById("ch-bonus-btn").disabled = false;
+          document.getElementById("ch-bonus-btn").className = "px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition cursor-pointer";
+        }
+      }
+
+      function renderRecovery() {
+        var card = document.getElementById("ch-recovery-card");
+        if (state.streak > 0 || state.completedDays.length === 0 || state.currentDay > 30) {
+          card.classList.add("hidden");
+          return;
+        }
+        if (state.totalXP < 200) {
+          card.classList.add("hidden");
+          return;
+        }
+        card.classList.remove("hidden");
+      }
+
+      function renderRoadmap() {
+        var grid = document.getElementById("ch-roadmap-grid");
+        grid.innerHTML = "";
+        var today = getTodayStr();
+        for (var i = 0; i < 30; i++) {
+          var dayNum = i + 1;
+          var completed = state.completedDays.indexOf(dayNum) > -1;
+          var isCurrent = dayNum === state.currentDay && state.currentDay <= 30;
+          var isBonus = state.bonusDays.length > 0 && dayNum <= state.completedDays.length;
+          var isLocked = dayNum > state.currentDay;
+
+          var el = document.createElement("div");
+          el.className = "aspect-square rounded-lg flex items-center justify-center text-xs font-bold border transition cursor-pointer relative";
+          el.setAttribute("data-day", dayNum);
+
+          if (completed) {
+            el.className += " bg-rose-500/30 border-rose-500 text-rose-300";
+          } else if (isCurrent) {
+            el.className += " bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20 animate-pulse";
+          } else if (isBonus && !isLocked) {
+            el.className += " bg-amber-500/20 border-amber-500 text-amber-300";
+          } else if (isLocked) {
+            el.className += " bg-slate-900/40 border-brand-border/40 text-slate-500";
+          } else {
+            el.className += " bg-slate-800 border-brand-border/60 text-slate-300 hover:border-slate-500";
+          }
+
+          el.textContent = dayNum;
+          el.addEventListener("click", function () {
+            var day = parseInt(this.getAttribute("data-day"));
+            if (day <= state.currentDay && day <= 30) {
+              var c = CHALLENGES[day - 1];
+              var dc = getDifficultyColor(c.difficulty);
+              document.getElementById("ch-today-difficulty").textContent = c.difficulty.charAt(0).toUpperCase() + c.difficulty.slice(1);
+              document.getElementById("ch-today-difficulty").className = "text-[10px] font-bold uppercase px-2 py-0.5 rounded-full " + dc.bg + " " + dc.text + " border " + dc.border;
+              document.getElementById("ch-today-xp").textContent = "+" + c.xp + " XP";
+              document.getElementById("ch-today-title").textContent = "Day " + c.day + ": " + c.title;
+              document.getElementById("ch-today-category").textContent = c.category;
+              document.getElementById("ch-today-desc").textContent = c.desc;
+              document.getElementById("ch-today-tips-text").textContent = c.tips;
+              if (completed) {
+                document.getElementById("ch-complete-btn").textContent = "Completed ✓";
+                document.getElementById("ch-complete-btn").disabled = true;
+                document.getElementById("ch-complete-btn").className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 rounded-xl cursor-default";
+              } else if (day < state.currentDay) {
+                document.getElementById("ch-complete-btn").textContent = "Already Passed";
+                document.getElementById("ch-complete-btn").disabled = true;
+                document.getElementById("ch-complete-btn").className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-slate-400 bg-slate-800 rounded-xl cursor-default";
+              } else {
+                document.getElementById("ch-complete-btn").textContent = "Mark as Complete";
+                document.getElementById("ch-complete-btn").disabled = false;
+                document.getElementById("ch-complete-btn").className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white bg-linear-to-r from-brand-primary to-brand-secondary rounded-xl hover:scale-105 transition cursor-pointer";
+              }
+            }
+          });
+
+          grid.appendChild(el);
+        }
+      }
+
+      function renderMilestones() {
+        var container = document.getElementById("ch-milestones");
+        container.innerHTML = "";
+        MILESTONES.forEach(function (m) {
+          var achieved = state.completedDays.length >= m.day;
+          var div = document.createElement("div");
+          div.className = "flex items-center justify-between text-xs p-3 rounded-xl border " + (achieved ? "bg-amber-500/10 border-amber-500/30" : "bg-slate-900/40 border-brand-border/20");
+          div.innerHTML = '<span class="text-slate-300">' + m.emoji + ' Day ' + m.day + ': ' + m.title + '</span>' +
+            '<span class="font-bold ' + (achieved ? "text-amber-400" : "text-slate-500") + '">' + (achieved ? "Achieved" : "Locked") + '</span>';
+          container.appendChild(div);
+        });
+      }
+
+      function renderBadges() {
+        var container = document.getElementById("ch-badges");
+        container.innerHTML = "";
+        BADGES.forEach(function (b) {
+          var unlocked = state.badgesUnlocked.indexOf(b.id) > -1;
+          var div = document.createElement("div");
+          div.className = "flex flex-col items-center p-2 rounded-xl border text-center " + (unlocked ? "bg-violet-500/10 border-violet-500/30" : "bg-slate-900/40 border-brand-border/20 opacity-40");
+          div.innerHTML = '<div class="text-2xl mb-1">' + (unlocked ? b.emoji : "🔒") + '</div>' +
+            '<div class="text-[9px] font-bold ' + (unlocked ? "text-slate-200" : "text-slate-500") + '">' + b.title + '</div>';
+          container.appendChild(div);
+        });
+      }
+
+      function renderMotivation() {
+        var idx = state.completedDays.length % MOTIVATIONS.length;
+        document.getElementById("ch-motivation").textContent = String.fromCharCode(8220) + MOTIVATIONS[idx].text + String.fromCharCode(8221);
+        document.getElementById("ch-motivation-author").textContent = "-- " + MOTIVATIONS[idx].author;
+      }
+
+      function checkBadges() {
+        var newBadge = null;
+        BADGES.forEach(function (b) {
+          if (state.badgesUnlocked.indexOf(b.id) === -1 && b.condition(state)) {
+            state.badgesUnlocked.push(b.id);
+            newBadge = b;
+          }
+        });
+        return newBadge;
+      }
+
+      function checkMilestones() {
+        var newMs = null;
+        MILESTONES.forEach(function (m) {
+          if (state.completedDays.length >= m.day && state.milestonesUnlocked.indexOf(m.day) === -1) {
+            state.milestonesUnlocked.push(m.day);
+            newMs = m;
+          }
+        });
+        return newMs;
+      }
+
+      function renderAll() {
+        renderStats();
+        renderToday();
+        renderBonus();
+        renderRecovery();
+        renderRoadmap();
+        renderMilestones();
+        renderBadges();
+        renderMotivation();
+      }
+
+      // Mark Complete
+      document.getElementById("ch-complete-btn").addEventListener("click", function () {
+        if (state.currentDay > 30) return;
+        var today = getTodayStr();
+        if (state.completedDays.indexOf(state.currentDay) > -1) return;
+
+        state.completedDays.push(state.currentDay);
+
+        var c = CHALLENGES[state.currentDay - 1];
+        state.totalXP += c.xp;
+
+        if (!state.lastCompletedDate) {
+          state.streak = 1;
+        } else if (state.lastCompletedDate === getYesterdayStr() || state.lastCompletedDate === today) {
+          if (state.lastCompletedDate !== today) state.streak++;
+        } else {
+          state.streak = 1;
+        }
+        state.lastCompletedDate = today;
+        if (state.streak > state.longestStreak) state.longestStreak = state.streak;
+
+        state.currentDay++;
+
+        var badge = checkBadges();
+        var milestone = checkMilestones();
+
+        var user = loadJSON(USER_KEY) || { name: "User" };
+        user.xp = (user.xp || 0) + c.xp;
+        saveJSON(USER_KEY, user);
+
+        saveJSON(CH_KEY, state);
+
+        document.getElementById("ch-complete-xp").textContent = c.xp;
+        document.getElementById("ch-complete-msg").textContent = "Day " + c.day + ": " + c.title + " -- Done!";
+        document.getElementById("ch-complete-streak").textContent = "Current streak: " + state.streak + " day" + (state.streak > 1 ? "s" : "") + " 🔥 | Longest: " + state.longestStreak;
+        document.getElementById("ch-complete-modal").classList.remove("hidden");
+
+        renderAll();
+
+        if (badge) {
+          setTimeout(function () {
+            document.getElementById("ch-milestone-emoji").textContent = badge.emoji;
+            document.getElementById("ch-milestone-title").textContent = "Badge Unlocked!";
+            document.getElementById("ch-milestone-msg").textContent = badge.title + " -- " + "New achievement earned!";
+            document.getElementById("ch-milestone-modal").classList.remove("hidden");
+          }, 1500);
+        }
+        if (milestone) {
+          setTimeout(function () {
+            document.getElementById("ch-milestone-emoji").textContent = milestone.emoji;
+            document.getElementById("ch-milestone-title").textContent = "Milestone: " + milestone.title;
+            document.getElementById("ch-milestone-msg").textContent = milestone.msg;
+            document.getElementById("ch-milestone-modal").classList.remove("hidden");
+          }, badge ? 3000 : 1500);
+        }
+      });
+
+      // Skip
+      document.getElementById("ch-skip-btn").addEventListener("click", function () {
+        if (state.currentDay > 30) return;
+        state.skippedDays.push(state.currentDay);
+        state.currentDay++;
+        saveJSON(CH_KEY, state);
+        renderAll();
+      });
+
+      // Bonus
+      document.getElementById("ch-bonus-btn").addEventListener("click", function () {
+        var today = getTodayStr();
+        if (state.bonusDays.indexOf(today) > -1) return;
+        state.bonusDays.push(today);
+        state.lastBonusDate = today;
+        state.totalXP += 75;
+        saveJSON(CH_KEY, state);
+        var user = loadJSON(USER_KEY) || { name: "User" };
+        user.xp = (user.xp || 0) + 75;
+        saveJSON(USER_KEY, user);
+        renderAll();
+      });
+
+      // Streak Recovery
+      document.getElementById("ch-recovery-btn").addEventListener("click", function () {
+        if (state.totalXP < 200) return;
+        state.totalXP -= 200;
+        state.streak = 1;
+        state.lastCompletedDate = getYesterdayStr();
+        var user = loadJSON(USER_KEY) || { name: "User" };
+        user.xp = Math.max(0, (user.xp || 0) - 200);
+        saveJSON(USER_KEY, user);
+        saveJSON(CH_KEY, state);
+        renderAll();
+      });
+
+      // Close modals
+      document.getElementById("ch-complete-close").addEventListener("click", function () {
+        document.getElementById("ch-complete-modal").classList.add("hidden");
+      });
+      document.getElementById("ch-milestone-close").addEventListener("click", function () {
+        document.getElementById("ch-milestone-modal").classList.add("hidden");
+      });
+
+      // Share
+      document.getElementById("ch-share-btn").addEventListener("click", function () {
+        document.getElementById("ch-share-days").textContent = state.completedDays.length;
+        document.getElementById("ch-share-streak").textContent = state.longestStreak;
+        document.getElementById("ch-share-xp").textContent = state.totalXP;
+        document.getElementById("ch-share-badges").textContent = state.badgesUnlocked.length;
+        document.getElementById("ch-share-modal").classList.remove("hidden");
+      });
+      document.getElementById("ch-share-close").addEventListener("click", function () {
+        document.getElementById("ch-share-modal").classList.add("hidden");
+      });
+      document.getElementById("ch-share-copy").addEventListener("click", function () {
+        var text = "30-Day Challenge Progress\n" +
+          "Days: " + state.completedDays.length + "/30\n" +
+          "Longest Streak: " + state.longestStreak + " days\n" +
+          "Total XP: " + state.totalXP + "\n" +
+          "Badges: " + state.badgesUnlocked.length + "\n" +
+          "Building confidence with Rizzora";
+        navigator.clipboard.writeText(text).then(function () {
+          var btn = document.getElementById("ch-share-copy");
+          btn.textContent = "Copied!";
+          setTimeout(function () { btn.textContent = "Copy Stats"; }, 1500);
+        });
+      });
+      document.getElementById("ch-share-download").addEventListener("click", function () {
+        var card = document.getElementById("ch-share-card");
+        var canvas = document.createElement("canvas");
+        canvas.width = 600;
+        canvas.height = 400;
+        var ctx = canvas.getContext("2d");
+        var grad = ctx.createLinearGradient(0, 0, 600, 400);
+        grad.addColorStop(0, "#080d1a");
+        grad.addColorStop(1, "#1a1040");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 600, 400);
+        ctx.fillStyle = "#e11d48";
+        ctx.font = "bold 48px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(String.fromCodePoint(0x1F525), 300, 80);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 28px sans-serif";
+        ctx.fillText("30-Day Challenge Progress", 300, 130);
+        ctx.fillStyle = "#f59e0b";
+        ctx.font = "bold 56px sans-serif";
+        ctx.fillText(state.completedDays.length + "/30 Days", 300, 210);
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Streak: " + state.longestStreak + " days  |  XP: " + state.totalXP + "  |  Badges: " + state.badgesUnlocked.length, 300, 270);
+        ctx.fillStyle = "#64748b";
+        ctx.font = "14px sans-serif";
+        ctx.fillText("Building confidence with Rizzora", 300, 350);
+        var link = document.createElement("a");
+        link.download = "rizzora-challenge-progress.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+
+      // Init
+      renderAll();
+    })();
+  </script>
+</Layout>

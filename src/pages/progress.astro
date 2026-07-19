@@ -1,0 +1,878 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="My Progress | Rizzora">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10" id="prog-root">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+      <div>
+        <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          Back to Dashboard
+        </a>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white" id="prog-greeting">My Progress</h1>
+        <p class="text-slate-400 mt-1 text-sm">Your complete Rizzora journey — scores, growth, achievements & milestones.</p>
+      </div>
+      <button id="prog-share-btn" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 rounded-full hover:scale-105 transition shadow-lg shadow-rose-500/20 shrink-0 cursor-pointer">
+        Share Progress Card
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div id="prog-empty" class="hidden max-w-lg mx-auto text-center glass p-10 sm:p-14 rounded-2xl">
+      <div class="text-5xl mb-4">📊</div>
+      <h3 class="text-lg font-bold text-slate-300">No activity yet</h3>
+      <p class="text-sm text-slate-500 mt-2">Start using Rizzora features to see your progress here. Try a Conversation Simulation or take the 30-Day Challenge!</p>
+      <a href="/conversation-simulator" class="inline-block mt-6 px-6 py-3 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition">Start First Session</a>
+    </div>
+
+    <!-- Progress Content -->
+    <div id="prog-content" class="hidden space-y-8">
+
+      <!-- QUICK STATS -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass p-5 rounded-xl border border-brand-border/60 relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 w-20 h-20 bg-rose-500/10 rounded-full blur-xl"></div>
+          <span class="text-[10px] uppercase font-bold text-slate-500 block">Rizz Score</span>
+          <div class="text-2xl font-black mt-2 text-rose-400" id="qs-rizz-score">—</div>
+          <span class="text-[10px] text-slate-400 block mt-1" id="qs-rizz-change">No data yet</span>
+        </div>
+        <div class="glass p-5 rounded-xl border border-brand-border/60 relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 w-20 h-20 bg-violet-500/10 rounded-full blur-xl"></div>
+          <span class="text-[10px] uppercase font-bold text-slate-500 block">Total XP</span>
+          <div class="text-2xl font-black mt-2 text-violet-400" id="qs-xp">—</div>
+          <span class="text-[10px] text-slate-400 block mt-1" id="qs-level">Level 1</span>
+        </div>
+        <div class="glass p-5 rounded-xl border border-brand-border/60 relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 w-20 h-20 bg-amber-500/10 rounded-full blur-xl"></div>
+          <span class="text-[10px] uppercase font-bold text-slate-500 block">Current Streak</span>
+          <div class="text-2xl font-black mt-2 text-amber-400" id="qs-streak">0 Days</div>
+          <span class="text-[10px] text-slate-400 block mt-1" id="qs-streak-sub">Keep it going!</span>
+        </div>
+        <div class="glass p-5 rounded-xl border border-brand-border/60 relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl"></div>
+          <span class="text-[10px] uppercase font-bold text-slate-500 block">Total Activities</span>
+          <div class="text-2xl font-black mt-2 text-emerald-400" id="qs-total">0</div>
+          <span class="text-[10px] text-slate-400 block mt-1" id="qs-total-sub">Sessions completed</span>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200 mb-4">Rizz Score Trend</h3>
+          <div class="relative h-40" id="chart-rizz">
+            <div class="absolute inset-0 flex items-end justify-between gap-1 px-1" id="chart-rizz-bars"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-px bg-brand-border/40"></div>
+          </div>
+          <div class="flex justify-between text-[9px] text-slate-500 mt-2 px-1" id="chart-rizz-labels"></div>
+        </div>
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200 mb-4">XP Growth</h3>
+          <div class="relative h-40" id="chart-xp">
+            <div class="absolute inset-0 flex items-end justify-between gap-1 px-1" id="chart-xp-bars"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-px bg-brand-border/40"></div>
+          </div>
+          <div class="flex justify-between text-[9px] text-slate-500 mt-2 px-1" id="chart-xp-labels"></div>
+        </div>
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200 mb-4">Activity Breakdown</h3>
+          <div id="chart-activity" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <!-- FEATURE PROGRESS CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="glass p-5 rounded-2xl border border-brand-border/60">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🔥</span>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">30-Day Challenge</h4>
+              <span class="text-[10px] text-slate-500" id="fp-challenge-status">Not started</span>
+            </div>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-2 mb-2">
+            <div id="fp-challenge-bar" class="bg-linear-to-r from-rose-500 to-orange-500 h-2 rounded-full transition-all duration-700" style="width:0%"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-500">
+            <span id="fp-challenge-days">0 / 30 days</span>
+            <span id="fp-challenge-xp">0 XP earned</span>
+          </div>
+        </div>
+        <div class="glass p-5 rounded-2xl border border-brand-border/60">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🗣️</span>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Conversation Simulator</h4>
+              <span class="text-[10px] text-slate-500" id="fp-sim-status">No sessions</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center mt-3">
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-emerald-400" id="fp-sim-count">0</div>
+              <div class="text-[9px] text-slate-500">Sessions</div>
+            </div>
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-rose-400" id="fp-sim-avg">0</div>
+              <div class="text-[9px] text-slate-500">Avg Score</div>
+            </div>
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-violet-400" id="fp-sim-best">0</div>
+              <div class="text-[9px] text-slate-500">Best Score</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass p-5 rounded-2xl border border-brand-border/60">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🎯</span>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Crush Mode</h4>
+              <span class="text-[10px] text-slate-500" id="fp-crush-status">No activity</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-center mt-3">
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-pink-400" id="fp-crush-count">0</div>
+              <div class="text-[9px] text-slate-500">Sessions</div>
+            </div>
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-amber-400" id="fp-crush-xp">0</div>
+              <div class="text-[9px] text-slate-500">XP Earned</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass p-5 rounded-2xl border border-brand-border/60">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🔍</span>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Interest Check</h4>
+              <span class="text-[10px] text-slate-500" id="fp-interest-status">No checks done</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-center mt-3">
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-indigo-400" id="fp-interest-count">0</div>
+              <div class="text-[9px] text-slate-500">Checks Done</div>
+            </div>
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-emerald-400" id="fp-interest-xp">0</div>
+              <div class="text-[9px] text-slate-500">XP Earned</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass p-5 rounded-2xl border border-brand-border/60">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">✨</span>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Profile Coach</h4>
+              <span class="text-[10px] text-slate-500" id="fp-profile-status">No profiles checked</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-center mt-3">
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-pink-400" id="fp-profile-count">0</div>
+              <div class="text-[9px] text-slate-500">Reviews</div>
+            </div>
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-amber-400" id="fp-profile-avg">0%</div>
+              <div class="text-[9px] text-slate-500">Avg Score</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass p-5 rounded-2xl border border-brand-border/60">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">⚡</span>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Messaging Tools</h4>
+              <span class="text-[10px] text-slate-500" id="fp-messaging-status">No messages reworked</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-center mt-3">
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-amber-400" id="fp-flirt-count">0</div>
+              <div class="text-[9px] text-slate-500">Flirt Coach</div>
+            </div>
+            <div class="bg-slate-900/60 rounded-lg p-2">
+              <div class="text-lg font-bold text-sky-400" id="fp-wsti-count">0</div>
+              <div class="text-[9px] text-slate-500">WSTI Texts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STRENGTHS & IMPROVEMENT -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-400 mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Your Strengths
+          </h3>
+          <div id="prog-strengths" class="space-y-3"></div>
+        </div>
+        <div class="glass p-6 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-amber-400 mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span> Areas to Improve
+          </h3>
+          <div id="prog-improve" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <!-- ACHIEVEMENTS -->
+      <div class="glass p-6 rounded-2xl">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200 mb-4 border-b border-brand-border/40 pb-3">Achievements & Badges</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="prog-achievements"></div>
+      </div>
+
+      <!-- RECENT MILESTONES -->
+      <div class="glass p-6 rounded-2xl">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200 mb-4 border-b border-brand-border/40 pb-3">Recent Milestones</h3>
+        <div id="prog-milestones" class="space-y-3"></div>
+      </div>
+
+      <!-- YOUR GROWTH -->
+      <div class="glass-accent p-6 rounded-2xl border border-rose-500/20 relative overflow-hidden">
+        <div class="absolute right-0 top-0 translate-x-12 -translate-y-12 w-32 h-32 bg-brand-primary/10 rounded-full blur-2xl"></div>
+        <span class="text-xs font-bold uppercase tracking-wider text-rose-400 px-2 py-0.5 bg-rose-500/10 rounded-md">Your Growth Summary</span>
+        <h3 class="text-lg font-bold text-slate-100 mt-4" id="growth-title">Getting to know you...</h3>
+        <p class="text-sm text-slate-300 mt-2 max-w-2xl leading-relaxed" id="growth-insight"></p>
+        <div class="mt-5 glass p-4 rounded-xl border border-brand-border/40">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-violet-400">Recommended Next Step</span>
+          <p class="text-sm text-slate-200 mt-1" id="growth-next"></p>
+          <a id="growth-next-link" href="/dashboard" class="inline-block mt-3 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 rounded-full hover:scale-105 transition">Go There Now</a>
+        </div>
+      </div>
+
+      <!-- ACTIVITY TIMELINE -->
+      <div class="glass p-6 rounded-2xl">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200 mb-4 border-b border-brand-border/40 pb-3">Activity History</h3>
+        <div class="hidden sm:block overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-brand-border/40 text-slate-500 font-semibold">
+                <th class="pb-3">Date</th>
+                <th class="pb-3">Feature</th>
+                <th class="pb-3">Details</th>
+                <th class="pb-3">Score/Output</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-brand-border/30" id="prog-timeline-table"></tbody>
+          </table>
+        </div>
+        <div class="sm:hidden space-y-3" id="prog-timeline-mobile"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SHARE CARD MODAL -->
+  <div id="share-modal" class="hidden fixed inset-0 z-[100] bg-brand-dark/95 backdrop-blur-sm flex items-center justify-center px-4">
+    <div class="w-full max-w-md glass rounded-3xl border border-brand-border/60 p-6 sm:p-8 relative">
+      <button id="share-close" class="absolute top-4 right-4 text-slate-400 hover:text-white transition cursor-pointer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <h3 class="text-lg font-bold text-slate-100 mb-1">Share Progress Card</h3>
+      <p class="text-xs text-slate-400 mb-5">Privacy-safe — only shows stats, never conversations, names, or personal details.</p>
+      <div id="share-card-preview" class="rounded-xl overflow-hidden border border-brand-border/40 mb-5">
+        <canvas id="share-canvas" width="400" height="520" class="w-full block"></canvas>
+      </div>
+      <div class="flex gap-3">
+        <button id="share-download" class="flex-1 py-3 text-xs font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-xl transition cursor-pointer">Download PNG</button>
+        <button id="share-copy" class="flex-1 py-3 text-xs font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-xl transition cursor-pointer">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      var KEYS = {
+        user: "rizzora_user",
+        scoreHistory: "rizzora_score_history",
+        simulator: "rizzora_simulator",
+        crushMode: "rizzora_crush_mode",
+        interestCheck: "rizzora_interest_check",
+        profileScores: "rizzora_profile_scores",
+        challenge: "rizzora_challenge",
+        flirtCoach: "rizzora_flirt_coach",
+        wsti: "rizzora_wsti",
+        datePlans: "rizzora_date_plans"
+      };
+
+      function load(key) {
+        try { var r = localStorage.getItem(key); return r ? JSON.parse(r) : null; }
+        catch { return null; }
+      }
+      function loadArr(key) { var d = load(key); return Array.isArray(d) ? d : []; }
+
+      var user = load(KEYS.user) || {};
+      var scoreHistory = loadArr(KEYS.scoreHistory);
+      var simSessions = loadArr(KEYS.simulator);
+      var crushActivities = loadArr(KEYS.crushMode);
+      var interestChecks = loadArr(KEYS.interestCheck);
+      var profileScores = loadArr(KEYS.profileScores);
+      var challenge = load(KEYS.challenge) || { completedDays: [], streak: 0, longestStreak: 0, totalXP: 0, bonusDays: [], badgesUnlocked: [], milestonesUnlocked: [] };
+      var flirtActivities = loadArr(KEYS.flirtCoach);
+      var wstiActivities = loadArr(KEYS.wsti);
+      var datePlans = loadArr(KEYS.datePlans);
+
+      var totalActivities = scoreHistory.length + simSessions.length + crushActivities.length + interestChecks.length + profileScores.length + (challenge.completedDays ? challenge.completedDays.length : 0) + flirtActivities.length + wstiActivities.length + datePlans.length;
+
+      if (totalActivities === 0) {
+        document.getElementById("prog-empty").classList.remove("hidden");
+        document.getElementById("prog-content").classList.add("hidden");
+        return;
+      }
+      document.getElementById("prog-empty").classList.add("hidden");
+      document.getElementById("prog-content").classList.remove("hidden");
+
+      if (user.name) {
+        document.getElementById("prog-greeting").textContent = user.name + "'s Progress";
+      }
+
+      // XP & Level
+      var xpThresholds = [0, 500, 1500, 3000, 5000, 8000, 12000, 17000, 23000];
+      var levelTitles = ["Curious Learner", "Growing Communicator", "Empathetic Communicator", "Smooth Operator", "Confident Connector", "Rizz Master", "Dating Legend", "Elite Rizzler", "Rizz God"];
+      var totalXP = user.xp || 0;
+      if (challenge.totalXP) totalXP += challenge.totalXP;
+      totalXP += crushActivities.length * 80;
+      totalXP += interestChecks.length * 40;
+      totalXP += profileScores.length * 50;
+      totalXP += flirtActivities.length * 30;
+      totalXP += wstiActivities.length * 30;
+      totalXP += datePlans.length * 60;
+
+      var currentLevel = 1;
+      var levelTitle = levelTitles[0];
+      for (var i = xpThresholds.length - 1; i >= 0; i--) {
+        if (totalXP >= xpThresholds[i]) { currentLevel = i + 1; levelTitle = levelTitles[i]; break; }
+      }
+
+      // Rizz Score
+      var scoreHistoryScores = scoreHistory.map(function (s) { return s.overall || 0; });
+      var latestScore = scoreHistoryScores.length > 0 ? scoreHistoryScores[0] : (user.lastScore || 0);
+      var prevScore = scoreHistoryScores.length > 1 ? scoreHistoryScores[1] : latestScore;
+      var scoreChange = latestScore - prevScore;
+
+      // Streak
+      var mainStreak = user.streak || challenge.streak || 0;
+
+      // Quick Stats
+      document.getElementById("qs-rizz-score").textContent = latestScore + "/100";
+      document.getElementById("qs-rizz-change").textContent = scoreChange > 0 ? "+" + scoreChange + " pts improvement" : scoreChange < 0 ? scoreChange + " pts to recover" : "Steady performance";
+      document.getElementById("qs-xp").textContent = totalXP.toLocaleString();
+      document.getElementById("qs-level").textContent = "Level " + currentLevel + " — " + levelTitle;
+      document.getElementById("qs-streak").textContent = mainStreak + " Day" + (mainStreak !== 1 ? "s" : "");
+      document.getElementById("qs-streak-sub").textContent = mainStreak >= 7 ? "On fire!" : mainStreak >= 3 ? "Building momentum" : "Keep going!";
+      document.getElementById("qs-total").textContent = totalActivities;
+
+      var featuresUsedCount = 0;
+      if (simSessions.length) featuresUsedCount++;
+      if (crushActivities.length) featuresUsedCount++;
+      if (interestChecks.length) featuresUsedCount++;
+      if (profileScores.length) featuresUsedCount++;
+      if (flirtActivities.length) featuresUsedCount++;
+      if (wstiActivities.length) featuresUsedCount++;
+      if (datePlans.length) featuresUsedCount++;
+      if (scoreHistory.length) featuresUsedCount++;
+      if (challenge.completedDays && challenge.completedDays.length) featuresUsedCount++;
+      document.getElementById("qs-total-sub").textContent = featuresUsedCount + " features used";
+
+      // Rizz Score Chart
+      (function () {
+        var container = document.getElementById("chart-rizz-bars");
+        var labelsEl = document.getElementById("chart-rizz-labels");
+        if (!scoreHistoryScores.length) {
+          container.innerHTML = '<div class="flex items-center justify-center w-full text-[10px] text-slate-500">No score data yet</div>';
+          return;
+        }
+        var displayScores = scoreHistoryScores.slice(0, 14).reverse();
+        var maxScore = Math.max.apply(null, displayScores.concat([100]));
+        var colors = ["#db2777","#a855f7","#6366f1","#3b82f6","#10b981","#f59e0b","#ef4444","#ec4899","#8b5cf6","#6366f1","#3b82f6","#10b981","#f59e0b","#ef4444"];
+        var html = "";
+        for (var i = 0; i < displayScores.length; i++) {
+          var h = Math.max(8, (displayScores[i] / maxScore) * 100);
+          html += '<div class="flex-1 rounded-t-sm transition-all duration-700 hover:opacity-80" style="height:' + h + '%;background:' + colors[i % colors.length] + ';opacity:0.8" title="Score: ' + displayScores[i] + '"></div>';
+        }
+        container.innerHTML = html;
+        var lhtml = "";
+        for (var i = 0; i < displayScores.length; i++) {
+          lhtml += '<span>' + (i % 3 === 0 ? displayScores[i] : '') + '</span>';
+        }
+        labelsEl.innerHTML = lhtml;
+      })();
+
+      // XP Growth Chart
+      (function () {
+        var container = document.getElementById("chart-xp-bars");
+        var labelsEl = document.getElementById("chart-xp-labels");
+        var xpTimeline = scoreHistory.map(function (s) { return s.xp || 0; }).reverse();
+        if (xpTimeline.length < 2) {
+          xpTimeline = [Math.max(0, totalXP - 300), Math.max(0, totalXP - 200), Math.max(0, totalXP - 100), totalXP];
+        }
+        var maxXP = Math.max.apply(null, xpTimeline.concat([1]));
+        var html = "";
+        for (var i = 0; i < xpTimeline.length; i++) {
+          var h = Math.max(8, (xpTimeline[i] / maxXP) * 100);
+          html += '<div class="flex-1 rounded-t-sm transition-all duration-700" style="height:' + h + '%;background:linear-gradient(to top, #8b5cf6, #db2777);opacity:0.8" title="XP: ' + xpTimeline[i] + '"></div>';
+        }
+        container.innerHTML = html;
+        var lhtml = "";
+        for (var i = 0; i < xpTimeline.length; i++) {
+          lhtml += '<span>' + (i % 2 === 0 ? xpTimeline[i] : '') + '</span>';
+        }
+        labelsEl.innerHTML = lhtml;
+      })();
+
+      // Activity Breakdown Chart
+      (function () {
+        var container = document.getElementById("chart-activity");
+        var items = [
+          { label: "Simulator", count: simSessions.length, color: "bg-emerald-500" },
+          { label: "30-Day Challenge", count: (challenge.completedDays || []).length, color: "bg-orange-500" },
+          { label: "Crush Mode", count: crushActivities.length, color: "bg-pink-500" },
+          { label: "Interest Check", count: interestChecks.length, color: "bg-indigo-500" },
+          { label: "Profile Coach", count: profileScores.length, color: "bg-violet-500" },
+          { label: "Flirt Coach", count: flirtActivities.length, color: "bg-amber-500" },
+          { label: "WSTI", count: wstiActivities.length, color: "bg-sky-500" },
+          { label: "Date Plans", count: datePlans.length, color: "bg-purple-500" },
+          { label: "Rizz Score", count: scoreHistory.length, color: "bg-rose-500" }
+        ].filter(function (x) { return x.count > 0; }).sort(function (a, b) { return b.count - a.count; });
+        if (!items.length) {
+          container.innerHTML = '<div class="text-[10px] text-slate-500 text-center py-4">No activity data</div>';
+          return;
+        }
+        var maxCount = Math.max.apply(null, items.map(function (x) { return x.count; }));
+        var html = "";
+        for (var i = 0; i < items.length; i++) {
+          var pct = Math.round((items[i].count / maxCount) * 100);
+          html += '<div class="flex items-center gap-3">' +
+            '<span class="text-[10px] text-slate-400 w-24 shrink-0 truncate">' + items[i].label + '</span>' +
+            '<div class="flex-1 bg-slate-800 rounded-full h-2">' +
+            '<div class="h-2 rounded-full ' + items[i].color + ' transition-all duration-700" style="width:' + pct + '%"></div>' +
+            '</div>' +
+            '<span class="text-[10px] font-bold text-slate-300 w-8 text-right">' + items[i].count + '</span>' +
+            '</div>';
+        }
+        container.innerHTML = html;
+      })();
+
+      // Feature Progress Cards
+      (function () {
+        var cDays = (challenge.completedDays || []).length;
+        document.getElementById("fp-challenge-bar").style.width = Math.round((cDays / 30) * 100) + "%";
+        document.getElementById("fp-challenge-days").textContent = cDays + " / 30 days";
+        document.getElementById("fp-challenge-xp").textContent = (challenge.totalXP || 0) + " XP earned";
+        document.getElementById("fp-challenge-status").textContent = cDays === 0 ? "Not started" : cDays >= 30 ? "Completed!" : "Day " + cDays + " in progress";
+
+        document.getElementById("fp-sim-count").textContent = simSessions.length;
+        if (simSessions.length > 0) {
+          var sScores = simSessions.map(function (s) {
+            if (s.overall) return s.overall;
+            var m = s.metrics || {};
+            return Math.round(((m.confidence||0) + (m.humor||0) + (m.flow||0) + (m.listening||0) + (m.flirting||0) + (m.respect||0)) / 6);
+          });
+          var avg = Math.round(sScores.reduce(function (a,b){return a+b;},0) / sScores.length);
+          document.getElementById("fp-sim-avg").textContent = avg;
+          document.getElementById("fp-sim-best").textContent = Math.max.apply(null, sScores);
+          document.getElementById("fp-sim-status").textContent = simSessions.length + " session" + (simSessions.length !== 1 ? "s" : "") + " completed";
+        }
+
+        document.getElementById("fp-crush-count").textContent = crushActivities.length;
+        document.getElementById("fp-crush-xp").textContent = crushActivities.length * 80;
+        document.getElementById("fp-crush-status").textContent = crushActivities.length ? crushActivities.length + " sessions" : "No activity";
+
+        document.getElementById("fp-interest-count").textContent = interestChecks.length;
+        document.getElementById("fp-interest-xp").textContent = interestChecks.length * 40;
+        document.getElementById("fp-interest-status").textContent = interestChecks.length ? interestChecks.length + " checks done" : "No checks done";
+
+        document.getElementById("fp-profile-count").textContent = profileScores.length;
+        if (profileScores.length > 0) {
+          var pScores = profileScores.map(function (s) { return s.score || 0; });
+          document.getElementById("fp-profile-avg").textContent = Math.round(pScores.reduce(function(a,b){return a+b;},0) / pScores.length) + "%";
+          document.getElementById("fp-profile-status").textContent = profileScores.length + " profile" + (profileScores.length !== 1 ? "s" : "") + " reviewed";
+        }
+
+        document.getElementById("fp-flirt-count").textContent = flirtActivities.length;
+        document.getElementById("fp-wsti-count").textContent = wstiActivities.length;
+        var totalMsg = flirtActivities.length + wstiActivities.length;
+        document.getElementById("fp-messaging-status").textContent = totalMsg ? totalMsg + " messages reworked" : "No messages reworked";
+      })();
+
+      // Strengths & Improvement
+      (function () {
+        var strengthsEl = document.getElementById("prog-strengths");
+        var improveEl = document.getElementById("prog-improve");
+        var metrics = null;
+        if (simSessions.length > 0 && simSessions[0].metrics) {
+          metrics = simSessions[0].metrics;
+        } else if (scoreHistory.length > 0 && scoreHistory[0].metrics) {
+          metrics = scoreHistory[0].metrics;
+        }
+        var categories = {
+          confidence: { name: "Confidence", icon: "💪" },
+          humor: { name: "Humor", icon: "😄" },
+          flow: { name: "Conversation Flow", icon: "🌊" },
+          listening: { name: "Active Listening", icon: "👂" },
+          flirting: { name: "Flirting", icon: "✨" },
+          respect: { name: "Respect", icon: "🤝" }
+        };
+        if (metrics) {
+          var sorted = Object.keys(metrics).sort(function (a, b) { return metrics[b] - metrics[a]; });
+          var top3 = sorted.slice(0, 3);
+          var bottom3 = sorted.slice(-3).reverse();
+          var shtml = "";
+          for (var i = 0; i < top3.length; i++) {
+            var cat = categories[top3[i]] || { name: top3[i], icon: "•" };
+            shtml += '<div class="flex items-center gap-3 p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10">' +
+              '<span class="text-lg">' + cat.icon + '</span>' +
+              '<div class="flex-1">' +
+              '<div class="text-xs font-bold text-slate-200">' + cat.name + '</div>' +
+              '<div class="flex items-center gap-2 mt-1">' +
+              '<div class="flex-1 bg-slate-800 rounded-full h-1.5"><div class="h-1.5 rounded-full bg-emerald-500" style="width:' + metrics[top3[i]] + '%"></div></div>' +
+              '<span class="text-[10px] font-bold text-emerald-400">' + metrics[top3[i]] + '%</span>' +
+              '</div></div></div>';
+          }
+          strengthsEl.innerHTML = shtml;
+          var ihtml = "";
+          for (var i = 0; i < bottom3.length; i++) {
+            var cat = categories[bottom3[i]] || { name: bottom3[i], icon: "•" };
+            ihtml += '<div class="flex items-center gap-3 p-3 bg-amber-500/5 rounded-xl border border-amber-500/10">' +
+              '<span class="text-lg">' + cat.icon + '</span>' +
+              '<div class="flex-1">' +
+              '<div class="text-xs font-bold text-slate-200">' + cat.name + '</div>' +
+              '<div class="flex items-center gap-2 mt-1">' +
+              '<div class="flex-1 bg-slate-800 rounded-full h-1.5"><div class="h-1.5 rounded-full bg-amber-500" style="width:' + metrics[bottom3[i]] + '%"></div></div>' +
+              '<span class="text-[10px] font-bold text-amber-400">' + metrics[bottom3[i]] + '%</span>' +
+              '</div></div></div>';
+          }
+          improveEl.innerHTML = ihtml;
+        } else {
+          strengthsEl.innerHTML = '<div class="text-xs text-slate-500 p-3">Complete a Conversation Simulator session to see your strengths.</div>';
+          improveEl.innerHTML = '<div class="text-xs text-slate-500 p-3">Complete a Conversation Simulator session to see areas to improve.</div>';
+        }
+      })();
+
+      // Achievements
+      (function () {
+        var container = document.getElementById("prog-achievements");
+        var allAch = [];
+        if (simSessions.length >= 1) allAch.push({ title: "First Conversation", desc: "Completed your first Conversation Simulator session.", icon: "🗣️" });
+        if (simSessions.length >= 5) allAch.push({ title: "Practice Makes Perfect", desc: "Completed 5 simulator sessions.", icon: "🎯" });
+        if (simSessions.length >= 10) allAch.push({ title: "Conversation Pro", desc: "Completed 10 simulator sessions.", icon: "🏆" });
+        if (mainStreak >= 3) allAch.push({ title: "3-Day Warrior", desc: "Maintained a 3-day activity streak.", icon: "⚡" });
+        if (mainStreak >= 7) allAch.push({ title: "7-Day Streak", desc: "Maintained a 7-day activity streak.", icon: "🔥" });
+        if (mainStreak >= 14) allAch.push({ title: "14-Day Legend", desc: "Maintained a 14-day activity streak.", icon: "🌟" });
+        if (mainStreak >= 30) allAch.push({ title: "30-Day Champion", desc: "Maintained a 30-day activity streak.", icon: "👑" });
+        if (latestScore >= 60) allAch.push({ title: "Confidence Builder", desc: "Achieved a Rizz Score of 60+.", icon: "💪" });
+        if (latestScore >= 80) allAch.push({ title: "Smooth Talker", desc: "Achieved a Rizz Score of 80+.", icon: "😎" });
+        if (latestScore >= 95) allAch.push({ title: "Rizz Master", desc: "Achieved a Rizz Score of 95+.", icon: "👑" });
+        if ((challenge.completedDays || []).length >= 1) allAch.push({ title: "Challenge Started", desc: "Began the 30-Day Challenge.", icon: "🔥" });
+        if ((challenge.completedDays || []).length >= 10) allAch.push({ title: "Challenge Halfway", desc: "Completed 10 days of the 30-Day Challenge.", icon: "🎯" });
+        if ((challenge.completedDays || []).length >= 30) allAch.push({ title: "Challenge Master", desc: "Completed all 30 days of the Challenge.", icon: "🏅" });
+        if (featuresUsedCount >= 3) allAch.push({ title: "Explorer", desc: "Used 3+ different Rizzora features.", icon: "🧭" });
+        if (featuresUsedCount >= 6) allAch.push({ title: "Well-Rounded", desc: "Used 6+ different Rizzora features.", icon: "🌈" });
+        if (totalXP >= 500) allAch.push({ title: "XP Collector", desc: "Earned 500+ total XP.", icon: "✨" });
+        if (totalXP >= 2000) allAch.push({ title: "XP Hoarder", desc: "Earned 2,000+ total XP.", icon: "💎" });
+        if (totalXP >= 5000) allAch.push({ title: "XP Legend", desc: "Earned 5,000+ total XP.", icon: "🚀" });
+        if (crushActivities.length >= 3) allAch.push({ title: "Crush Strategist", desc: "Used Crush Mode 3+ times.", icon: "🎯" });
+        if (interestChecks.length >= 3) allAch.push({ title: "Signal Reader", desc: "Performed 3+ Interest Checks.", icon: "🔍" });
+        if (profileScores.length >= 2) allAch.push({ title: "Profile Polisher", desc: "Reviewed 2+ dating profiles.", icon: "✨" });
+        if (!allAch.length) allAch.push({ title: "Getting Started", desc: "Begin your Rizzora journey to earn achievements.", icon: "🌱" });
+        var html = "";
+        for (var i = 0; i < allAch.length; i++) {
+          html += '<div class="flex items-start space-x-3 p-3 bg-slate-900/40 rounded-xl border border-brand-border/30">' +
+            '<span class="text-2xl bg-slate-900 p-1.5 rounded-lg border border-brand-border">' + allAch[i].icon + '</span>' +
+            '<div><h4 class="text-xs font-bold text-slate-200">' + allAch[i].title + '</h4>' +
+            '<p class="text-[10px] text-slate-400 mt-0.5 leading-relaxed">' + allAch[i].desc + '</p></div></div>';
+        }
+        container.innerHTML = html;
+      })();
+
+      // Milestones
+      (function () {
+        var container = document.getElementById("prog-milestones");
+        var milestones = [];
+        var cMilestones = [
+          { day: 5, title: "Compliment Initiator", emoji: "💬" },
+          { day: 10, title: "Social Navigator", emoji: "🧭" },
+          { day: 15, title: "Text Wizard", emoji: "✨" },
+          { day: 20, title: "Confidence Builder", emoji: "💪" },
+          { day: 25, title: "Connection Master", emoji: "🔗" },
+          { day: 30, title: "Rizz Master", emoji: "👑" }
+        ];
+        var cDays = (challenge.completedDays || []).length;
+        for (var i = 0; i < cMilestones.length; i++) {
+          if (cDays >= cMilestones[i].day) {
+            milestones.push({ title: cMilestones[i].title, desc: "Completed day " + cMilestones[i].day + " of the 30-Day Challenge.", icon: cMilestones[i].emoji });
+          }
+        }
+        if (simSessions.length >= 5) milestones.push({ title: "5 Sessions Done", desc: "Practiced 5 conversation scenarios.", icon: "🗣️" });
+        if (simSessions.length >= 10) milestones.push({ title: "10 Sessions Done", desc: "Practiced 10 conversation scenarios.", icon: "🎯" });
+        if (latestScore >= 70) milestones.push({ title: "Score 70+ Club", desc: "Achieved a Rizz Score above 70.", icon: "📈" });
+        if (latestScore >= 90) milestones.push({ title: "Elite Score", desc: "Achieved a Rizz Score above 90.", icon: "🏆" });
+        if (totalXP >= 1000) milestones.push({ title: "1K XP Club", desc: "Earned over 1,000 total XP.", icon: "✨" });
+        if (totalXP >= 5000) milestones.push({ title: "5K XP Legend", desc: "Earned over 5,000 total XP.", icon: "💎" });
+        if (mainStreak >= 7) milestones.push({ title: "Week Warrior", desc: "Maintained a 7-day streak.", icon: "🔥" });
+        if (!milestones.length) milestones.push({ title: "Your First Milestone Awaits", desc: "Complete activities to unlock milestones here.", icon: "🌱" });
+        var recent = milestones.slice(-8).reverse();
+        var html = "";
+        for (var i = 0; i < recent.length; i++) {
+          html += '<div class="flex items-center gap-3 p-3 bg-slate-900/40 rounded-xl border border-brand-border/30">' +
+            '<span class="text-xl">' + recent[i].icon + '</span>' +
+            '<div><h4 class="text-xs font-bold text-slate-200">' + recent[i].title + '</h4>' +
+            '<p class="text-[10px] text-slate-400 mt-0.5">' + recent[i].desc + '</p></div></div>';
+        }
+        container.innerHTML = html;
+      })();
+
+      // Growth Summary
+      (function () {
+        var titleEl = document.getElementById("growth-title");
+        var insightEl = document.getElementById("growth-insight");
+        var nextEl = document.getElementById("growth-next");
+        var nextLink = document.getElementById("growth-next-link");
+        var insight = "", title = "", nextStep = "", nextHref = "/dashboard";
+        if (totalXP >= 5000) {
+          title = "You're a Rizzora Veteran";
+          insight = "With " + totalXP.toLocaleString() + " XP earned across " + featuresUsedCount + " features, you've put serious work into your communication skills. Your consistent practice is paying off — keep refining and mentoring others.";
+          nextStep = "Try the Conversation Simulator with a harder scenario to push your limits.";
+          nextHref = "/conversation-simulator";
+        } else if (totalXP >= 2000) {
+          title = "Strong Momentum Building";
+          insight = "You've earned " + totalXP.toLocaleString() + " XP and explored " + featuresUsedCount + " features. Your Rizz Score of " + latestScore + "/100 shows real growth. Focus on your weaker areas to level up faster.";
+          nextStep = "Review your strengths and weaknesses above — then practice your weakest skill in the Simulator.";
+          nextHref = "/conversation-simulator";
+        } else if (totalXP >= 500) {
+          title = "Great Start, Keep Going!";
+          insight = "You've earned " + totalXP.toLocaleString() + " XP so far. You're building real habits. The key now is consistency — try to practice a little every day to maintain your streak.";
+          nextStep = "Start the 30-Day Challenge to build a daily practice habit.";
+          nextHref = "/challenge";
+        } else {
+          title = "Welcome to Your Journey";
+          insight = "You're just getting started with " + totalXP + " XP. Every expert was once a beginner. Try a Conversation Simulator session to get your first Rizz Score and see where you stand.";
+          nextStep = "Complete your first Conversation Simulator session to get your Rizz Score.";
+          nextHref = "/conversation-simulator";
+        }
+        if (latestScore >= 80) insight += " Your Rizz Score of " + latestScore + " is excellent — you're in the top tier.";
+        if (mainStreak >= 7) insight += " Your " + mainStreak + "-day streak shows real dedication.";
+        if ((challenge.completedDays || []).length >= 15) insight += " You're past halfway in the 30-Day Challenge — amazing consistency.";
+        titleEl.textContent = title;
+        insightEl.textContent = insight;
+        nextEl.textContent = nextStep;
+        nextLink.href = nextHref;
+      })();
+
+      // Activity Timeline
+      (function () {
+        var allEntries = [];
+        var featureIcons = { Simulator: "🗣️", "Rizz Score": "🎯", "Crush Mode": "🎯", "Interest Check": "🔍", "Profile Coach": "✨", "Flirt Coach": "⚡", WSTI: "💬", "Date Planner": "🗺️" };
+        simSessions.forEach(function (s) {
+          var sc = s.overall || Math.round(((s.metrics||{}).confidence+(s.metrics||{}).humor+(s.metrics||{}).flow+(s.metrics||{}).listening+(s.metrics||{}).flirting+(s.metrics||{}).respect)/6);
+          allEntries.push({ date: s.date||"", feature: "Simulator", detail: (s.scenario||"Practice") + " with " + (s.theirName||"Partner"), score: sc+"/100" });
+        });
+        scoreHistory.forEach(function (s) {
+          allEntries.push({ date: s.date||"", feature: "Rizz Score", detail: s.level||"Evaluation", score: (s.overall||0)+"/100" });
+        });
+        crushActivities.forEach(function (a) {
+          allEntries.push({ date: a.date||"", feature: "Crush Mode", detail: a.detail||a.name||"Strategy", score: a.score||"" });
+        });
+        interestChecks.forEach(function (a) {
+          allEntries.push({ date: a.date||"", feature: "Interest Check", detail: a.detail||a.name||"Analysis", score: a.score||"" });
+        });
+        profileScores.forEach(function (s) {
+          allEntries.push({ date: s.date||"", feature: "Profile Coach", detail: (s.platform||"General")+" profile", score: (s.score||0)+"%" });
+        });
+        flirtActivities.forEach(function (a) {
+          allEntries.push({ date: a.date||"", feature: "Flirt Coach", detail: a.detail||"Message rewrite", score: a.score||"Optimized" });
+        });
+        wstiActivities.forEach(function (a) {
+          allEntries.push({ date: a.date||"", feature: "WSTI", detail: a.detail||"Text suggestion", score: a.score||"" });
+        });
+        datePlans.forEach(function (p) {
+          allEntries.push({ date: p.date||"", feature: "Date Planner", detail: (p.dateName||"Date")+" in "+(p.city||""), score: "+60 XP" });
+        });
+        allEntries.sort(function (a, b) { return (b.date||"").localeCompare(a.date||""); });
+        var display = allEntries.slice(0, 15);
+        var tableEl = document.getElementById("prog-timeline-table");
+        var mobileEl = document.getElementById("prog-timeline-mobile");
+        if (!display.length) {
+          tableEl.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-xs text-slate-500">No activity recorded yet</td></tr>';
+          mobileEl.innerHTML = '<div class="text-xs text-slate-500 text-center py-4">No activity recorded yet</div>';
+          return;
+        }
+        var thtml = "", mhtml = "";
+        for (var i = 0; i < display.length; i++) {
+          var e = display[i];
+          var icon = featureIcons[e.feature] || "📌";
+          thtml += '<tr class="text-slate-300">' +
+            '<td class="py-3 font-mono text-[10px]">' + (e.date||"—") + '</td>' +
+            '<td class="py-3 font-semibold">' + icon + ' ' + e.feature + '</td>' +
+            '<td class="py-3">' + e.detail + '</td>' +
+            '<td class="py-3"><span class="font-bold text-rose-400">' + e.score + '</span></td></tr>';
+          mhtml += '<div class="p-3 bg-slate-900/40 rounded-xl border border-brand-border/30">' +
+            '<div class="flex justify-between items-start mb-1">' +
+            '<span class="text-xs font-bold text-slate-200">' + icon + ' ' + e.feature + '</span>' +
+            '<span class="text-[10px] font-bold text-rose-400">' + e.score + '</span></div>' +
+            '<p class="text-[10px] text-slate-400">' + e.detail + '</p>' +
+            '<span class="text-[9px] text-slate-500 font-mono">' + (e.date||"") + '</span></div>';
+        }
+        tableEl.innerHTML = thtml;
+        mobileEl.innerHTML = mhtml;
+      })();
+
+      // Share Card
+      var shareModal = document.getElementById("share-modal");
+      var shareCanvas = document.getElementById("share-canvas");
+      document.getElementById("prog-share-btn").addEventListener("click", function () {
+        renderShareCard();
+        shareModal.classList.remove("hidden");
+      });
+      document.getElementById("share-close").addEventListener("click", function () { shareModal.classList.add("hidden"); });
+      shareModal.addEventListener("click", function (e) { if (e.target === shareModal) shareModal.classList.add("hidden"); });
+
+      function renderShareCard() {
+        var ctx = shareCanvas.getContext("2d");
+        var W = 400, H = 520;
+        var grad = ctx.createLinearGradient(0, 0, W, H);
+        grad.addColorStop(0, "#080d1a");
+        grad.addColorStop(0.5, "#0f172a");
+        grad.addColorStop(1, "#1a0a2e");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+        ctx.textAlign = "center";
+
+        // Brand
+        ctx.font = "bold 22px sans-serif";
+        ctx.fillStyle = "#db2777";
+        ctx.fillText("Rizzora", W/2, 40);
+        ctx.font = "9px sans-serif";
+        ctx.fillStyle = "#64748b";
+        ctx.fillText("MY PROGRESS CARD", W/2, 56);
+
+        // Divider
+        ctx.strokeStyle = "rgba(30,41,59,0.5)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(40, 70);
+        ctx.lineTo(W-40, 70);
+        ctx.stroke();
+
+        // Rizz Score Circle
+        var scoreR = 45;
+        var cx = W/2, cy = 140;
+        ctx.beginPath();
+        ctx.arc(cx, cy, scoreR, 0, Math.PI*2);
+        ctx.strokeStyle = "rgba(219,39,119,0.2)";
+        ctx.lineWidth = 6;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(cx, cy, scoreR, -Math.PI/2, -Math.PI/2 + (Math.PI*2*Math.min(latestScore,100)/100));
+        ctx.strokeStyle = "#db2777";
+        ctx.lineWidth = 6;
+        ctx.stroke();
+        ctx.font = "bold 36px sans-serif";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(latestScore, cx, cy + 12);
+        ctx.font = "10px sans-serif";
+        ctx.fillStyle = "#94a3b8";
+        ctx.fillText("/100", cx, cy + 28);
+        ctx.font = "bold 11px sans-serif";
+        ctx.fillStyle = "#db2777";
+        ctx.fillText("RIZZ SCORE", cx, cy - 58);
+
+        // Stats grid
+        var statsY = 210;
+        var statItems = [
+          { label: "LEVEL", value: currentLevel + "", sub: levelTitle, color: "#a855f7" },
+          { label: "TOTAL XP", value: totalXP.toLocaleString(), sub: "Earned", color: "#8b5cf6" },
+          { label: "STREAK", value: mainStreak + " Days", sub: "Current", color: "#f59e0b" },
+          { label: "ACTIVITIES", value: totalActivities + "", sub: featuresUsedCount + " features", color: "#10b981" }
+        ];
+        var colW = (W - 80) / 4;
+        for (var i = 0; i < statItems.length; i++) {
+          var sx = 40 + colW * i + colW / 2;
+          ctx.font = "8px sans-serif";
+          ctx.fillStyle = "#64748b";
+          ctx.fillText(statItems[i].label, sx, statsY);
+          ctx.font = "bold 18px sans-serif";
+          ctx.fillStyle = statItems[i].color;
+          ctx.fillText(statItems[i].value, sx, statsY + 22);
+          ctx.font = "8px sans-serif";
+          ctx.fillStyle = "#64748b";
+          ctx.fillText(statItems[i].sub, sx, statsY + 34);
+        }
+
+        // Divider
+        ctx.beginPath();
+        ctx.moveTo(40, statsY + 50);
+        ctx.lineTo(W-40, statsY + 50);
+        ctx.stroke();
+
+        // Feature stats
+        var fy = statsY + 70;
+        ctx.font = "bold 10px sans-serif";
+        ctx.fillStyle = "#94a3b8";
+        ctx.textAlign = "left";
+        ctx.fillText("FEATURE STATS", 40, fy);
+        ctx.textAlign = "center";
+        fy += 20;
+        var featureData = [
+          { icon: "🗣️", label: "Simulator", count: simSessions.length },
+          { icon: "🔥", label: "Challenge", count: (challenge.completedDays||[]).length + "/30" },
+          { icon: "🎯", label: "Crush Mode", count: crushActivities.length },
+          { icon: "🔍", label: "Interest", count: interestChecks.length },
+          { icon: "✨", label: "Profile", count: profileScores.length },
+          { icon: "⚡", label: "Messaging", count: flirtActivities.length + wstiActivities.length }
+        ];
+        var fcolW = (W - 80) / 3;
+        for (var i = 0; i < featureData.length; i++) {
+          var row = Math.floor(i / 3);
+          var col = i % 3;
+          var fx = 40 + fcolW * col + fcolW / 2;
+          var ffy = fy + row * 40;
+          ctx.font = "16px sans-serif";
+          ctx.fillStyle = "#ffffff";
+          ctx.fillText(featureData[i].icon, fx, ffy);
+          ctx.font = "8px sans-serif";
+          ctx.fillStyle = "#94a3b8";
+          ctx.fillText(featureData[i].label, fx, ffy + 14);
+          ctx.font = "bold 14px sans-serif";
+          ctx.fillStyle = "#e2e8f0";
+          ctx.fillText(String(featureData[i].count), fx, ffy + 28);
+        }
+
+        // Footer
+        ctx.beginPath();
+        ctx.moveTo(40, H - 50);
+        ctx.lineTo(W-40, H - 50);
+        ctx.stroke();
+        ctx.font = "8px sans-serif";
+        ctx.fillStyle = "#475569";
+        ctx.fillText("Generated on " + new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }), W/2, H - 30);
+        ctx.fillStyle = "#64748b";
+        ctx.fillText("rizzora.app — Your Dating Confidence Coach", W/2, H - 16);
+      }
+
+      document.getElementById("share-download").addEventListener("click", function () {
+        var link = document.createElement("a");
+        link.download = "rizzora-progress.png";
+        link.href = shareCanvas.toDataURL("image/png");
+        link.click();
+      });
+
+      document.getElementById("share-copy").addEventListener("click", function () {
+        shareCanvas.toBlob(function (blob) {
+          if (navigator.clipboard && navigator.clipboard.write) {
+            var item = new ClipboardItem({ "image/png": blob });
+            navigator.clipboard.write([item]).then(function () {
+              document.getElementById("share-copy").textContent = "Copied!";
+              setTimeout(function () { document.getElementById("share-copy").textContent = "Copy to Clipboard"; }, 2000);
+            });
+          }
+        });
+      });
+    })();
+  </script>
+</Layout>

@@ -1,0 +1,373 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+
+const features = [
+  { icon: "💬", name: "What Should I Text?", desc: "Get safe, playful, flirty, and coy reply suggestions for any conversation.", color: "from-sky-500/10 to-sky-500/20", border: "border-sky-500/20" },
+  { icon: "⚡", name: "Flirt Coach", desc: "Rewrite dry messages into natural, confident, and personality-rich alternatives.", color: "from-amber-500/10 to-amber-500/20", border: "border-amber-500/20" },
+  { icon: "🗣️", name: "Conversation Simulator", desc: "Practice realistic dating conversations with AI characters and get scored on confidence, flow, and respect.", color: "from-emerald-500/10 to-emerald-500/20", border: "border-emerald-500/20" },
+  { icon: "🎯", name: "Crush Mode", desc: "Step-by-step strategic planning for approaching your crush with confidence.", color: "from-rose-500/10 to-rose-500/20", border: "border-rose-500/20" },
+  { icon: "🔍", name: "Interest Check", desc: "Analyze conversation signals and estimate interest levels with honest, balanced assessments.", color: "from-indigo-500/10 to-indigo-500/20", border: "border-indigo-500/20" },
+  { icon: "🎯", name: "Rizz Score", desc: "Get a comprehensive evaluation of your conversational confidence, humor, flow, and respect.", color: "from-pink-500/10 to-pink-500/20", border: "border-pink-500/20" },
+  { icon: "🗺️", name: "First Date Planner", desc: "Get date ideas, conversation starters, and preparation tips for memorable first dates.", color: "from-purple-500/10 to-purple-500/20", border: "border-purple-500/20" },
+  { icon: "✨", name: "Dating Profile Coach", desc: "Improve your dating app bio, prompts, and photos with personalized feedback.", color: "from-violet-500/10 to-violet-500/20", border: "border-violet-500/20" },
+  { icon: "🔥", name: "30-Day Challenge", desc: "Daily confidence-building challenges, streaks, and milestones to transform your dating skills.", color: "from-orange-500/10 to-orange-500/20", border: "border-orange-500/20" },
+];
+
+const safetyPrinciples = [
+  { icon: "🤝", title: "Respect", desc: "Every interaction teaches you to treat people with dignity and genuine care." },
+  { icon: "✋", title: "Consent", desc: "Understanding and honoring boundaries is a core skill we help you build." },
+  { icon: "🛡️", title: "Boundaries", desc: "Learning when to step back and how to set your own boundaries with confidence." },
+  { icon: "💎", title: "Honesty", desc: "Authentic communication beats manipulation every time. We teach real connection." },
+];
+
+const faqs = [
+  {
+    q: "Is Rizzora an AI-powered success guarantee?",
+    a: "No. Rizzora is a confidence and communication training tool. We offer contextual tips, signal analysis, and practice simulations based on social intelligence principles. We never guarantee romantic outcomes — human relationships are dynamic and deeply personal. Our role is to help you build skills, not to promise results."
+  },
+  {
+    q: "How does the AI generate responses and advice?",
+    a: "Rizzora uses trained AI models to analyze conversation context, tone, and social cues. It generates suggestions based on communication best practices — active listening, humor, respect, and genuine interest. Every response is designed to promote healthy, confident communication rather than manipulation."
+  },
+  {
+    q: "Is the Interest Check percentage a guaranteed prediction?",
+    a: "No. The Interest % is an estimate based on behavioral signals and conversation patterns — it is guidance, not a definitive prediction. Human behavior is complex and influenced by many factors that text alone cannot capture. Use it as one data point alongside your own judgment."
+  },
+  {
+    q: "Is my data private? What about screenshots and chats?",
+    a: "Yes. Your chat logs, uploaded screenshots, and practice scenarios are strictly private. We do not sell or share your data with advertisers. Analysis is processed locally or securely to generate feedback only. Your conversations, crush names, and personal details are never stored permanently on our servers."
+  },
+  {
+    q: "What happens when I upload a screenshot?",
+    a: "Screenshots you upload for analysis are processed to extract conversation context. They are used solely to generate advice and suggestions. We do not store screenshots permanently, and they are never shared with third parties. You remain in control of your data."
+  },
+  {
+    q: "Does Rizzora support Hinglish and other languages?",
+    a: "Yes! Rizzora natively supports Roman-script Hinglish queries like 'usne reply nahi kiya, kya bolu?' and translates concepts to fit modern slang and regional communication context. We also support English and are expanding language coverage."
+  },
+  {
+    q: "What is the Rizz Score and how is it calculated?",
+    a: "The Rizz Score is a comprehensive evaluation of your conversational skills across six dimensions: Confidence, Humor, Conversation Flow, Active Listening, Flirting, and Respect. Scores are generated from your simulator sessions and range from 0-100. Higher scores indicate stronger, more balanced communication skills."
+  },
+  {
+    q: "Is Rizzora safe for people new to dating?",
+    a: "Absolutely. Rizzora is designed for all experience levels. Our 30-Day Challenge starts with beginner-friendly tasks like casual conversations and compliments, gradually building to more advanced skills. The platform creates a judgment-free space to practice and grow."
+  },
+  {
+    q: "Can Rizzora help me if I have social anxiety?",
+    a: "Rizzora can be a helpful supplement for building social confidence through low-pressure practice. The Conversation Simulator lets you practice without real-world stakes. However, Rizzora is not a substitute for professional mental health support. If you experience significant anxiety, we encourage seeking guidance from a qualified professional."
+  },
+  {
+    q: "How does the 30-Day Challenge work?",
+    a: "Each day presents a new confidence-building task — from starting casual conversations to practicing vulnerability. You earn XP, maintain streaks, and unlock milestones. The challenge progresses from easy to hard, systematically building your communication and dating confidence."
+  },
+  {
+    q: "Is my usage tracked or monetized?",
+    a: "Rizzora does not sell, share, or monetize your personal data. Your progress is stored locally in your browser for a personalized experience. We do not run ads or share data with third-party trackers."
+  },
+  {
+    q: "What is Rizzora's stance on manipulation?",
+    a: "We strictly reject and block any instructions that encourage manipulation, spamming, unwanted persistent contact, or bypassing someone's rejection. Our core philosophy is that genuine confidence comes from authenticity, respect, and real connection — not from tricks or coercion."
+  },
+];
+---
+
+<Layout title="About Rizzora | Dating Communication & Confidence">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16">
+
+    <!-- ═══════ HERO ═══════ -->
+    <section class="text-center space-y-5 relative">
+      <div class="absolute left-1/2 -translate-x-1/2 -top-10 w-64 h-64 bg-rose-500/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-rose-400 bg-rose-500/10 rounded-full border border-rose-500/20">Built with Respect</div>
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
+        Dating Confidence,<br/>
+        <span class="gradient-text">Done Right</span>
+      </h1>
+      <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        Rizzora helps you build genuine connections, master respectful communication, and develop real dating confidence — through practice, not manipulation.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
+        <a href="/dashboard" class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-full shadow-lg shadow-rose-500/20 hover:shadow-rose-500/40 transition-all duration-200 hover:scale-105">
+          Start Your Journey
+        </a>
+        <a href="#how-it-works" class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-slate-300 bg-slate-800/60 hover:bg-slate-700/60 border border-brand-border rounded-full transition">
+          Learn More
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══════ MISSION ═══════ -->
+    <section class="space-y-6">
+      <div class="text-center">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Our Mission</h2>
+        <div class="w-20 h-1 bg-linear-to-r from-brand-primary to-brand-secondary mx-auto rounded-full mt-3"></div>
+      </div>
+      <p class="text-center text-slate-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+        We believe everyone deserves to feel confident in dating. Not through fake personas or manipulation — but through genuine self-expression, active listening, and respectful communication. Rizzora is your safe space to practice, fail, learn, and grow.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="glass p-6 rounded-2xl border border-brand-border/60 hover:border-rose-500/30 transition-all duration-300 group">
+          <span class="text-2xl group-hover:scale-110 inline-block transition-transform">🌱</span>
+          <h3 class="text-base font-bold text-slate-100 mt-3">Authentic Expression</h3>
+          <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+            No games, no scripted pick-up lines. Learn to express your genuine interest with honesty, personality, and style.
+          </p>
+        </div>
+        <div class="glass p-6 rounded-2xl border border-brand-border/60 hover:border-violet-500/30 transition-all duration-300 group">
+          <span class="text-2xl group-hover:scale-110 inline-block transition-transform">🛡️</span>
+          <h3 class="text-base font-bold text-slate-100 mt-3">Respect & Boundaries</h3>
+          <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+            Understanding consent and boundaries is core to confidence. We teach you when to step forward and when to step back with grace.
+          </p>
+        </div>
+        <div class="glass p-6 rounded-2xl border border-brand-border/60 hover:border-emerald-500/30 transition-all duration-300 group">
+          <span class="text-2xl group-hover:scale-110 inline-block transition-transform">⚡</span>
+          <h3 class="text-base font-bold text-slate-100 mt-3">Real Practice</h3>
+          <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+            Practice conversations in low-stakes simulated scenarios. Master active listening, humor, and natural flow before the real thing.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ HOW IT WORKS ═══════ -->
+    <section id="how-it-works" class="space-y-6">
+      <div class="text-center">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">How Rizzora Works</h2>
+        <div class="w-20 h-1 bg-linear-to-r from-brand-primary to-brand-secondary mx-auto rounded-full mt-3"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="glass p-5 rounded-2xl border border-brand-border/60 text-center relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-linear-to-r from-rose-500 to-violet-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-rose-500/20">1</div>
+          <span class="text-3xl block mt-2">📝</span>
+          <h4 class="text-sm font-bold text-slate-200 mt-3">Set Up Your Profile</h4>
+          <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Tell us your name, optional crush, and dating goals. Everything stays local on your device.</p>
+        </div>
+        <div class="glass p-5 rounded-2xl border border-brand-border/60 text-center relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-linear-to-r from-rose-500 to-violet-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-rose-500/20">2</div>
+          <span class="text-3xl block mt-2">🛠️</span>
+          <h4 class="text-sm font-bold text-slate-200 mt-3">Use the Tools</h4>
+          <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Practice conversations, rewrite messages, plan dates, check interest signals, and get personalized feedback.</p>
+        </div>
+        <div class="glass p-5 rounded-2xl border border-brand-border/60 text-center relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-linear-to-r from-rose-500 to-violet-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-rose-500/20">3</div>
+          <span class="text-3xl block mt-2">📈</span>
+          <h4 class="text-sm font-bold text-slate-200 mt-3">Track Your Growth</h4>
+          <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Earn XP, maintain streaks, unlock achievements, and watch your Rizz Score improve over time.</p>
+        </div>
+        <div class="glass p-5 rounded-2xl border border-brand-border/60 text-center relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-linear-to-r from-rose-500 to-violet-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-rose-500/20">4</div>
+          <span class="text-3xl block mt-2">💪</span>
+          <h4 class="text-sm font-bold text-slate-200 mt-3">Build Real Confidence</h4>
+          <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Apply your skills in real conversations with genuine confidence rooted in practice.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ KEY FEATURES ═══════ -->
+    <section class="space-y-6">
+      <div class="text-center">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Key Features</h2>
+        <div class="w-20 h-1 bg-linear-to-r from-brand-primary to-brand-secondary mx-auto rounded-full mt-3"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {features.map((feat) => (
+          <div class={`p-4 rounded-xl border ${feat.border} bg-linear-to-br ${feat.color} hover:bg-slate-800/30 transition duration-200`}>
+            <span class="text-2xl">{feat.icon}</span>
+            <h4 class="text-sm font-bold text-slate-200 mt-2">{feat.name}</h4>
+            <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">{feat.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ═══════ RESPONSIBLE AI & SAFETY ═══════ -->
+    <section class="space-y-6">
+      <div class="text-center">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Responsible AI & Safety</h2>
+        <div class="w-20 h-1 bg-linear-to-r from-brand-primary to-brand-secondary mx-auto rounded-full mt-3"></div>
+      </div>
+
+      <div class="glass p-6 rounded-2xl border border-brand-border/60 space-y-4">
+        <div class="flex items-start gap-3">
+          <span class="text-xl mt-0.5">🤖</span>
+          <div>
+            <h4 class="text-sm font-bold text-slate-200">AI as Guidance, Not Gospel</h4>
+            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+              Rizzora uses AI to provide guidance, suggestions, and feedback. AI-generated advice and the Interest Check percentage are estimates based on behavioral patterns — they are <strong class="text-slate-300">not guaranteed predictions</strong>. Human relationships are complex, and no algorithm can fully understand the nuances of another person's feelings. Always use your own judgment and communicate directly with the people in your life.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass p-6 rounded-2xl border border-brand-border/60 space-y-4">
+        <div class="flex items-start gap-3">
+          <span class="text-xl mt-0.5">🔒</span>
+          <div>
+            <h4 class="text-sm font-bold text-slate-200">Your Privacy Matters</h4>
+            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+              Your chat logs, uploaded screenshots, practice scenarios, and crush names are <strong class="text-slate-300">strictly private</strong>. We do not sell or share your data with advertisers or third parties. Analysis is processed locally or securely to generate feedback only. Your progress is stored in your browser's local storage — not on our servers. You remain in full control of your information.
+            </p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+          <div class="bg-slate-900/40 p-3 rounded-xl border border-brand-border/30">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">What We Store</span>
+            <p class="text-[11px] text-slate-400 mt-1">Your progress, scores, and settings — locally in your browser only.</p>
+          </div>
+          <div class="bg-slate-900/40 p-3 rounded-xl border border-brand-border/30">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-400">What We Never Store</span>
+            <p class="text-[11px] text-slate-400 mt-1">Private conversations, screenshots, crush names, or personal details on our servers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ SAFETY PRINCIPLES ═══════ -->
+    <section class="space-y-6">
+      <div class="text-center">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Our Safety Principles</h2>
+        <div class="w-20 h-1 bg-linear-to-r from-brand-primary to-brand-secondary mx-auto rounded-full mt-3"></div>
+        <p class="text-sm text-slate-400 mt-3 max-w-xl mx-auto">Every feature in Rizzora is built on these non-negotiable values.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {safetyPrinciples.map((p) => (
+          <div class="glass p-5 rounded-2xl border border-brand-border/60 text-center hover:border-rose-500/30 transition-all duration-300 group">
+            <span class="text-3xl block group-hover:scale-110 transition-transform">{p.icon}</span>
+            <h4 class="text-sm font-bold text-slate-200 mt-3">{p.title}</h4>
+            <p class="text-[11px] text-slate-400 mt-2 leading-relaxed">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div class="glass-accent p-5 rounded-2xl border border-rose-500/20 text-center">
+        <p class="text-xs text-slate-300 leading-relaxed max-w-2xl mx-auto">
+          <strong class="text-rose-400">Zero tolerance for manipulation.</strong> We strictly reject and block any attempt to use Rizzora for spamming, harassment, bypassing boundaries, or ignoring rejection. Genuine confidence comes from authenticity and respect — never from tricks or coercion.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════ FAQ ═══════ -->
+    <section id="faq" class="space-y-6">
+      <div class="text-center">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Frequently Asked Questions</h2>
+        <div class="w-20 h-1 bg-linear-to-r from-brand-primary to-brand-secondary mx-auto rounded-full mt-3"></div>
+      </div>
+      <div class="space-y-3" id="faq-list">
+        {faqs.map((faq, i) => (
+          <div class="faq-item glass rounded-xl border border-brand-border/40 overflow-hidden transition-all duration-300" data-idx={i}>
+            <button class="faq-toggle w-full flex items-center justify-between gap-4 p-5 text-left cursor-pointer" aria-expanded="false">
+              <span class="text-sm font-bold text-slate-200">{faq.q}</span>
+              <svg class="faq-chevron w-5 h-5 text-slate-500 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+              <div class="px-5 pb-5 text-xs text-slate-400 leading-relaxed">{faq.a}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ═══════ CONTACT & FEEDBACK ═══════ -->
+    <section id="contact" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="glass p-6 rounded-2xl border border-brand-border/60 space-y-4">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200">Contact Support</h3>
+        <p class="text-xs text-slate-400">Got questions about the app? We're here to help.</p>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Your Name</label>
+            <input type="text" class="w-full bg-slate-900 border border-brand-border rounded-lg px-3 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition" placeholder="e.g. Alex" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Email Address</label>
+            <input type="email" class="w-full bg-slate-900 border border-brand-border rounded-lg px-3 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition" placeholder="alex@example.com" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Your Message</label>
+            <textarea rows="3" class="w-full bg-slate-900 border border-brand-border rounded-lg px-3 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition" placeholder="How can we help?"></textarea>
+          </div>
+          <button type="button" class="w-full py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-slate-800 rounded-lg cursor-not-allowed opacity-60" disabled>
+            Send Message (Demo)
+          </button>
+        </div>
+      </div>
+      <div class="glass p-6 rounded-2xl border border-brand-border/60 space-y-4 flex flex-col justify-between">
+        <div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-200">Share App Feedback</h3>
+          <p class="text-xs text-slate-400 mt-1">Help us improve your confidence training experience.</p>
+          <textarea rows="5" class="w-full bg-slate-900 border border-brand-border rounded-lg px-3 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition mt-3" placeholder="Tell us what you like, what we can add, or any bugs you found..."></textarea>
+        </div>
+        <button type="button" class="w-full py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-slate-800 rounded-lg cursor-not-allowed opacity-60" disabled>
+          Submit Feedback (Demo)
+        </button>
+      </div>
+    </section>
+
+    <!-- ═══════ PRIVACY & TERMS ═══════ -->
+    <section id="privacy" class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-brand-border/40">
+      <div class="space-y-3">
+        <h4 class="font-bold text-sm text-slate-300 uppercase tracking-wider flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Privacy Policy Summary
+        </h4>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          At Rizzora, your chat logs, uploaded screenshots, and practice scenarios are strictly private. We do not sell or share your data with advertisers. Analysis is processed locally or securely to generate feedback only.
+        </p>
+      </div>
+      <div id="terms" class="space-y-3">
+        <h4 class="font-bold text-sm text-slate-300 uppercase tracking-wider flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span> Terms of Service Summary
+        </h4>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          By using Rizzora, you agree to treat others with respect and dignity. Our tools are built to teach confidence and natural communication. Any attempt to abuse the system to bypass boundaries or engage in spamming/harassment violates our Terms.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════ CTA ═══════ -->
+    <section class="text-center space-y-4 py-8">
+      <div class="glass-accent p-8 sm:p-12 rounded-2xl border border-rose-500/20 relative overflow-hidden">
+        <div class="absolute right-0 top-0 translate-x-16 -translate-y-16 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl"></div>
+        <div class="absolute left-0 bottom-0 -translate-x-16 translate-y-16 w-40 h-40 bg-brand-secondary/10 rounded-full blur-3xl"></div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white relative">Ready to Level Up?</h2>
+        <p class="text-sm text-slate-300 mt-3 max-w-lg mx-auto relative">
+          Your journey to better conversations and genuine confidence starts with a single step. No sign-up required — just open the dashboard and begin.
+        </p>
+        <a href="/dashboard" class="inline-block mt-6 px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-full shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 transition-all duration-200 hover:scale-105 relative">
+          Start Your Journey
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <script is:inline>
+    (function () {
+      var items = document.querySelectorAll(".faq-item");
+      items.forEach(function (item) {
+        var toggle = item.querySelector(".faq-toggle");
+        var answer = item.querySelector(".faq-answer");
+        var chevron = item.querySelector(".faq-chevron");
+        toggle.addEventListener("click", function () {
+          var isOpen = item.classList.contains("faq-open");
+          // Close all
+          items.forEach(function (other) {
+            other.classList.remove("faq-open");
+            other.querySelector(".faq-answer").style.maxHeight = "0";
+            other.querySelector(".faq-toggle").setAttribute("aria-expanded", "false");
+            other.querySelector(".faq-chevron").style.transform = "rotate(0deg)";
+          });
+          // Open clicked if it was closed
+          if (!isOpen) {
+            item.classList.add("faq-open");
+            answer.style.maxHeight = answer.scrollHeight + "px";
+            toggle.setAttribute("aria-expanded", "true");
+            chevron.style.transform = "rotate(180deg)";
+          }
+        });
+      });
+    })();
+  </script>
+</Layout>

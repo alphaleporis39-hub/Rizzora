@@ -1,0 +1,623 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Dating Profile Coach | Rizzora">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+    <!-- Header -->
+    <div class="mb-6 sm:mb-8">
+      <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Dating Profile Coach</h1>
+      <p class="text-slate-400 mt-1 text-sm sm:text-base">Optimize your bio, prompts, and profile to stand out naturally.</p>
+    </div>
+
+    <!-- ═══════════ INPUT SCREEN ═══════════ -->
+    <div id="pc-input" class="max-w-3xl mx-auto">
+      <div class="glass p-6 sm:p-8 rounded-2xl space-y-5">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 border-b border-brand-border/40 pb-2">Profile Details</h3>
+
+        <!-- Platform -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Dating Platform</label>
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2" id="pc-platform-grid">
+            <button data-platform="hinge" class="pc-platform-btn py-2.5 text-xs font-bold rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">Hinge</button>
+            <button data-platform="bumble" class="pc-platform-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Bumble</button>
+            <button data-platform="tinder" class="pc-platform-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Tinder</button>
+            <button data-platform="instagram" class="pc-platform-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Instagram</button>
+            <button data-platform="badoo" class="pc-platform-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Badoo</button>
+            <button data-platform="general" class="pc-platform-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">General</button>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Current bio / prompt response</label>
+          <textarea id="pc-bio" rows="4" maxlength="500" placeholder="Paste your current bio or prompt answer here..." class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition resize-none"></textarea>
+          <span class="text-[10px] text-slate-500" id="pc-bio-count">0 / 500</span>
+        </div>
+
+        <!-- Interests / Personality / Looking For -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Interests / Hobbies</label>
+            <input id="pc-interests" type="text" maxlength="100" placeholder="e.g. coffee, hiking, music" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Personality traits</label>
+            <input id="pc-personality" type="text" maxlength="100" placeholder="e.g. funny, curious, introvert" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Looking for</label>
+            <input id="pc-looking" type="text" maxlength="100" placeholder="e.g. genuine connection, dating" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+          </div>
+        </div>
+
+        <!-- Vibe -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Choose your vibe</label>
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2" id="pc-vibe-grid">
+            <button data-vibe="funny" class="pc-vibe-btn py-2.5 text-xs font-bold rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">Funny</button>
+            <button data-vibe="confident" class="pc-vibe-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Confident</button>
+            <button data-vibe="charming" class="pc-vibe-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Charming</button>
+            <button data-vibe="mysterious" class="pc-vibe-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Mysterious</button>
+            <button data-vibe="genuine" class="pc-vibe-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Genuine</button>
+            <button data-vibe="flirty" class="pc-vibe-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Flirty</button>
+          </div>
+        </div>
+
+        <!-- Screenshot Upload -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Profile screenshot (optional, up to 15MB)</label>
+          <div id="pc-upload-area" class="relative border-2 border-dashed border-brand-border/60 rounded-xl p-4 text-center cursor-pointer hover:border-rose-500/30 transition">
+            <div id="pc-upload-prompt">
+              <div class="text-2xl mb-1">&#128247;</div>
+              <p class="text-xs text-slate-400">Click to upload profile screenshot(s)</p>
+              <p class="text-[10px] text-slate-500 mt-1">PNG, JPG, WEBP up to 15MB</p>
+            </div>
+            <div id="pc-upload-preview" class="hidden flex-wrap gap-2 justify-center"></div>
+            <input id="pc-file-input" type="file" accept="image/png,image/jpeg,image/webp" multiple class="hidden" />
+          </div>
+        </div>
+
+        <!-- Language -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Language</label>
+          <div class="flex gap-2">
+            <button data-lang="english" class="pc-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">English</button>
+            <button data-lang="hinglish" class="pc-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Hinglish</button>
+          </div>
+        </div>
+
+        <button id="pc-analyze-btn" class="w-full py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition-all duration-200 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 cursor-pointer active:scale-95">
+          Analyze My Profile
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════ RESULTS SCREEN ═══════════ -->
+    <div id="pc-results" class="hidden max-w-4xl mx-auto space-y-6">
+
+      <!-- Score -->
+      <div class="glass p-6 sm:p-8 rounded-2xl text-center">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-rose-400">Profile Score</span>
+        <div class="my-4 relative inline-flex items-center justify-center">
+          <svg class="w-32 h-32 transform -rotate-90">
+            <circle cx="64" cy="64" r="52" stroke="#1f2e4d" stroke-width="8" fill="transparent" />
+            <circle id="pc-gauge" cx="64" cy="64" r="52" stroke="#db2777" stroke-width="8" fill="transparent" stroke-dasharray="327" stroke-dashoffset="327" />
+          </svg>
+          <div class="absolute">
+            <div id="pc-score-num" class="text-3xl font-black text-white">0</div>
+            <div class="text-[10px] text-slate-400">/100</div>
+          </div>
+        </div>
+        <h3 id="pc-score-title" class="text-lg font-bold text-slate-200"></h3>
+        <p id="pc-score-sub" class="text-xs text-slate-400 mt-1"></p>
+      </div>
+
+      <!-- Analysis + Strengths/Weaknesses -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-violet-400 mb-3">Profile Analysis</h3>
+          <p id="pc-analysis" class="text-xs text-slate-300 leading-relaxed"></p>
+        </div>
+        <div class="space-y-4">
+          <div class="glass p-5 rounded-2xl">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3">Strengths</h3>
+            <ul id="pc-strengths" class="space-y-2"></ul>
+          </div>
+          <div class="glass p-5 rounded-2xl">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-3">Weaknesses</h3>
+            <ul id="pc-weaknesses" class="space-y-2"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generic / Needs Work -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-red-400 mb-3">What Feels Generic or Needs Improvement</h3>
+        <ul id="pc-generic" class="space-y-2"></ul>
+      </div>
+
+      <!-- 3 Improved Bios -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400 mb-4">Improved Bio Versions</h3>
+        <div id="pc-bios" class="space-y-4"></div>
+      </div>
+
+      <!-- Prompts + Conversation Starters -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-pink-400 mb-3">Suggested Prompts + Answers</h3>
+          <ul id="pc-prompts" class="space-y-2"></ul>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-3">Profile Conversation Starters</h3>
+          <ul id="pc-convos" class="space-y-2"></ul>
+        </div>
+      </div>
+
+      <!-- Tips -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3">Personalized Improvement Tips</h3>
+        <ul id="pc-tips" class="space-y-2"></ul>
+      </div>
+
+      <!-- Bio Makeover -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-violet-400 mb-3">Bio Makeover</h3>
+        <p class="text-xs text-slate-400 mb-3">Rewrite your bio in different styles while keeping it authentic.</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4" id="pc-makeover-grid">
+          <button data-style="funny" class="pc-makeover-btn py-2 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-violet-500/40 hover:bg-violet-500/10 transition cursor-pointer">Funny</button>
+          <button data-style="confident" class="pc-makeover-btn py-2 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-violet-500/40 hover:bg-violet-500/10 transition cursor-pointer">Confident</button>
+          <button data-style="charming" class="pc-makeover-btn py-2 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-violet-500/40 hover:bg-violet-500/10 transition cursor-pointer">Charming</button>
+          <button data-style="mysterious" class="pc-makeover-btn py-2 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-violet-500/40 hover:bg-violet-500/10 transition cursor-pointer">Mysterious</button>
+          <button data-style="genuine" class="pc-makeover-btn py-2 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-violet-500/40 hover:bg-violet-500/10 transition cursor-pointer">Genuine</button>
+          <button data-style="flirty" class="pc-makeover-btn py-2 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-violet-500/40 hover:bg-violet-500/10 transition cursor-pointer">Flirty</button>
+        </div>
+        <div id="pc-makeover-output" class="hidden p-4 bg-slate-900/60 rounded-xl border border-brand-border/40">
+          <p id="pc-makeover-text" class="text-xs text-slate-200 leading-relaxed font-mono"></p>
+          <div class="flex gap-2 mt-3">
+            <button id="pc-makeover-copy" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer">Copy</button>
+            <button id="pc-makeover-regen" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-lg transition cursor-pointer">Regenerate</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="pc-save-btn" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition cursor-pointer">Save Score</button>
+        <button id="pc-new-btn" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-2xl transition cursor-pointer">Analyze Another Profile</button>
+        <a href="/dashboard" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-2xl transition text-center">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+  <script is:inline>
+    (function () {
+      function q(a, b, c) { var s = String.fromCharCode(a); if (b) s += String.fromCharCode(b); if (c) s += String.fromCharCode(c); return s; }
+      var SCORE_KEY = "rizzora_profile_scores";
+      var USER_KEY = "rizzora_user";
+      function loadJSON(key) { try { var r = localStorage.getItem(key); return r ? JSON.parse(r) : null; } catch { return null; } }
+      function saveJSON(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+      var state = { platform: "hinge", bio: "", interests: "", personality: "", looking: "", vibe: "funny", language: "english", screenshots: [] };
+
+      // Platform buttons
+      document.querySelectorAll(".pc-platform-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".pc-platform-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          state.platform = btn.getAttribute("data-platform");
+        });
+      });
+
+      // Vibe buttons
+      document.querySelectorAll(".pc-vibe-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".pc-vibe-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          state.vibe = btn.getAttribute("data-vibe");
+        });
+      });
+
+      // Language
+      document.querySelectorAll(".pc-lang-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".pc-lang-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          state.language = btn.getAttribute("data-lang");
+        });
+      });
+
+      // Bio counter
+      var bioEl = document.getElementById("pc-bio");
+      var bioCount = document.getElementById("pc-bio-count");
+      bioEl.addEventListener("input", function () { bioCount.textContent = bioEl.value.length + " / 500"; });
+
+      // File upload
+      var fileInput = document.getElementById("pc-file-input");
+      var uploadArea = document.getElementById("pc-upload-area");
+      var uploadPrompt = document.getElementById("pc-upload-prompt");
+      var uploadPreview = document.getElementById("pc-upload-preview");
+
+      uploadArea.addEventListener("click", function (e) {
+        if (e.target.classList.contains("pc-remove-img")) return;
+        fileInput.click();
+      });
+
+      fileInput.addEventListener("change", function () {
+        if (!fileInput.files) return;
+        for (var i = 0; i < fileInput.files.length; i++) {
+          var f = fileInput.files[i];
+          if (f.size > 15 * 1024 * 1024) { alert(f.name + " is too large. Max 15MB."); continue; }
+          if (!f.type.match(/^image\/(png|jpeg|webp)$/)) { alert(f.name + " is not a supported image format."); continue; }
+          (function (file) {
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+              state.screenshots.push({ name: file.name, src: ev.target.result });
+              renderPreviews();
+            };
+            reader.readAsDataURL(file);
+          })(f);
+        }
+        fileInput.value = "";
+      });
+
+      function renderPreviews() {
+        uploadPreview.innerHTML = "";
+        if (state.screenshots.length > 0) {
+          uploadPrompt.classList.add("hidden");
+          uploadPreview.classList.remove("hidden");
+        } else {
+          uploadPrompt.classList.remove("hidden");
+          uploadPreview.classList.add("hidden");
+        }
+        state.screenshots.forEach(function (img, idx) {
+          var wrap = document.createElement("div");
+          wrap.className = "relative";
+          wrap.innerHTML =
+            '<img src="' + img.src + '" class="w-16 h-16 object-cover rounded-lg" alt="Profile screenshot" />' +
+            '<button data-idx="' + idx + '" class="pc-remove-img absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-[8px] font-bold leading-none flex items-center justify-center cursor-pointer">&times;</button>';
+          uploadPreview.appendChild(wrap);
+        });
+        document.querySelectorAll(".pc-remove-img").forEach(function (btn) {
+          btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            var idx = parseInt(btn.getAttribute("data-idx"));
+            state.screenshots.splice(idx, 1);
+            renderPreviews();
+          });
+        });
+      }
+
+      // Analyze
+      document.getElementById("pc-analyze-btn").addEventListener("click", function () {
+        state.bio = bioEl.value.trim();
+        state.interests = document.getElementById("pc-interests").value.trim();
+        state.personality = document.getElementById("pc-personality").value.trim();
+        state.looking = document.getElementById("pc-looking").value.trim();
+        if (!state.bio && state.screenshots.length === 0) {
+          bioEl.classList.add("ring-2", "ring-red-500/50");
+          bioEl.focus();
+          setTimeout(function () { bioEl.classList.remove("ring-2", "ring-red-500/50"); }, 1500);
+          return;
+        }
+        analyzeProfile();
+      });
+      function analyzeProfile() {
+        var bio = state.bio.toLowerCase();
+        var interests = state.interests.toLowerCase();
+        var personality = state.personality.toLowerCase();
+        var looking = state.looking.toLowerCase();
+        var vibe = state.vibe;
+        var lang = state.language;
+        var isHL = lang === "hinglish";
+        var hasScreenshots = state.screenshots.length > 0;
+
+        var score = 40;
+        var strengths = [];
+        var weaknesses = [];
+        var generic = [];
+        var analysis = "";
+
+        // Bio analysis
+        if (state.bio.length > 30) { score += 10; strengths.push("Bio has decent length and gives people something to work with."); }
+        else if (state.bio.length > 0) { weaknesses.push("Bio is too short. Add more personality and specific details."); }
+        else { generic.push("No bio provided. A bio is essential for making a good first impression."); }
+
+        var boringWords = ["just", "looking to see", "nothing special", "ask me", "idk", "here for", "down to"];
+        var boringCount = 0;
+        boringWords.forEach(function (w) { if (bio.indexOf(w) > -1) boringCount++; });
+        if (boringCount >= 2) { score -= 10; generic.push("Bio contains generic phrases that blend in with everyone else."); }
+        else if (boringCount === 1) { generic.push("One phrase in your bio sounds generic. Try being more specific."); }
+
+        var specificWords = ["love", "passionate", "obsessed", "favorite", "best", "worst", "always", "never", "weird", "secret"];
+        var specificCount = 0;
+        for (var sw = 0; sw < specificWords.length; sw++) { if (bio.indexOf(specificWords[sw]) > -1 || interests.indexOf(specificWords[sw]) > -1) specificCount++; }
+        if (specificCount >= 2) { score += 10; strengths.push("Uses specific, vivid language that makes you memorable."); }
+        else { generic.push("Add more specific details about what you love, hate, or find funny."); }
+
+        if (bio.indexOf("?") > -1) { score += 8; strengths.push("Includes a question - invites conversation and engagement."); }
+        else { generic.push("Consider adding a question to your bio to invite responses."); }
+
+        var humorWords = ["funny", "laugh", "joke", "humor", "witty", "sarcastic", "pun", "nerd"];
+        var hasHumor = false;
+        for (var hw = 0; hw < humorWords.length; hw++) { if (bio.indexOf(humorWords[hw]) > -1 || personality.indexOf(humorWords[hw]) > -1) hasHumor = true; }
+        if (hasHumor) { score += 8; strengths.push("Shows humor and personality - makes you approachable."); }
+
+        if (interests.length > 10) { score += 5; strengths.push("Clear interests give people conversation starters."); }
+        else if (interests.length === 0) { generic.push("Add interests/hobbies to help people find common ground."); }
+
+        if (looking.length > 5) { score += 5; strengths.push("States what you are looking for - shows intention and clarity."); }
+        else { generic.push("Add what you are looking for to attract like-minded people."); }
+
+        if (hasScreenshots) { score += 5; strengths.push("Provided screenshots for visual profile analysis."); }
+
+        var negativeWords = ["no drama", "don't waste my time", "not here for games", "real only", "serious only"];
+        var hasNegativity = false;
+        negativeWords.forEach(function (w) { if (bio.indexOf(w) > -1) hasNegativity = true; });
+        if (hasNegativity) { score -= 8; weaknesses.push("Negative language ('no drama', 'don't waste time') creates bad energy. Frame positively."); }
+
+        if (vibe === "mysterious" && state.bio.length < 40) { score += 5; strengths.push("Mysterious vibe works well with a shorter, intriguing bio."); }
+        if (vibe === "funny" && (hasHumor || bio.indexOf("?") > -1)) { score += 5; strengths.push("Funny vibe is supported by your bio content."); }
+
+        score = Math.max(15, Math.min(95, score));
+
+        if (score >= 75) { analysis = "Your profile has strong personality, specific details, and good conversation hooks. It stands out from the crowd and invites engagement."; }
+        else if (score >= 55) { analysis = "Your profile has good foundations but could use more specific details, personality, and conversation starters to really stand out."; }
+        else if (score >= 35) { analysis = "Your profile needs work. It currently blends in with generic profiles. Adding specific interests, humor, and a clear 'what you are looking for' will help."; }
+        else { analysis = "Your profile is very minimal. People scroll past profiles without personality. Let us fix that with specific, authentic details about who you are."; }
+
+        if (strengths.length === 0) strengths.push("You are taking the step to improve your profile - that is already a strength.");
+        if (weaknesses.length === 0) weaknesses.push("No major weaknesses detected. Keep the authentic energy.");
+        if (generic.length === 0) generic.push("Your profile avoids generic phrases. Nice work!");
+
+        var bios = generateBios(state.bio, interests, personality, looking, vibe, isHL);
+        var prompts = generatePrompts(interests, personality, looking, vibe, isHL);
+        var convos = generateConvos(interests, personality, isHL);
+        var tips = generateTips(score, vibe, isHL);
+
+        renderResults(score, analysis, strengths, weaknesses, generic, bios, prompts, convos, tips, isHL);
+      }
+      function generateBios(bio, interests, personality, looking, vibe, isHL) {
+        var bios = [];
+        var intParts = interests ? interests.split(",").map(function(s){return s.trim();}).filter(function(s){return s;}) : ["coffee", "music", "adventures"];
+        var perParts = personality ? personality.split(",").map(function(s){return s.trim();}).filter(function(s){return s;}) : ["curious", "fun"];
+        var lookText = looking || "genuine connection";
+
+        if (vibe === "funny") {
+          bios.push(isHL ? "Professional overthinker. Mere interests mein coffee, aur tumhe impress karna shamil hai. Warning: mujhe bad puns pasand hain." : "Professional overthinker. Interests include coffee and impressing you. Warning: I am into bad puns.");
+          bios.push(isHL ? "Meri personality: " + perParts[0] + ". Mera superpower: awkward silence ko aur awkward bana dena. Let us be weird together." : "My personality: " + perParts[0] + ". My superpower: making awkward silences even more awkward. Let us be weird together.");
+          bios.push(isHL ? "Agar tum " + intParts[0] + " pasand karti ho toh hum already compatible hain. Baaki dekhte hain." : "If you are into " + intParts[0] + ", we are already compatible. The rest is just details.");
+        } else if (vibe === "confident") {
+          bios.push(isHL ? "Main " + perParts[0] + " hu aur " + intParts[0] + " karta hu. Looking for " + lookText + ". Let us see where this goes." : "I am " + perParts[0] + " and I love " + intParts[0] + ". Looking for " + lookText + ". Let us see where this goes.");
+          bios.push(isHL ? "Confident in " + intParts[0] + ", clueless in love. balanced hai life. Let us figure it out together." : "Confident in " + intParts[0] + ", clueless in love. Life is balanced. Let us figure it out together.");
+          bios.push(isHL ? "I know what I want: " + lookText + ". I know what I bring: " + perParts[0] + " energy. Let us match." : "I know what I want: " + lookText + ". I know what I bring: " + perParts[0] + " energy. Let us match.");
+        } else if (vibe === "charming") {
+          bios.push(isHL ? "Tumhari smile dekh ke pata chala ki " + intParts[0] + " wali ladki/ladka hi chahiye tha mujhe." : "One look at your smile and I knew I needed someone who loves " + intParts[0] + ".");
+          bios.push(isHL ? "Main " + perParts[0] + " hu. " + intParts[0] + " mera passion hai. Tumhara introduction kab?" : "I am " + perParts[0] + ". " + intParts[0] + " is my passion. When do I get yours?");
+          bios.push(isHL ? "Coffee peete hue " + intParts[0] + " ke baare mein baat karna pasand hai. Looking for " + lookText + "." : "I love talking about " + intParts[0] + " over coffee. Looking for " + lookText + ".");
+        } else if (vibe === "mysterious") {
+          bios.push(isHL ? "Kuch cheezein batani nahi chahiye. Bas itna jaano: " + intParts[0] + " aur " + perParts[0] + "." : "Some things are better left unsaid. Just know: " + intParts[0] + " and " + perParts[0] + ".");
+          bios.push(isHL ? "Puzzle piece dhundh raha hu. Agar tum " + intParts[0] + " samajhti ho, maybe tum ho woh piece." : "Looking for a puzzle piece. If you understand " + intParts[0] + ", maybe you are it.");
+          bios.push(isHL ? "Profile padh ke guess karo main kaun hu. Clue: " + intParts[0] + "." : "Read my profile and guess who I am. Clue: " + intParts[0] + ".");
+        } else if (vibe === "genuine") {
+          bios.push(isHL ? "Main " + perParts[0] + " hu. " + intParts[0] + " karta hu aur " + lookText + " dhundh raha hu. Simple hai." : "I am " + perParts[0] + ". I love " + intParts[0] + " and looking for " + lookText + ". Simple as that.");
+          bios.push(isHL ? "No games, no drama. Bas " + intParts[0] + + " enjoy karna aur " + lookText + " chahta hu." : "No games, no drama. Just enjoy " + intParts[0] + " and looking for " + lookText + ".");
+          bios.push(isHL ? "Real baat: " + perParts[0] + " hu, " + intParts[0] + + " pasand hai, aur " + lookText + " chahiye. Let us be honest with each other." : "Real talk: I am " + perParts[0] + ", I like " + intParts[0] + ", and I want " + lookText + ". Let us be honest.");
+        } else if (vibe === "flirty") {
+          bios.push(isHL ? "Tumhe pata hai kya accha lagta hai? " + intParts[0] + " aur tumhari smile. 😊" : "You know what I love? " + intParts[0] + " and your smile. 😊");
+          bios.push(isHL ? "Main " + perParts[0] + " hu. Tumhe impress karne ka plan bana raha hu. Ready ho?" : "I am " + perParts[0] + ". Currently plotting to impress you. Ready?");
+          bios.push(isHL ? "Agar tum " + intParts[0] + + " pasand karti ho toh ek coffee ke liye manao mujhe." : "If you are into " + intParts[0] + ", take me out for coffee and let us see.");
+        }
+        return bios;
+      }
+
+      function generatePrompts(interests, personality, looking, vibe, isHL) {
+        var intParts = interests ? interests.split(",")[0].trim() : "coffee";
+        var prompts = isHL
+          ? [q("Mujhe sabse zyada khushi milti hai jab...") + " - " + intParts + " karta hu ya naye logon se milta hu.", q("My most irrational fear is...") + " - Ki mujhe boring lagunga.", q("A life goal of mine...") + " - Ek accha insaan banna aur " + (looking || "genuine connection") + " dhundhna.", q("I geek out on...") + " - " + intParts + " ke baare mein ghanton baat kar sakta hu.", q("The way to win me over is...") + " - Genuine baat karo, jokes maro, coffee pilao."]
+          : [q("I geek out on...") + " - " + intParts + ". Ask me about it and I will not stop.", q("My most controversial opinion is...") + " - Pineapple on pizza is elite. Fight me.", q("A life goal of mine...") + " - Become a better person and find " + (looking || "genuine connection") + ".", q("I am weirdly attracted to...") + " - People who laugh at their own jokes before finishing them.", q("The way to win me over is...") + " - Be genuine, make me laugh, and suggest coffee."];
+        return prompts;
+      }
+
+      function generateConvos(interests, personality, isHL) {
+        var intParts = interests ? interests.split(",").map(function(s){return s.trim();}).filter(function(s){return s;}).slice(0,3) : ["coffee", "music", "travel"];
+        var convos = isHL
+          ? ["Profile dekh ke laga ki tum " + intParts[0] + " + " + intParts[1] + " wali ho. Am I right?", "Agar hum date pe jaayein toh kya tum " + intParts[0] + " ke baare mein baat karogi?", "Tumhari profile se pata chalta hai ki tum " + personality + " ho. Confirmed?", "Ek question: " + intParts[2] + " ya " + intParts[0] + " - kya zyada enjoy karti ho?"]
+          : ["Your profile says " + intParts[0] + ". I need to know: coffee or " + intParts[1] + "?", "I see you are into " + intParts[2] + ". Tell me your hot take on that.", "Your vibe says " + personality + ". Am I reading that right?", "If we went on a date, what would you want to do first?"];
+        return convos;
+      }
+
+      function generateTips(score, vibe, isHL) {
+        var tips = [];
+        if (score < 50) {
+          tips.push(isHL ? "Apne bio mein specific details daalo. 'I like music' boring hai. 'Main 3 AM tak lo-fi sunta hu' interesting hai." : "Add specific details to your bio. 'I like music' is boring. 'I listen to lo-fi at 3 AM' is interesting.");
+          tips.push(isHL ? "Ek question pucho apne bio mein. Ye logon ko reply karne ka reason deta hai." : "Add a question to your bio. It gives people a reason to respond.");
+        }
+        if (vibe === "funny") tips.push(isHL ? "Humor ka balance rakho. Thoda funny, thoda genuine. Sirf jokes mat maro." : "Balance humor with authenticity. A little funny, a little real. Do not just joke non-stop.");
+        if (vibe === "mysterious") tips.push(isHL ? "Mysterious rehna accha hai par itna bhi mat chupao ki log bore ho jaayein." : "Mystery is good but do not hide so much that people lose interest.");
+        tips.push(isHL ? "Prompts ka jawab do detail mein. 'I like travel' boring hai. 'Main Paris gaya tha aur wahan ka croissant life change kar gaya' interesting hai." : "Answer prompts with detail. 'I like travel' is boring. 'I went to Paris and the croissant changed my life' is interesting.");
+        tips.push(isHL ? "Profile mein negativity mat daalo. 'No drama' ki jagah 'Good vibes only' likho." : "Avoid negativity in your profile. Instead of 'No drama', say 'Good vibes only'.");
+        tips.push(isHL ? "Apne " + (isHL ? "favourite" : "favorite") + " conversation starter soch ke rakho. Pehla impression sabse important hai." : "Have a go-to conversation starter ready. First impressions matter most.");
+        return tips;
+      }
+      function renderResults(score, analysis, strengths, weaknesses, generic, bios, prompts, convos, tips, isHL) {
+        document.getElementById("pc-input").classList.add("hidden");
+        document.getElementById("pc-results").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        // Animate score
+        var gauge = document.getElementById("pc-gauge");
+        var circumference = 327;
+        var offset = circumference - (circumference * score / 327);
+        setTimeout(function () {
+          gauge.style.transition = "stroke-dashoffset 1.5s ease-out";
+          gauge.setAttribute("stroke-dashoffset", circumference - (circumference * score / 100));
+          var el = document.getElementById("pc-score-num");
+          var cur = 0;
+          var step = Math.ceil(score / 30);
+          var iv = setInterval(function () { cur += step; if (cur >= score) { cur = score; clearInterval(iv); } el.textContent = cur; }, 30);
+        }, 200);
+
+        var title, sub;
+        if (score >= 80) { title = "Strong Profile"; sub = "Your profile stands out. Minor tweaks can make it perfect."; }
+        else if (score >= 60) { title = "Good Foundation"; sub = "Solid start with room to become more memorable."; }
+        else if (score >= 40) { title = "Needs Work"; sub = "Blends in with the crowd. Let us make you stand out."; }
+        else { title = "Minimal Profile"; sub = "Too generic. People scroll past this. Time for a makeover."; }
+
+        document.getElementById("pc-score-title").textContent = title;
+        document.getElementById("pc-score-sub").textContent = sub;
+        document.getElementById("pc-analysis").textContent = analysis;
+
+        var sHtml = "";
+        strengths.forEach(function (s) { sHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-emerald-400 mt-0.5 shrink-0">&#10003;</span>' + s + '</li>'; });
+        document.getElementById("pc-strengths").innerHTML = sHtml;
+
+        var wHtml = "";
+        weaknesses.forEach(function (w) { wHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-amber-400 mt-0.5 shrink-0">&#9679;</span>' + w + '</li>'; });
+        document.getElementById("pc-weaknesses").innerHTML = wHtml;
+
+        var gHtml = "";
+        generic.forEach(function (g) { gHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-red-400 mt-0.5 shrink-0">&#10007;</span>' + g + '</li>'; });
+        document.getElementById("pc-generic").innerHTML = gHtml;
+
+        var bHtml = "";
+        bios.forEach(function (b, idx) {
+          bHtml += '<div class="p-4 bg-slate-900/60 rounded-xl border border-brand-border/40">' +
+            '<div class="flex items-center justify-between mb-2"><span class="text-[10px] font-bold text-rose-400 uppercase">Version ' + (idx + 1) + '</span>' +
+            '<button class="pc-copy-bio px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-rose-400 transition cursor-pointer" data-text="' + b.replace(/"/g, "&quot;") + '">Copy</button></div>' +
+            '<p class="text-xs text-slate-200 leading-relaxed">' + b + '</p></div>';
+        });
+        document.getElementById("pc-bios").innerHTML = bHtml;
+
+        document.querySelectorAll(".pc-copy-bio").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var text = btn.getAttribute("data-text");
+            navigator.clipboard.writeText(text).then(function () {
+              btn.textContent = "Copied!";
+              btn.classList.add("text-emerald-400");
+              setTimeout(function () { btn.textContent = "Copy"; btn.classList.remove("text-emerald-400"); }, 1500);
+            });
+          });
+        });
+
+        var pHtml = "";
+        prompts.forEach(function (p) { pHtml += '<li class="p-3 bg-slate-900/60 rounded-xl border border-pink-500/10 text-xs text-slate-300">' + p + '</li>'; });
+        document.getElementById("pc-prompts").innerHTML = pHtml;
+
+        var cHtml = "";
+        convos.forEach(function (c) { cHtml += '<li class="p-3 bg-slate-900/60 rounded-xl border border-blue-500/10 text-xs text-slate-300">' + c + '</li>'; });
+        document.getElementById("pc-convos").innerHTML = cHtml;
+
+        var tHtml = "";
+        tips.forEach(function (t) { tHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-emerald-400 mt-0.5 shrink-0">&#10148;</span>' + t + '</li>'; });
+        document.getElementById("pc-tips").innerHTML = tHtml;
+
+        state.currentScore = score;
+        state.currentBios = bios;
+      }
+
+      // Bio Makeover
+      var currentMakeoverStyle = "funny";
+      document.querySelectorAll(".pc-makeover-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".pc-makeover-btn").forEach(function (b) {
+            b.classList.remove("border-violet-500", "bg-violet-500/10", "text-violet-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-violet-500", "bg-violet-500/10", "text-violet-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          currentMakeoverStyle = btn.getAttribute("data-style");
+          generateMakeover();
+        });
+      });
+
+      function generateMakeover() {
+        var bio = state.bio || "I like coffee and music. Looking for someone cool.";
+        var isHL = state.language === "hinglish";
+        var style = currentMakeoverStyle;
+        var result = "";
+
+        if (style === "funny") {
+          result = isHL ? "Main " + (state.personality || "interesting") + " hu. Mera dream hai ki koi mujhe " + (state.interests || "coffee") + " ke saath impressed kare. Abhi tak sirf coffee khud impress ho rahi hai." : "I am " + (state.personality || "interesting") + ". My dream is for someone to be impressed by my " + (state.interests || "coffee") + " skills. So far, only my coffee is impressed.";
+        } else if (style === "confident") {
+          result = isHL ? "I know what I bring: " + (state.personality || "authentic") + " energy. I know what I want: " + (state.looking || "genuine connection") + ". Let us see if we match." : "I know what I bring: " + (state.personality || "authentic") + " energy. I know what I want: " + (state.looking || "genuine connection") + ". Let us see if we match.";
+        } else if (style === "charming") {
+          result = isHL ? "Tumhari profile dekh ke laga ki tum " + (state.interests || "good conversations") + + " pasand karti ho. Main bhi yahi chahta hu. Coincidence?" : "Your profile says you love " + (state.interests || "good conversations") + ". Same here. Coincidence?";
+        } else if (style === "mysterious") {
+          result = isHL ? "Kuch cheezein batani nahi chahiye. Bas itna jaano: " + (state.interests || "interesting") + " aur " + (state.personality || "curious") + ". Baaki khud discover karo." : "Some things are better left unsaid. Just know: " + (state.interests || "interesting") + " and " + (state.personality || "curious") + ". Discover the rest yourself.";
+        } else if (style === "genuine") {
+          result = isHL ? "Main " + (state.personality || "real") + " hu. " + (state.interests || "Simple pleasures") + " enjoy karta hu aur " + (state.looking || "genuine connection") + " dhundh raha hu. No filters." : "I am " + (state.personality || "real") + ". I enjoy " + (state.interests || "simple pleasures") + " and looking for " + (state.looking || "genuine connection") + ". No filters.";
+        } else if (style === "flirty") {
+          result = isHL ? "Tumhe pata hai kya accha lagta hai? " + (state.interests || "good conversations") + " aur tumhari profile padhna. Smiles guaranteed." : "You know what I love? " + (state.interests || "good conversations") + " and reading your profile. Smiles guaranteed.";
+        }
+
+        document.getElementById("pc-makeover-text").textContent = result;
+        document.getElementById("pc-makeover-output").classList.remove("hidden");
+      }
+
+      document.getElementById("pc-makeover-copy").addEventListener("click", function () {
+        var text = document.getElementById("pc-makeover-text").textContent;
+        navigator.clipboard.writeText(text).then(function () {
+          var btn = document.getElementById("pc-makeover-copy");
+          btn.textContent = "Copied!";
+          btn.classList.add("text-emerald-400");
+          setTimeout(function () { btn.textContent = "Copy"; btn.classList.remove("text-emerald-400"); }, 1500);
+        });
+      });
+
+      document.getElementById("pc-makeover-regen").addEventListener("click", function () { generateMakeover(); });
+
+      // Save
+      document.getElementById("pc-save-btn").addEventListener("click", function () {
+        var scores = loadJSON(SCORE_KEY) || [];
+        scores.unshift({
+          score: state.currentScore,
+          platform: state.platform,
+          vibe: state.vibe,
+          date: new Date().toLocaleString(),
+          timestamp: Date.now()
+        });
+        saveJSON(SCORE_KEY, scores.slice(0, 30));
+
+        var user = loadJSON(USER_KEY) || { name: "User" };
+        user.xp = (user.xp || 0) + 50;
+        saveJSON(USER_KEY, user);
+
+        var btn = document.getElementById("pc-save-btn");
+        btn.textContent = "Saved!";
+        btn.classList.add("bg-emerald-500");
+        setTimeout(function () { btn.textContent = "Save Score"; btn.classList.remove("bg-emerald-500"); }, 2000);
+      });
+
+      // New
+      document.getElementById("pc-new-btn").addEventListener("click", function () {
+        document.getElementById("pc-results").classList.add("hidden");
+        document.getElementById("pc-input").classList.remove("hidden");
+        state.screenshots = [];
+        renderPreviews();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    })();
+  </script>
+</Layout>

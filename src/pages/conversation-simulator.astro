@@ -1,0 +1,752 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Conversation Simulator | Rizzora">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+    <!-- Header -->
+    <div class="mb-6 sm:mb-8">
+      <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Conversation Simulator</h1>
+      <p class="text-slate-400 mt-1 text-sm sm:text-base">Practice real dating conversations with AI-powered characters. Get live feedback on your flow.</p>
+    </div>
+
+    <!-- ═══════════ SETUP SCREEN ═══════════ -->
+    <div id="sim-setup" class="max-w-2xl mx-auto">
+      <div class="glass p-6 sm:p-8 rounded-2xl space-y-5">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 border-b border-brand-border/40 pb-2">Setup Your Scenario</h3>
+
+        <!-- Other Person's Name -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Other person's name</label>
+          <input id="sim-name" type="text" maxlength="20" placeholder="e.g. Sarah" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+        </div>
+
+        <!-- Language -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Language</label>
+          <div class="flex gap-2">
+            <button data-lang="english" class="sim-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">English</button>
+            <button data-lang="hinglish" class="sim-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-slate-600 cursor-pointer transition">Hinglish</button>
+          </div>
+        </div>
+
+        <!-- Scenario -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Scenario</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="sim-scenario-grid">
+            <button data-scenario="first_meeting" class="sim-scenario-btn text-left p-3 rounded-xl border-2 border-rose-500 bg-rose-500/10 transition cursor-pointer">
+              <span class="text-sm font-bold text-rose-400 block">First Meeting</span>
+              <span class="text-[10px] text-slate-400">Coffee shop, casual encounter</span>
+            </button>
+            <button data-scenario="crush" class="sim-scenario-btn text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Talking to Crush</span>
+              <span class="text-[10px] text-slate-400">Someone you like, building rapport</span>
+            </button>
+            <button data-scenario="dating_app" class="sim-scenario-btn text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Dating App</span>
+              <span class="text-[10px] text-slate-400">First text on a dating app</span>
+            </button>
+            <button data-scenario="first_date" class="sim-scenario-btn text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">First Date</span>
+              <span class="text-[10px] text-slate-400">Real date, getting to know them</span>
+            </button>
+            <button data-scenario="custom" class="sim-scenario-btn col-span-1 sm:col-span-2 text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Custom Scenario</span>
+              <span class="text-[10px] text-slate-400">Create your own situation</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom scenario input (hidden by default) -->
+        <div id="sim-custom-wrap" class="hidden">
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Describe your scenario</label>
+          <textarea id="sim-custom" rows="2" maxlength="200" placeholder="e.g. You meet at a bookstore and bond over sci-fi novels" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition resize-none"></textarea>
+        </div>
+
+        <!-- Personality -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Their personality</label>
+          <div class="grid grid-cols-2 gap-2" id="sim-personality-grid">
+            <button data-personality="friendly" class="sim-personality-btn text-left p-3 rounded-xl border-2 border-rose-500 bg-rose-500/10 transition cursor-pointer">
+              <span class="text-sm font-bold text-rose-400 block">Friendly</span>
+              <span class="text-[10px] text-slate-400">Warm, open, easy to talk to</span>
+            </button>
+            <button data-personality="shy" class="sim-personality-btn text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Shy</span>
+              <span class="text-[10px] text-slate-400">Reserved, warms up slowly</span>
+            </button>
+            <button data-personality="playful" class="sim-personality-btn text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Playful</span>
+              <span class="text-[10px] text-slate-400">Loves banter and teasing</span>
+            </button>
+            <button data-personality="hard_to_read" class="sim-personality-btn text-left p-3 rounded-xl border-2 border-brand-border/60 bg-slate-900/40 transition cursor-pointer">
+              <span class="text-sm font-bold text-slate-300 block">Hard to Read</span>
+              <span class="text-[10px] text-slate-400">Mysterious, gives short replies</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Start Button -->
+        <button id="sim-start-btn" class="w-full py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition-all duration-200 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 cursor-pointer active:scale-95">
+          Start Conversation
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════ CHAT SCREEN ═══════════ -->
+    <div id="sim-chat" class="hidden grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
+
+      <!-- Chat Area -->
+      <div class="lg:col-span-3 glass rounded-2xl flex flex-col h-[450px] sm:h-[550px]">
+        <!-- Chat Header -->
+        <div class="px-4 sm:px-6 py-4 border-b border-brand-border/60 flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center space-x-3">
+            <div id="sim-avatar" class="w-10 h-10 rounded-full bg-slate-800 border border-brand-border flex items-center justify-center font-bold text-rose-400 text-sm">S</div>
+            <div>
+              <h4 id="sim-chat-name" class="text-sm font-bold text-slate-200">Sarah</h4>
+              <span id="sim-chat-scenario" class="text-[10px] text-slate-400">First Meeting</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="sim-msg-count" class="text-[10px] text-slate-500">0 messages</span>
+            <button id="sim-end-btn" class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 px-3 py-1.5 rounded-lg transition cursor-pointer">End Chat</button>
+          </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="sim-messages" class="flex-grow p-4 sm:p-6 overflow-y-auto space-y-4"></div>
+
+        <!-- Chat Input -->
+        <div class="p-4 border-t border-brand-border/60 bg-slate-950/40 rounded-b-2xl">
+          <div class="flex items-center space-x-2">
+            <input id="sim-input" type="text" maxlength="300" placeholder="Type your message..." class="flex-grow bg-slate-900 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/30 transition" />
+            <button id="sim-send-btn" class="bg-rose-500 hover:bg-rose-600 text-white p-3 rounded-xl transition cursor-pointer active:scale-95">
+              <svg class="w-4 h-4 transform rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Metrics Sidebar -->
+      <div class="lg:col-span-1 glass p-5 rounded-2xl flex flex-col">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 border-b border-brand-border/40 pb-2">Live Feedback</h3>
+        <div class="space-y-4 flex-grow" id="sim-metrics">
+          <div>
+            <div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Confidence</span><span class="font-bold text-slate-100" id="m-confidence">50%</span></div>
+            <div class="w-full bg-slate-900 rounded-full h-1.5"><div class="bg-rose-500 h-1.5 rounded-full transition-all duration-500" id="bar-confidence" style="width:50%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Humor</span><span class="font-bold text-slate-100" id="m-humor">30%</span></div>
+            <div class="w-full bg-slate-900 rounded-full h-1.5"><div class="bg-amber-500 h-1.5 rounded-full transition-all duration-500" id="bar-humor" style="width:30%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Flow</span><span class="font-bold text-slate-100" id="m-flow">50%</span></div>
+            <div class="w-full bg-slate-900 rounded-full h-1.5"><div class="bg-blue-500 h-1.5 rounded-full transition-all duration-500" id="bar-flow" style="width:50%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Listening</span><span class="font-bold text-slate-100" id="m-listening">40%</span></div>
+            <div class="w-full bg-slate-900 rounded-full h-1.5"><div class="bg-indigo-500 h-1.5 rounded-full transition-all duration-500" id="bar-listening" style="width:40%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Flirting</span><span class="font-bold text-slate-100" id="m-flirting">25%</span></div>
+            <div class="w-full bg-slate-900 rounded-full h-1.5"><div class="bg-pink-500 h-1.5 rounded-full transition-all duration-500" id="bar-flirting" style="width:25%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Respect</span><span class="font-bold text-slate-100" id="m-respect">70%</span></div>
+            <div class="w-full bg-slate-900 rounded-full h-1.5"><div class="bg-emerald-500 h-1.5 rounded-full transition-all duration-500" id="bar-respect" style="width:70%"></div></div>
+          </div>
+        </div>
+        <div class="pt-4 border-t border-brand-border/20 mt-4">
+          <div class="text-center">
+            <span class="text-[10px] text-slate-500">Overall Vibe</span>
+            <div id="sim-vibe" class="text-lg font-bold text-emerald-400 mt-0.5">Good Start</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ SUMMARY SCREEN ═══════════ -->
+    <div id="sim-summary" class="hidden max-w-3xl mx-auto space-y-6">
+      <div class="glass p-6 sm:p-8 rounded-2xl text-center">
+        <div class="text-5xl mb-4">🏆</div>
+        <h2 class="text-2xl font-extrabold text-white">Simulation Complete</h2>
+        <p id="sum-scenario" class="text-slate-400 mt-1 text-sm"></p>
+      </div>
+
+      <!-- Score Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="sum-scores"></div>
+
+      <!-- Strengths & Mistakes -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-400 mb-3">Strengths</h3>
+          <ul id="sum-strengths" class="space-y-2"></ul>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-amber-400 mb-3">Mistakes</h3>
+          <ul id="sum-mistakes" class="space-y-2"></ul>
+        </div>
+      </div>
+
+      <!-- Tips -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-violet-400 mb-3">Improvement Tips</h3>
+        <ul id="sum-tips" class="space-y-2"></ul>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="sim-restart-btn" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition cursor-pointer">Restart Same Scenario</button>
+        <button id="sim-another-btn" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-2xl transition cursor-pointer">Try Another Scenario</button>
+        <a href="/dashboard" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-2xl transition text-center">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+  <script is:inline>
+    (function () {
+      var ACT_KEY = "rizzora_simulator";
+      function loadActivity() { try { var r = localStorage.getItem(ACT_KEY); return r ? JSON.parse(r) : []; } catch { return []; } }
+      function saveActivity(list) { localStorage.setItem(ACT_KEY, JSON.stringify(list.slice(0, 30))); }
+      function pushActivity(entry) { var list = loadActivity(); list.unshift(entry); saveActivity(list); }
+      function q(a, b, c) { var s = String.fromCharCode(a); if (b) s += String.fromCharCode(b); if (c) s += String.fromCharCode(c); return s; }
+
+      var selectedLang = "english";
+      var selectedScenario = "first_meeting";
+      var selectedPersonality = "friendly";
+      var customScenario = "";
+      var theirName = "Alex";
+      var chatHistory = [];
+      var msgCount = 0;
+      var metrics = { confidence: 50, humor: 30, flow: 50, listening: 40, flirting: 25, respect: 70 };
+      var sessionActive = false;
+
+      var scenarioLabels = {
+        first_meeting: "First Meeting",
+        crush: "Talking to Crush",
+        dating_app: "Dating App",
+        first_date: "First Date",
+        custom: "Custom Scenario"
+      };
+
+      // --- Setup: Language ---
+      document.querySelectorAll(".sim-lang-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".sim-lang-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          selectedLang = btn.getAttribute("data-lang");
+        });
+      });
+
+      // --- Setup: Scenario ---
+      document.querySelectorAll(".sim-scenario-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".sim-scenario-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40");
+            var lbl = b.querySelector("span:first-child");
+            if (lbl) { lbl.classList.remove("text-rose-400"); lbl.classList.add("text-slate-300"); }
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40");
+          var lbl = btn.querySelector("span:first-child");
+          if (lbl) { lbl.classList.add("text-rose-400"); lbl.classList.remove("text-slate-300"); }
+          selectedScenario = btn.getAttribute("data-scenario");
+          var cw = document.getElementById("sim-custom-wrap");
+          if (selectedScenario === "custom") cw.classList.remove("hidden");
+          else cw.classList.add("hidden");
+        });
+      });
+
+      // --- Setup: Personality ---
+      document.querySelectorAll(".sim-personality-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".sim-personality-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40");
+            var lbl = b.querySelector("span:first-child");
+            if (lbl) { lbl.classList.remove("text-rose-400"); lbl.classList.add("text-slate-300"); }
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40");
+          var lbl = btn.querySelector("span:first-child");
+          if (lbl) { lbl.classList.add("text-rose-400"); lbl.classList.remove("text-slate-300"); }
+          selectedPersonality = btn.getAttribute("data-personality");
+        });
+      });
+
+      // --- Start ---
+      document.getElementById("sim-start-btn").addEventListener("click", function () {
+        var nameInput = document.getElementById("sim-name");
+        theirName = nameInput.value.trim() || "Alex";
+        if (selectedScenario === "custom") {
+          customScenario = document.getElementById("sim-custom").value.trim();
+          if (!customScenario) {
+            document.getElementById("sim-custom").classList.add("ring-2", "ring-red-500/50");
+            document.getElementById("sim-custom").focus();
+            setTimeout(function () { document.getElementById("sim-custom").classList.remove("ring-2", "ring-red-500/50"); }, 1500);
+            return;
+          }
+        }
+        startChat();
+      });
+      function startChat() {
+        document.getElementById("sim-setup").classList.add("hidden");
+        document.getElementById("sim-chat").classList.remove("hidden");
+        document.getElementById("sim-chat").classList.add("grid");
+
+        theirName = theirName.charAt(0).toUpperCase() + theirName.slice(1);
+        document.getElementById("sim-chat-name").textContent = theirName;
+        document.getElementById("sim-chat-scenario").textContent = scenarioLabels[selectedScenario] + " | " + selectedPersonality.charAt(0).toUpperCase() + selectedPersonality.slice(1);
+        document.getElementById("sim-avatar").textContent = theirName.charAt(0);
+
+        chatHistory = [];
+        msgCount = 0;
+        metrics = { confidence: 50, humor: 30, flow: 50, listening: 40, flirting: 25, respect: 70 };
+        sessionActive = true;
+        updateMetrics();
+        document.getElementById("sim-messages").innerHTML = "";
+
+        var greeting = getGreeting();
+        addMessage(theirName, greeting, "them");
+        pushToHistory("them", greeting);
+      }
+
+      function getGreeting() {
+        var isHL = selectedLang === "hinglish";
+        var s = selectedScenario;
+        var p = selectedPersonality;
+        var greetings = {
+          first_meeting: {
+            friendly: isHL ? "Hey! Tum bhi yahan ho? Kya ordered kiya hai?" : "Hey! You are here too? What did you order?",
+            shy: isHL ? "Oh hi... tum bhi coffee lene aaye ho?" : "Oh hi... you are here for coffee too?",
+            playful: isHL ? "Hey! Lagta hai hum same taste ke hain. Coffee lover ya tea person?" : "Hey! Looks like we have the same taste. Coffee lover or tea person?",
+            hard_to_read: isHL ? "Hey." : "Hey."
+          },
+          crush: {
+            friendly: isHL ? "Hey! Aaj ka din kaisa ja raha hai tumhara?" : "Hey! How is your day going so far?",
+            shy: isHL ? "Hi... acha hua tum mil gaye. Mera din thoda boring tha." : "Hi... glad I ran into you. My day was a bit boring.",
+            playful: isHL ? "Hey! Tumhe dekh ke laga ki aaj ka din accha ho jaayega. Prove me right. 😊" : "Hey! Seeing you just made my day better. Prove me right. 😊",
+            hard_to_read: isHL ? "Hi. Kya chal raha hai?" : "Hi. What is up?"
+          },
+          dating_app: {
+            friendly: isHL ? "Hey! Tumhara profile dekh ke muskuraya main. Kya interest hai tumhari?" : "Hey! Your profile made me smile. What are you into?",
+            shy: isHL ? "Hi... hope ye message thoda awkward na lage. Tumhara bio accha hai." : "Hi... hope this is not awkward. Your bio is cool.",
+            playful: isHL ? "Hey! Agar tumhe ek emoji se describe karna padega khud ko, kya hoga?" : "Hey! If you had to describe yourself in one emoji, what would it be?",
+            hard_to_read: isHL ? "Hey. Profile acchi hai." : "Hey. Nice profile."
+          },
+          first_date: {
+            friendly: isHL ? "Hey! Kaisa laga yahan aake? comfortable ho?" : "Hey! How are you feeling about this place? Comfortable?",
+            shy: isHL ? "Hi... nervous nahi hu, bas thoda excited. Tum kaisi ho?" : "Hi... not nervous, just a bit excited. How are you?",
+            playful: isHL ? "Hey! Date ka pehla impression kaisa raha? 10 mein se kitne number doge mujhe?" : "Hey! First impression of this date? How many points out of 10 would you give me?",
+            hard_to_read: isHL ? "Hey. Yahan aake accha laga." : "Hey. Glad to be here."
+          },
+          custom: {
+            friendly: isHL ? "Hey! Kaisa lag raha hai yahan?" : "Hey! How are you feeling here?",
+            shy: isHL ? "Hi... thoda alag hai ye situation, but accha hai." : "Hi... this is a bit different, but nice.",
+            playful: isHL ? "Hey! Ye situation toh interesting hai. Tum kya soch rahe ho?" : "Hey! This situation is interesting. What are you thinking?",
+            hard_to_read: isHL ? "Hey." : "Hey."
+          }
+        };
+        return greetings[s][p] || greetings[s].friendly;
+      }
+      function addMessage(sender, text, type) {
+        var container = document.getElementById("sim-messages");
+        var now = new Date();
+        var time = now.getHours().toString().replace(/^(\d)$/, "0$1") + ":" + now.getMinutes().toString().replace(/^(\d)$/, "0$1");
+        var isMe = type === "me";
+        var wrap = document.createElement("div");
+        wrap.className = "flex flex-col " + (isMe ? "items-end" : "items-start");
+        wrap.innerHTML =
+          '<div class="text-[10px] text-slate-500 mb-0.5">' + sender + '</div>' +
+          '<div class="max-w-xs sm:max-w-sm px-4 py-2.5 rounded-2xl text-sm ' +
+            (isMe ? 'bg-rose-500 text-white rounded-tr-none' : 'bg-slate-800 text-slate-200 rounded-tl-none') +
+          '">' + text + '</div>' +
+          '<div class="text-[9px] text-slate-600 mt-0.5">' + time + '</div>';
+        container.appendChild(wrap);
+        container.scrollTop = container.scrollHeight;
+      }
+
+      function pushToHistory(sender, text) {
+        chatHistory.push({ sender: sender, text: text, ts: Date.now() });
+      }
+
+      function updateMetrics() {
+        var keys = ["confidence", "humor", "flow", "listening", "flirting", "respect"];
+        keys.forEach(function (k) {
+          var val = Math.round(metrics[k]);
+          var bar = document.getElementById("bar-" + k);
+          var label = document.getElementById("m-" + k);
+          if (bar) bar.style.width = val + "%";
+          if (label) label.textContent = val + "%";
+        });
+        var avg = Math.round((metrics.confidence + metrics.humor + metrics.flow + metrics.listening + metrics.flirting + metrics.respect) / 6);
+        var vibeEl = document.getElementById("sim-vibe");
+        if (vibeEl) {
+          if (avg >= 80) { vibeEl.textContent = "Amazing"; vibeEl.className = "text-lg font-bold text-emerald-400 mt-0.5"; }
+          else if (avg >= 65) { vibeEl.textContent = "Great Flow"; vibeEl.className = "text-lg font-bold text-blue-400 mt-0.5"; }
+          else if (avg >= 50) { vibeEl.textContent = "Good Start"; vibeEl.className = "text-lg font-bold text-amber-400 mt-0.5"; }
+          else if (avg >= 35) { vibeEl.textContent = "Needs Work"; vibeEl.className = "text-lg font-bold text-orange-400 mt-0.5"; }
+          else { vibeEl.textContent = "Awkward"; vibeEl.className = "text-lg font-bold text-red-400 mt-0.5"; }
+        }
+      }
+
+      function analyzeUser(msg) {
+        var m = msg.toLowerCase();
+        var len = msg.length;
+        var delta = { confidence: 0, humor: 0, flow: 0, listening: 0, flirting: 0, respect: 0 };
+
+        if (len > 20) delta.confidence += 8;
+        else if (len > 10) delta.confidence += 4;
+        else delta.confidence -= 5;
+
+        if (m.indexOf("?") > -1) delta.listening += 6;
+        if (m.indexOf("you") > -1 || m.indexOf("tum") > -1 || m.indexOf("your") > -1) delta.listening += 4;
+        if (m.indexOf("think") > -1 || m.indexOf("feel") > -1 || m.indexOf("sochte") > -1 || m.indexOf("lagta") > -1) delta.listening += 5;
+
+        var humorWords = ["haha", "lol", "joke", "funny", "maza", "hahaha", "😂", "😄", ";)", ":P"];
+        humorWords.forEach(function (w) { if (m.indexOf(w) > -1) delta.humor += 8; });
+
+        var flirtWords = ["cute", "beautiful", "handsome", "adorable", "pyaari", "sundar", "love", "miss", "😊", "😄", "❤"];
+        var flirtCount = 0;
+        flirtWords.forEach(function (w) { if (m.indexOf(w) > -1) flirtCount++; });
+        if (flirtCount === 1) delta.flirting += 6;
+        else if (flirtCount >= 2) delta.flirting += 10;
+
+        if (len > 30) delta.flow += 5;
+        if (m.indexOf("and") > -1 || m.indexOf("aur") > -1) delta.flow += 3;
+
+        var rudeWords = ["stupid", "idiot", "ugly", "shut up", "boring", "worst", "hate"];
+        var hasRude = false;
+        rudeWords.forEach(function (w) { if (m.indexOf(w) > -1) { hasRude = true; delta.respect -= 15; } });
+        if (!hasRude) delta.respect += 2;
+
+        var pushyWords = ["why didnt", "why not reply", "where are you", "answer me", " reply", "ignore"];
+        pushyWords.forEach(function (w) { if (m.indexOf(w) > -1) { delta.respect -= 8; delta.confidence -= 5; } });
+
+        return delta;
+      }
+      function generateResponse(userMsg, history, scenario, personality, lang) {
+        var isHL = lang === "hinglish";
+        var m = userMsg.toLowerCase();
+        var turnCount = history.length;
+        var lastThem = "";
+        for (var i = history.length - 1; i >= 0; i--) {
+          if (history[i].sender === "them") { lastThem = history[i].text.toLowerCase(); break; }
+        }
+
+        var isQuestion = m.indexOf("?") > -1;
+        var isShort = m.length < 10;
+        var isGreeting = m === "hey" || m === "hello" || m === "hi" || m === "sup" || m === "kya haal" || m === "kaise ho";
+        var isFlirty = m.indexOf("cute") > -1 || m.indexOf("beautiful") > -1 || m.indexOf("love") > -1 || m.indexOf("miss") > -1 || m.indexOf("pyari") > -1;
+        var isDeep = m.indexOf("feel") > -1 || m.indexOf("think") > -1 || m.indexOf("meaning") > -1 || m.indexOf("life") > -1 || m.indexOf("dream") > -1;
+        var isBoring = m === "ok" || m === "hmm" || m === "k" || m === "cool" || m === "nm";
+        var isRude = m.indexOf("stupid") > -1 || m.indexOf("ugly") > -1 || m.indexOf("boring") > -1 || m.indexOf("shut up") > -1;
+
+        if (isRude) {
+          return isHL ? "Ye thoda rude laga mujhe. Main chill rehna pasand karti hu. Friendly baat karte hain?" : "That felt a bit rude. I prefer keeping things friendly. Can we keep it chill?";
+        }
+
+        var responses = [];
+        var p = personality;
+
+        if (isGreeting) {
+          if (p === "friendly") {
+            responses = isHL
+              ? ["Hey! Aur batao, kya plans hain aaj ke liye?", "Hi! Tumhara din kaisa ja raha hai? Mera accha hai.", "Hey! Kuch interesting ho raha hai ya chill mode on hai?"]
+              : ["Hey! So, what are the plans for today?", "Hi! How is your day going? Mine is going well.", "Hey! Anything interesting happening or just chill mode?"];
+          } else if (p === "shy") {
+            responses = isHL
+              ? ["Hi... acha hai tum mil gaye. Mera din thoda boring tha.", "Hey... kaise ho? Main theek hu.", "Hi... kuch bolna chahti thi par bhool gayi."]
+              : ["Hi... nice to hear from you. My day was a bit quiet.", "Hey... how are you? I am doing okay.", "Hi... I was going to say something but forgot."];
+          } else if (p === "playful") {
+            responses = isHL
+              ? ["Hey! Tumhe pata hai, tumhara message dekh ke smile aa gayi. 😊", "Hey! Abhi tak koi interesting nahi mila aaj. Ab mila. 😄", "Hey! Guess what? Main bore ho rahi thi ab tak. Ab nahi. 😊"]
+              : ["Hey! You just made my day better, not gonna lie. 😊", "Hey! Was so bored until now. Thanks for texting! 😄", "Hey! I was literally thinking about something fun to do. Perfect timing. 😊"];
+          } else {
+            responses = isHL
+              ? ["Hey.", "Hi. Kya chal raha hai?", "Hey. Interesting."]
+              : ["Hey.", "Hi. What is up?", "Hey. Nice."];
+          }
+        } else if (isShort) {
+          if (p === "friendly") {
+            responses = isHL
+              ? ["Haha, ye kya tha? Thoda aur batao na!", "Short and sweet! Par kuch aur bhi bolo.", "Accha! Aur batao, kya scene hai?"]
+              : ["Haha, that was quick! Tell me more though.", "Short and sweet! But give me something to work with.", "Got it! What else is going on?"];
+          } else if (p === "shy") {
+            responses = isHL
+              ? ["Hmm... main samajh gayi. Par thoda aur context do.", "Ok... kuch aur bhi bolo.", "Accha..."]
+              : ["Hmm... I see. Could you elaborate a bit?", "Ok... anything else?", "Got it..."];
+          } else if (p === "playful") {
+            responses = isHL
+              ? ["Wow, itna content! Main overwhelmed ho gayi. 😂", "Ye padh ke laga ki tumhare phone ka autocorrect bhi bore ho raha hai. 😂", "Itna effort dekh ke impressed hu! 😂"]
+              : ["Wow, so much content! I am overwhelmed. 😂", "Even your phone's autocorrect is getting bored. 😂", "All that effort, wow! 😂"];
+          } else {
+            responses = isHL
+              ? ["Hmm.", "Ok.", "Interesting."]
+              : ["Hmm.", "Ok.", "Interesting."];
+          }
+        } else if (isQuestion) {
+          if (p === "friendly") {
+            responses = isHL
+              ? ["Accha sawaal hai! Mere according to... (soch rahi hu). Tum kya sochte ho?", "Hmm, ye socha nahi tha. Par lagta hai... interesting! Tumhari baat mein dum hai.", "Good question! Mera answer hai... par tum sunna chahti ho ya already jaanti ho?"]
+              : ["Good question! I would say... hmm, still thinking. What do you think?", "Interesting! I have not really thought about that. What is your take?", "Love that question! My answer is... honestly I am still deciding. How about you?"];
+          } else if (p === "shy") {
+            responses = isHL
+              ? ["Ye... interesting hai. Mere paas abhi answer nahi hai, par sochungi.", "Hmm... accha hai ye sawaal. Par thoda nervous ho rahi hu answer dene mein.", "Mujhe nahi pata exactly... par tum batao kya sochte ho?"]
+              : ["This is... interesting. I do not have an answer right now, but I will think about it.", "Hmm... that is a good question. I feel a bit nervous answering though.", "I am not sure exactly... but what do you think?"];
+          } else if (p === "playful") {
+            responses = isHL
+              ? ["Oho! Ye ekdam trap question lag rahi hai. Par okay, mera answer hai... ab tumhari baari! ;)", "Interesting! Par pehle tum batao, tumhara answer kya hoga? Curious hu. 😏", "Accha! Main bhi ek sawaal puchu ya pehle ye solve karein? ;)"]
+              : ["Okay this feels like a test... but my answer is... now your turn! ;)", "Good question! But I want to hear your answer first. Curious. 😏", "Nice! Should I answer first or should you? ;)"];
+          } else {
+            responses = isHL
+              ? ["Accha.", "Hmm, ye socha nahi tha.", "Interesting sawaal."]
+              : ["Interesting.", "Had not thought about that.", "Good question."];
+          }
+        } else if (isFlirty) {
+          if (p === "friendly") {
+            responses = isHL
+              ? ["Aww, thanks! Tum bhi kaafi acche ho, honestly. 😊", "Haha, ye sun ke accha laga! Par ab tumhari baari hai compliment dene ki. 😄", "That is sweet! Tumhe pata hai, tumhari baatein bhi acchi lagti hain. 😊"]
+              : ["Aww, that is really sweet of you! You are pretty great too, honestly. 😊", "Ha, thanks! Now it is your turn to接受 a compliment. 😄", "That is nice to hear! Your messages are pretty great too. 😊"];
+          } else if (p === "shy") {
+            responses = isHL
+              ? ["Oh... thanks. Tum bhi... accha ho. (blushing hu main abhi).", "Ye sun ke... accha laga. Par thoda shy ho rahi hu.", "Thanks... tumhari baatein bhi... acchi lagti hain."]
+              : ["Oh... thanks. You are... nice too. (I am blushing right now).", "That is... sweet. I feel a bit shy now though.", "Thanks... your messages are... nice too."];
+          } else if (p === "playful") {
+            responses = isHL
+              ? ["Haha, smooth! Tum expert ho kya? 😏", "Oho! Flirting skill level: expert. Main impressed hu. 😊", "Aww! Par ab ye prove bhi karo in person. ;)" ]
+              : ["Haha, smooth! Are you a pro at this? 😏", "Oh wow! Flirting level: expert. I am impressed. 😊", "That is sweet! Now prove it in person. ;)"];
+          } else {
+            responses = isHL
+              ? ["Accha.", "Hmm.", "Ok."]
+              : ["Nice.", "Hmm.", "Ok."];
+          }
+        } else if (isDeep) {
+          if (p === "friendly") {
+            responses = isHL
+              ? ["Ye gehri baat ho gayi! Par accha laga sun ke. Tum sochte ho bahut, ye acchi baat hai.", "Hmm, ye sochne wali baat hai. Main bhi kabhi kabhi aise sochti hu. Tumhare saath discuss karna accha lagta hai.", "Deep! Par sahi hai. Life mein aise conversations chahiye. Tum kya chahte ho life se?"]
+              : ["That got deep! But I like it. You think a lot, that is a good quality.", "Hmm, that is something to think about. I have those moments too. Love discussing this with you.", "Deep! But in a good way. Life needs these conversations. What do you want from life?"];
+          } else if (p === "shy") {
+            responses = isHL
+              ? ["Ye... gehri baat hai. Main itna sochti nahi hu aamtaur par, par ye accha laga.", "Hmm... main thoda nervous ho rahi hu ye discuss karne mein, par tumhare saath comfortable hu.", "Accha... ye sochne wali baat hai. Tumhare saath discuss karna accha lagta hai."]
+              : ["This is... deep. I do not usually think this much, but this is nice.", "Hmm... I feel a bit nervous discussing this, but I am comfortable with you.", "Good point... something to think about. I like talking about this with you."];
+          } else if (p === "playful") {
+            responses = isHL
+              ? ["Oho! philosopher ban gaye aaj? Par accha hai, depth bhi zaroori hai. 😊", "Deep! Ab thoda light bhi ho jaaye? ;). Par ye accha topic hai.", "Hmm, ye sun ke laga ki tum interesting ho. Par ab ek joke bhi sunao! 😄"]
+              : ["Oh, going philosophical today! But I like it, depth is good too. 😊", "Deep stuff! Can we lighten it up a bit too? ;). But great topic.", "Hmm, this makes you interesting. But now tell me a joke! 😄"];
+          } else {
+            responses = isHL
+              ? ["Hmm.", "Accha.", "Ye sochne wali baat hai."]
+              : ["Hmm.", "Interesting.", "Something to think about."];
+          }
+        } else {
+          if (p === "friendly") {
+            if (turnCount < 6) {
+              responses = isHL
+                ? ["Accha! Aur batao, kya chal raha hai tumhari life mein?", "Nice! Tumhe kya pasand hai karne ko? Weekend pe kya karti ho?", "Interesting! Main bhi kuch batau ya tum hi sunna chahti ho? ;)" ]
+                : ["Nice! What else is going on in your life?", "Cool! What do you like to do? What are your weekends like?", "Interesting! Want to hear about me or are you just vibing? ;)"];
+            } else {
+              responses = isHL
+                ? ["Haan! Tumhare saath ye conversation acchi ja rahi hai. Keep going! 😊", "Accha hai! Ab aur interesting batao. Main engaged hu. 😄", "Tumhari ye baat acchi lagi! Ab zara aur batao, kya sochte ho iske baare mein?"]
+                : ["Yes! This conversation is going well. Keep it coming! 😊", "Nice! Now tell me something even more interesting. I am engaged. 😄", "Love that! What else is on your mind?"];
+            }
+          } else if (p === "shy") {
+            if (turnCount < 6) {
+              responses = isHL
+                ? ["Hmm, accha hai ye. Par thoda aur batao, main zyada jaanna chahti hu.", "Ok... interesting. Tumhare baare mein aur batao?", "Accha... main bhi kuch batati hu par pehle tum bolo."]
+              : ["Hmm, nice. Tell me more about yourself though.", "Ok... interesting. What else about you?", "Got it... I will share too, but you go first."];
+            } else {
+              responses = isHL
+                ? ["Tumhare saath baat karke accha lag raha hai. Pehle jitni nervous thi, ab utni nahi.", "Hmm... comfortable ho rahi hu tumhare saath. Ye acchi baat hai.", "Accha laga ye conversation mein. Tum acche ho."]
+              : ["Talking to you feels nice. I was nervous at first, not so much now.", "Hmm... getting comfortable with you. That is a good thing.", "This conversation is nice. You are good company."];
+            }
+          } else if (p === "playful") {
+            if (turnCount < 6) {
+              responses = isHL
+                ? ["Interesting! Ab ek game khelte hain - tum 3 cheezein batao apne baare mein. Ready? 😄", "Accha! Tum interesting ho. Ab meri baari hai - ready ho? ;)", "Haan! Par ab ek challenge - mujhe hasao. Go! 😊"]
+                : ["Interesting! Let us play a game - tell me 3 things about yourself. Ready? 😄", "Nice! Your turn to impress - go! ;)", "Cool! Now a challenge - make me laugh. Go! 😊"];
+            } else {
+              responses = isHL
+                ? ["Tumhe pata hai, tum mera attention grab kar rahe ho. Ye acchi baat hai. 😊", "Conversation acchi ja rahi hai! Ab thoda aur drama bhi ho jaaye. 😄", "Haan! Tum mere liye interesting ban rahe ho. Keep going! 😊"]
+                : ["You know what, you have got my attention. That is a good thing. 😊", "Great conversation! Now let us add some drama. 😄", "Yes! You are becoming interesting to me. Keep going! 😊"];
+            }
+          } else {
+            if (turnCount < 6) {
+              responses = isHL
+                ? ["Hmm.", "Accha.", "Ok, aur batao."]
+              : ["Hmm.", "Ok.", "Tell me more."];
+            } else {
+              responses = isHL
+                ? ["Interesting.", "Ok.", "Accha."]
+              : ["Interesting.", "Ok.", "Nice."];
+            }
+          }
+        }
+
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+      // --- Send Message ---
+      function sendMessage() {
+        var input = document.getElementById("sim-input");
+        var msg = input.value.trim();
+        if (!msg || !sessionActive) return;
+        input.value = "";
+
+        addMessage("You", msg, "me");
+        pushToHistory("me", msg);
+        msgCount++;
+        document.getElementById("sim-msg-count").textContent = msgCount + " messages";
+
+        var delta = analyzeUser(msg);
+        var keys = ["confidence", "humor", "flow", "listening", "flirting", "respect"];
+        keys.forEach(function (k) {
+          metrics[k] = Math.max(0, Math.min(100, metrics[k] + delta[k]));
+        });
+        updateMetrics();
+
+        setTimeout(function () {
+          var response = generateResponse(msg, chatHistory, selectedScenario, selectedPersonality, selectedLang);
+          addMessage(theirName, response, "them");
+          pushToHistory("them", response);
+
+          if (selectedPersonality === "hard_to_read" && msgCount >= 8 && Math.random() > 0.5) {
+            sessionActive = false;
+            setTimeout(function () {
+              addMessage(theirName, "I think I should head out now. It was nice talking to you.", "them");
+              pushToHistory("them", "I think I should head out now. It was nice talking to you.");
+              setTimeout(showSummary, 1500);
+            }, 800);
+          }
+        }, 800 + Math.random() * 1200);
+      }
+
+      document.getElementById("sim-send-btn").addEventListener("click", sendMessage);
+      document.getElementById("sim-input").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") sendMessage();
+      });
+
+      // --- End Chat ---
+      document.getElementById("sim-end-btn").addEventListener("click", function () {
+        if (!sessionActive) return;
+        sessionActive = false;
+        addMessage("You", "It was great talking to you! Take care. 😊", "me");
+        pushToHistory("me", "It was great talking to you! Take care. 😊");
+        msgCount++;
+        setTimeout(function () {
+          addMessage(theirName, "You too! Had a great time. Take care!", "them");
+          pushToHistory("them", "You too! Had a great time. Take care!");
+          setTimeout(showSummary, 1200);
+        }, 1000);
+      });
+
+      function showSummary() {
+        document.getElementById("sim-chat").classList.add("hidden");
+        document.getElementById("sim-chat").classList.remove("grid");
+        document.getElementById("sim-summary").classList.remove("hidden");
+
+        document.getElementById("sum-scenario").textContent =
+          scenarioLabels[selectedScenario] + " with " + theirName + " (" + selectedPersonality.charAt(0).toUpperCase() + selectedPersonality.slice(1) + ") | " + msgCount + " messages";
+
+        var avg = Math.round((metrics.confidence + metrics.humor + metrics.flow + metrics.listening + metrics.flirting + metrics.respect) / 6);
+        var scoreData = [
+          { name: "Confidence", val: Math.round(metrics.confidence), color: "text-rose-400" },
+          { name: "Humor", val: Math.round(metrics.humor), color: "text-amber-400" },
+          { name: "Flow", val: Math.round(metrics.flow), color: "text-blue-400" },
+          { name: "Listening", val: Math.round(metrics.listening), color: "text-indigo-400" },
+          { name: "Flirting", val: Math.round(metrics.flirting), color: "text-pink-400" },
+          { name: "Respect", val: Math.round(metrics.respect), color: "text-emerald-400" }
+        ];
+        var scoreHtml = "";
+        scoreData.forEach(function (s) {
+          scoreHtml += '<div class="glass p-4 rounded-xl text-center">' +
+            '<div class="text-2xl font-extrabold ' + s.color + '">' + s.val + '%</div>' +
+            '<div class="text-xs text-slate-400 mt-1">' + s.name + '</div></div>';
+        });
+        scoreHtml += '<div class="glass p-4 rounded-xl text-center col-span-2 sm:col-span-3">' +
+          '<div class="text-3xl font-extrabold text-white">' + avg + '%</div>' +
+          '<div class="text-xs text-slate-400 mt-1">Overall Score</div></div>';
+        document.getElementById("sum-scores").innerHTML = scoreHtml;
+
+        var strengths = [];
+        if (metrics.respect >= 70) strengths.push("Showed genuine respect throughout the conversation.");
+        if (metrics.listening >= 60) strengths.push("Asked thoughtful follow-up questions and engaged with their replies.");
+        if (metrics.confidence >= 65) strengths.push("Communicated confidently with clear, well-formed messages.");
+        if (metrics.humor >= 50) strengths.push("Added humor and lightness to keep the vibe fun.");
+        if (metrics.flirting >= 50) strengths.push("Flirted naturally without being pushy or overwhelming.");
+        if (metrics.flow >= 60) strengths.push("Maintained smooth conversation flow with good transitions.");
+        if (strengths.length === 0) strengths.push("You completed the conversation! That takes courage. Keep practicing.");
+        var sHtml = "";
+        strengths.forEach(function (s) { sHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-emerald-400 mt-0.5">&#10003;</span>' + s + '</li>'; });
+        document.getElementById("sum-strengths").innerHTML = sHtml;
+
+        var mistakes = [];
+        if (metrics.respect < 60) mistakes.push("Some messages may have felt pushy or disrespectful. Focus on giving space.");
+        if (metrics.listening < 50) mistakes.push("Try asking more questions about what they share instead of redirecting to yourself.");
+        if (metrics.confidence < 50) mistakes.push("Messages were too short or uncertain. Try adding more detail and personality.");
+        if (metrics.humor < 30 && metrics.flirting < 30) mistakes.push("The conversation lacked lightness. Add humor or playful energy to keep it fun.");
+        if (msgCount < 6) mistakes.push("The conversation ended quickly. Try to sustain the flow with follow-up questions.");
+        if (mistakes.length === 0) mistakes.push("No major mistakes! You kept things respectful and engaging.");
+        var mHtml = "";
+        mistakes.forEach(function (m) { mHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-amber-400 mt-0.5">&#9888;</span>' + m + '</li>'; });
+        document.getElementById("sum-mistakes").innerHTML = mHtml;
+
+        var tips = [];
+        if (metrics.flow < 60) tips.push("Practice the FORD method: Family, Occupation, Recreation, Dreams. It keeps conversations flowing naturally.");
+        if (metrics.humor < 50) tips.push("Use playful teasing or situational humor. Avoid forced jokes; let humor come from the moment.");
+        if (metrics.flirting < 50) tips.push("Add subtle compliments that feel genuine. Notice small things about them, not just appearance.");
+        if (metrics.listening < 60) tips.push("Reflect back what they say: 'Oh you like hiking? What trails have you tried?' It shows real interest.");
+        if (metrics.confidence < 60) tips.push("Speak with conviction. Instead of 'I guess so', try 'Absolutely!' or 'That sounds great.'");
+        tips.push("After 5-6 exchanges, suggest moving to a different platform or meeting in person if the vibe is right.");
+        var tHtml = "";
+        tips.forEach(function (t) { tHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-violet-400 mt-0.5">&#10148;</span>' + t + '</li>'; });
+        document.getElementById("sum-tips").innerHTML = tHtml;
+
+        pushActivity({
+          type: "Simulator",
+          name: scenarioLabels[selectedScenario] + " Simulation",
+          detail: "With " + theirName + " (" + selectedPersonality + ")",
+          score: avg + "% overall",
+          date: new Date().toLocaleString(),
+          scenario: selectedScenario,
+          personality: selectedPersonality,
+          theirName: theirName,
+          messages: msgCount,
+          metrics: {
+            confidence: Math.round(metrics.confidence),
+            humor: Math.round(metrics.humor),
+            flow: Math.round(metrics.flow),
+            listening: Math.round(metrics.listening),
+            flirting: Math.round(metrics.flirting),
+            respect: Math.round(metrics.respect)
+          }
+        });
+      }
+
+      // --- Restart ---
+      document.getElementById("sim-restart-btn").addEventListener("click", function () {
+        document.getElementById("sim-summary").classList.add("hidden");
+        startChat();
+      });
+
+      document.getElementById("sim-another-btn").addEventListener("click", function () {
+        document.getElementById("sim-summary").classList.add("hidden");
+        document.getElementById("sim-chat").classList.add("hidden");
+        document.getElementById("sim-chat").classList.remove("grid");
+        document.getElementById("sim-setup").classList.remove("hidden");
+      });
+    })();
+  </script>
+</Layout>

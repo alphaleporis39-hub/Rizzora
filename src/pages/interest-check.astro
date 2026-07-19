@@ -1,0 +1,760 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Interest Check | Rizzora">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+    <!-- Header -->
+    <div class="mb-6 sm:mb-8">
+      <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Does She Like Me?</h1>
+      <p class="text-slate-400 mt-1 text-sm sm:text-base">Analyze signals, behaviors, and interaction patterns. 100% private and local.</p>
+    </div>
+
+    <!-- ═══════════ SCREEN 1: INPUT ═══════════ -->
+    <div id="ic-input" class="max-w-2xl mx-auto">
+      <div class="glass p-6 sm:p-8 rounded-2xl space-y-5">
+        <div class="text-center mb-2">
+          <div class="text-3xl mb-2">&#128064;</div>
+          <h3 class="text-lg font-bold text-slate-200">Tell me everything.</h3>
+          <p class="text-sm text-slate-400 mt-1">What is happening between you two?</p>
+        </div>
+
+        <!-- Crush Name -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Their name</label>
+          <input id="ic-name" type="text" maxlength="20" placeholder="e.g. Sarah" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+        </div>
+
+        <!-- Relationship -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Your relationship</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="ic-rel-grid">
+            <button data-rel="crush" class="ic-rel-btn py-2.5 text-xs font-bold rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">Crush</button>
+            <button data-rel="friend" class="ic-rel-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Friend</button>
+            <button data-rel="classmate" class="ic-rel-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Classmate</button>
+            <button data-rel="coworker" class="ic-rel-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Coworker</button>
+            <button data-rel="dating" class="ic-rel-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Dating</button>
+            <button data-rel="talking" class="ic-rel-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Talking Stage</button>
+            <button data-rel="custom" class="ic-rel-btn col-span-2 py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Custom</button>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Describe what is going on</label>
+          <textarea id="ic-desc" rows="4" maxlength="1000" placeholder="Tell me everything: how you met, how they act around you, what they say, how they reply, any mixed signals..." class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition resize-none"></textarea>
+          <div class="flex justify-between mt-1">
+            <span class="text-[10px] text-slate-500" id="ic-desc-count">0 / 1000</span>
+            <span class="text-[10px] text-slate-500">The more detail, the better the analysis</span>
+          </div>
+        </div>
+
+        <!-- Chat Screenshot Upload -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Chat screenshot (optional)</label>
+          <div id="ic-upload-area" class="relative border-2 border-dashed border-brand-border/60 rounded-xl p-4 text-center cursor-pointer hover:border-rose-500/30 transition">
+            <div id="ic-upload-prompt">
+              <div class="text-2xl mb-1">&#128247;</div>
+              <p class="text-xs text-slate-400">Click to upload a screenshot</p>
+              <p class="text-[10px] text-slate-500 mt-1">PNG, JPG up to 5MB</p>
+            </div>
+            <div id="ic-upload-preview" class="hidden">
+              <img id="ic-preview-img" class="max-h-32 mx-auto rounded-lg mb-2" alt="Screenshot preview" />
+              <p id="ic-preview-name" class="text-xs text-slate-400 truncate"></p>
+              <button id="ic-remove-img" class="mt-2 text-[10px] font-bold text-red-400 hover:text-red-300 cursor-pointer">Remove</button>
+            </div>
+            <input id="ic-file-input" type="file" accept="image/*" class="hidden" />
+          </div>
+        </div>
+
+        <!-- Language -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Language</label>
+          <div class="flex gap-2">
+            <button data-lang="english" class="ic-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">English</button>
+            <button data-lang="hinglish" class="ic-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Hinglish</button>
+          </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="p-3 bg-rose-500/5 border border-rose-500/15 rounded-xl">
+          <p class="text-[10px] text-rose-300/80 leading-relaxed">
+            <span class="font-bold">Disclaimer:</span> These estimates are based purely on the context you provide. They are NOT predictions of someone's actual feelings. Always respect clear boundaries.
+          </p>
+        </div>
+
+        <!-- Start Button -->
+        <button id="ic-start-btn" class="w-full py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition-all duration-200 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 cursor-pointer active:scale-95">
+          Analyze Signals
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════ SCREEN 2: INTERACTIVE CHAT ═══════════ -->
+    <div id="ic-chat" class="hidden max-w-2xl mx-auto">
+      <div class="glass rounded-2xl flex flex-col h-[450px] sm:h-[550px]">
+        <!-- Chat Header -->
+        <div class="px-4 sm:px-6 py-4 border-b border-brand-border/60 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-linear-to-r from-rose-500/20 to-violet-500/20 border border-rose-500/30 flex items-center justify-center text-lg">&#128161;</div>
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Interest Analyst</h4>
+              <span id="ic-chat-status" class="text-[10px] text-slate-400">Asking follow-up questions...</span>
+            </div>
+          </div>
+          <span id="ic-q-count" class="text-[10px] text-slate-500">Question 1 of 4</span>
+        </div>
+
+        <!-- Messages -->
+        <div id="ic-messages" class="flex-grow p-4 sm:p-6 overflow-y-auto space-y-4"></div>
+
+        <!-- Quick Reply Buttons -->
+        <div id="ic-quick-replies" class="px-4 sm:px-6 pb-4 flex flex-wrap gap-2"></div>
+
+        <!-- Input -->
+        <div class="px-4 sm:px-6 pb-4 pt-2 border-t border-brand-border/60">
+          <div class="flex items-center space-x-2">
+            <input id="ic-chat-input" type="text" maxlength="300" placeholder="Type your answer..." class="flex-grow bg-slate-900 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/30 transition" />
+            <button id="ic-chat-send" class="bg-rose-500 hover:bg-rose-600 text-white p-3 rounded-xl transition cursor-pointer active:scale-95">
+              <svg class="w-4 h-4 transform rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ SCREEN 3: RESULTS ═══════════ -->
+    <div id="ic-results" class="hidden max-w-3xl mx-auto space-y-6">
+
+      <!-- Main Result Card -->
+      <div class="glass p-6 sm:p-8 rounded-2xl text-center border border-brand-border/60">
+        <div id="ic-result-emoji" class="text-5xl mb-3"></div>
+        <h2 id="ic-result-title" class="text-2xl font-extrabold text-white"></h2>
+        <p id="ic-result-subtitle" class="text-slate-400 mt-1 text-sm"></p>
+
+        <!-- Percentages -->
+        <div class="grid grid-cols-3 gap-3 mt-6">
+          <div class="p-4 bg-rose-500/10 rounded-xl border border-rose-500/20">
+            <div id="ic-pct-romantic" class="text-2xl font-black text-rose-400">0%</div>
+            <div class="text-[10px] text-slate-400 mt-1">Romantic Interest</div>
+          </div>
+          <div class="p-4 bg-amber-500/10 rounded-xl border border-amber-500/20">
+            <div id="ic-pct-mixed" class="text-2xl font-black text-amber-400">0%</div>
+            <div class="text-[10px] text-slate-400 mt-1">Mixed Signals</div>
+          </div>
+          <div class="p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+            <div id="ic-pct-friendly" class="text-2xl font-black text-blue-400">0%</div>
+            <div class="text-[10px] text-slate-400 mt-1">Likely Friendly</div>
+          </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-slate-900/60 rounded-xl border border-brand-border/40">
+          <p class="text-[10px] text-slate-400 leading-relaxed">
+            <span class="font-bold text-slate-300">Confidence:</span> <span id="ic-confidence" class="text-slate-200"></span>
+          </p>
+          <p class="text-[10px] text-slate-500 mt-1">These are contextual estimates, not predictions of someone's actual feelings.</p>
+        </div>
+      </div>
+
+      <!-- Signals -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3">Positive Signals</h3>
+          <ul id="ic-positive" class="space-y-2"></ul>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-3">Mixed / Unclear</h3>
+          <ul id="ic-mixed-signals" class="space-y-2"></ul>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-red-400 mb-3">Low Interest Signs</h3>
+          <ul id="ic-negative" class="space-y-2"></ul>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-violet-400 mb-3">Why This Result</h3>
+        <p id="ic-explanation" class="text-sm text-slate-300 leading-relaxed"></p>
+      </div>
+
+      <!-- Next Move -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3">Best Respectful Next Move</h3>
+          <p id="ic-next-move" class="text-xs text-slate-300 leading-relaxed"></p>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-red-400 mb-3">What NOT to Do</h3>
+          <p id="ic-what-not" class="text-xs text-slate-300 leading-relaxed"></p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="ic-something-changed" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition cursor-pointer">Something Changed</button>
+        <button id="ic-check-again" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-2xl transition cursor-pointer">Check Again</button>
+        <button id="ic-share-result" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-violet-300 bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/20 rounded-2xl transition cursor-pointer">Share Result</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SHARE CARD MODAL ═══════════ -->
+  <div id="ic-modal" class="hidden fixed inset-0 z-[100] bg-brand-dark/90 backdrop-blur-sm flex items-center justify-center px-4">
+    <div class="w-full max-w-sm">
+      <div id="ic-card" class="rounded-3xl overflow-hidden border border-brand-border/60 shadow-2xl" style="background: linear-gradient(135deg, #080d1a 0%, #0f172a 50%, #1a0a2e 100%);">
+        <div class="p-8 text-center">
+          <div class="text-xl font-black tracking-tight gradient-text mb-1">Rizzora</div>
+          <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-6">Interest Result</div>
+          <div id="card-ic-emoji" class="text-4xl mb-2"></div>
+          <div id="card-ic-pct" class="text-5xl font-black text-white"></div>
+          <div class="text-xs text-slate-400 mt-1">Estimated Romantic Interest</div>
+          <h3 id="card-ic-title" class="text-lg font-bold text-slate-100 mt-4"></h3>
+          <p id="card-ic-subtitle" class="text-xs text-rose-400 font-semibold mt-1"></p>
+          <div class="mt-6 pt-4 border-t border-brand-border/40">
+            <p class="text-[10px] text-slate-500">Generated on <span id="card-ic-date"></span></p>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-4">
+        <button id="ic-download-btn" class="flex-1 py-3 text-xs font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 rounded-xl cursor-pointer transition">Download Card</button>
+        <button id="ic-close-modal" class="flex-1 py-3 text-xs font-bold uppercase tracking-wider text-slate-300 bg-slate-800 border border-brand-border rounded-xl cursor-pointer transition">Close</button>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+  <script is:inline>
+    (function () {
+      function q(a, b, c) { var s = String.fromCharCode(a); if (b) s += String.fromCharCode(b); if (c) s += String.fromCharCode(c); return s; }
+      var ACT_KEY = "rizzora_interest_check";
+      function loadJSON(key) { try { var r = localStorage.getItem(key); return r ? JSON.parse(r) : null; } catch { return null; } }
+      function saveJSON(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+      function loadActivity() { return loadJSON(ACT_KEY) || []; }
+      function saveActivity(list) { saveJSON(ACT_KEY, list.slice(0, 30)); }
+      function pushActivity(entry) { var list = loadActivity(); list.unshift(entry); saveActivity(list); }
+
+      var state = {
+        crushName: "",
+        relationship: "crush",
+        description: "",
+        language: "english",
+        chatAnswers: [],
+        currentQuestion: 0,
+        questions: [],
+        results: null
+      };
+
+      // --- Relationship buttons ---
+      document.querySelectorAll(".ic-rel-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".ic-rel-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          state.relationship = btn.getAttribute("data-rel");
+        });
+      });
+
+      // --- Language ---
+      document.querySelectorAll(".ic-lang-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".ic-lang-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          state.language = btn.getAttribute("data-lang");
+        });
+      });
+
+      // --- Description counter ---
+      var descEl = document.getElementById("ic-desc");
+      var descCount = document.getElementById("ic-desc-count");
+      descEl.addEventListener("input", function () {
+        descCount.textContent = descEl.value.length + " / 1000";
+      });
+
+      // --- File upload ---
+      var fileInput = document.getElementById("ic-file-input");
+      var uploadArea = document.getElementById("ic-upload-area");
+      var uploadPrompt = document.getElementById("ic-upload-prompt");
+      var uploadPreview = document.getElementById("ic-upload-preview");
+      var previewImg = document.getElementById("ic-preview-img");
+      var previewName = document.getElementById("ic-preview-name");
+      var removeImgBtn = document.getElementById("ic-remove-img");
+
+      uploadArea.addEventListener("click", function (e) {
+        if (e.target === removeImgBtn || e.target.closest("#ic-remove-img")) return;
+        fileInput.click();
+      });
+      fileInput.addEventListener("change", function () {
+        if (!fileInput.files || !fileInput.files[0]) return;
+        var f = fileInput.files[0];
+        if (f.size > 5 * 1024 * 1024) { alert("File too large. Max 5MB."); fileInput.value = ""; return; }
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          previewImg.src = ev.target.result;
+          previewName.textContent = f.name;
+          uploadPrompt.classList.add("hidden");
+          uploadPreview.classList.remove("hidden");
+        };
+        reader.readAsDataURL(f);
+      });
+      removeImgBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        fileInput.value = "";
+        uploadPrompt.classList.remove("hidden");
+        uploadPreview.classList.add("hidden");
+      });
+
+      // --- Generate questions based on description ---
+      function generateQuestions(desc, rel, lang) {
+        var d = desc.toLowerCase();
+        var isHL = lang === "hinglish";
+        var qs = [];
+        var allQs = {
+          initiation: isHL ? "Ye batao - zyada tar conversations kiske taraf se start hoti hain? Tumhari ya unki?" : "Who usually starts the conversations - you or them?",
+          reply_time: isHL ? "Unka reply time kaisa hai? Jaldi reply karte hain ya ghanton ka wait karna padta hai?" : "How is their reply time? Quick responses or hours of waiting?",
+          alone_time: isHL ? "Kya wo tumhare saath akela waqat bitaane ki koshish karte hain? Ya hamesha group mein milte hain?" : "Do they try to spend alone time with you, or do you always meet in groups?",
+          different_behavior: isHL ? "Kya wo tumhare saath aur doosron se alag behave karte hain? Koi fark dikhta hai?" : "Do they behave differently with you compared to others? Any noticeable difference?",
+          deep_convo: isHL ? "Kya wo tumse personally baat karte hain? Deep topics pe discuss karte hain ya sirf casual?" : "Do they have personal or deep conversations with you, or only casual talk?",
+          body_language: isHL ? "Milne pe body language kaisa hai? Eye contact, smile, ya koi special gesture?" : "How is their body language when you meet? Eye contact, smile, or any special gestures?",
+          future_talk: isHL ? "Kya wo future ke plans mein tumhe include karte hain? Jaise 'hum ye karenge' type baatein?" : "Do they include you in future plans? Like 'we should do this' type of talk?",
+          compliments: isHL ? "Kya wo tumhe compliment karte hain? Ya kabhi kuch special kehte hain tumhare baare mein?" : "Do they compliment you or say something special about you?",
+          mixed_signals: isHL ? "Kabhi aisa lagta hai ki wo interested hain, par kabhi lagta hai ki nahi? Mixed signals milte hain?" : "Do you ever feel they are interested one moment and distant the next? Mixed signals?",
+          social_media: isHL ? "Social media pe kaise interact karte hain? Likes, comments, stories pe react?" : "How do they interact on social media? Likes, comments, story reactions?",
+          texting_style: isHL ? "Texting ka style kaisa hai? Emojis use karte hain, long messages likhte hain, ya sirf short replies?" : "What is their texting style? Emojis, long messages, or short replies?",
+          comfort_level: isHL ? "Tumhare saath kitne comfortable lagte hain? Kya wo open up karte hain ya reserved rehte hain?" : "How comfortable do they seem around you? Do they open up or stay reserved?"
+        };
+
+        if (d.indexOf("start") > -1 || d.indexOf("initiat") > -1 || d.indexOf("text") > -1 || d.indexOf("message") > -1 || d.indexOf("chat") > -1 || d.indexOf("baat") > -1) {
+          qs.push("reply_time");
+          qs.push("texting_style");
+        } else if (d.indexOf("meet") > -1 || d.indexOf("date") > -1 || d.indexOf("saath") > -1 || d.indexOf("together") > -1 || d.indexOf("hangout") > -1) {
+          qs.push("alone_time");
+          qs.push("body_language");
+        } else if (d.indexOf("feel") > -1 || d.indexOf("confus") > -1 || d.indexOf("mixed") > -1 || d.indexOf("samajh") > -1 || d.indexOf("pata") > -1) {
+          qs.push("mixed_signals");
+          qs.push("different_behavior");
+        } else {
+          qs.push("initiation");
+          qs.push("different_behavior");
+        }
+
+        var pool = ["deep_convo", "compliments", "future_talk", "social_media", "comfort_level", "body_language"];
+        var shuffled = pool.sort(function () { return 0.5 - Math.random(); });
+        for (var i = 0; qs.length < 4 && i < shuffled.length; i++) {
+          if (qs.indexOf(shuffled[i]) === -1) qs.push(shuffled[i]);
+        }
+
+        return qs.map(function (key) { return { key: key, text: allQs[key] }; });
+      }
+      // --- Start analysis ---
+      document.getElementById("ic-start-btn").addEventListener("click", function () {
+        var name = document.getElementById("ic-name").value.trim();
+        var desc = descEl.value.trim();
+        if (!name) { document.getElementById("ic-name").classList.add("ring-2", "ring-red-500/50"); document.getElementById("ic-name").focus(); setTimeout(function () { document.getElementById("ic-name").classList.remove("ring-2", "ring-red-500/50"); }, 1500); return; }
+        if (!desc) { descEl.classList.add("ring-2", "ring-red-500/50"); descEl.focus(); setTimeout(function () { descEl.classList.remove("ring-2", "ring-red-500/50"); }, 1500); return; }
+        state.crushName = name.charAt(0).toUpperCase() + name.slice(1);
+        state.description = desc;
+        state.questions = generateQuestions(desc, state.relationship, state.language);
+        state.currentQuestion = 0;
+        state.chatAnswers = [];
+        startChat();
+      });
+
+      function startChat() {
+        document.getElementById("ic-input").classList.add("hidden");
+        document.getElementById("ic-chat").classList.remove("hidden");
+
+        var isHL = state.language === "hinglish";
+        var relLabels = { crush: "Crush", friend: "Friend", classmate: "Classmate", coworker: "Coworker", dating: "Dating", talking: "Talking Stage", custom: "Custom" };
+        var welcome = isHL
+          ? "Accha, " + state.crushName + " ke baare mein jaanna hai. Interesting! Mere kuch follow-up sawaal hain taaki main better samajh saku. Ready ho?"
+          : "So you want to know about " + state.crushName + ". Interesting! I have a few follow-up questions to understand better. Ready?";
+
+        addChatMsg("Interest Analyst", welcome, "them");
+        setTimeout(function () { askQuestion(); }, 1200);
+      }
+
+      function askQuestion() {
+        if (state.currentQuestion >= state.questions.length) {
+          finishChat();
+          return;
+        }
+        var q = state.questions[state.currentQuestion];
+        document.getElementById("ic-q-count").textContent = "Question " + (state.currentQuestion + 1) + " of " + state.questions.length;
+        document.getElementById("ic-chat-status").textContent = "Analyzing " + state.crushName + "'s signals...";
+
+        setTimeout(function () {
+          addChatMsg("Interest Analyst", q.text, "them");
+          showQuickReplies(q.key);
+        }, 600);
+      }
+
+      function showQuickReplies(qKey) {
+        var container = document.getElementById("ic-quick-replies");
+        container.innerHTML = "";
+        var isHL = state.language === "hinglish";
+        var options = {
+          initiation: isHL ? ["Zyada tar main", "Zyada tar wo", "Dono equally", "Kabhi kabhi"] : ["Mostly me", "Mostly them", "Both equally", "Sometimes"],
+          reply_time: isHL ? ["Jaldi, 1-2 ghante mein", "Thoda late, 3-6 ghante", "Bohot late, 12+ ghante", "Varies bahut"] : ["Quick, 1-2 hours", "Moderate, 3-6 hours", "Very late, 12+ hours", "Varies a lot"],
+          alone_time: isHL ? ["Haan, akela chahte hain", "Kabhi kabhi", "Hamesha group mein", "Abhi tak nahi"] : ["Yes, they try", "Sometimes", "Always in groups", "Not yet"],
+          different_behavior: isHL ? ["Haan, bilkul alag", "Thoda fark hai", "Same hai sabke saath", "Pata nahi"] : ["Yes, totally different", "A bit different", "Same with everyone", "Not sure"],
+          deep_convo: isHL ? ["Haan, personal baatein karte hain", "Kabhi kabhi", "Sirf casual", "Bilkul nahi"] : ["Yes, personal talks", "Sometimes", "Only casual", "Never"],
+          body_language: isHL ? ["Accha, eye contact, smile", "Normal hai", "Door rehte hain", "Mixed hai"] : ["Good, eye contact, smile", "Normal", "Keeps distance", "Mixed"],
+          future_talk: isHL ? ["Haan, include karte hain", "Kabhi kabhi", "Sirf apne baare mein", "Nahi"] : ["Yes, includes me", "Sometimes", "Only about themselves", "No"],
+          compliments: isHL ? ["Haan, often", "Kabhi kabhi", "Rarely", "Bilkul nahi"] : ["Yes, often", "Sometimes", "Rarely", "Never"],
+          mixed_signals: isHL ? ["Haan, bahut confused hu", "Thoda sa", "Nahi, consistent hai", "Abhi naya hai"] : ["Yes, very confused", "A little", "No, consistent", "It is new"],
+          social_media: isHL ? ["Bahut interact karte hain", "Kabhi kabhi", "Rarely", "Bilkul nahi"] : ["Very active", "Sometimes", "Rarely", "Never"],
+          texting_style: isHL ? ["Long messages, emojis", "Short but sweet", "Sirf one word", "Mix hai"] : ["Long messages, emojis", "Short but sweet", "One word replies", "Mixed"],
+          comfort_level: isHL ? ["Bahut comfortable", "Thoda reserved", "Bahut shy hai", "Mixed signals"] : ["Very comfortable", "A bit reserved", "Very shy", "Mixed signals"]
+        };
+
+        var opts = options[qKey] || options.initiation;
+        opts.forEach(function (opt) {
+          var btn = document.createElement("button");
+          btn.className = "px-4 py-2 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-300 transition cursor-pointer";
+          btn.textContent = opt;
+          btn.addEventListener("click", function () {
+            handleAnswer(opt);
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      function handleAnswer(answer) {
+        state.chatAnswers.push({ question: state.questions[state.currentQuestion].key, answer: answer });
+        addChatMsg("You", answer, "me");
+        document.getElementById("ic-quick-replies").innerHTML = "";
+        state.currentQuestion++;
+        setTimeout(askQuestion, 800);
+      }
+
+      function addChatMsg(sender, text, type) {
+        var container = document.getElementById("ic-messages");
+        var wrap = document.createElement("div");
+        wrap.className = "flex flex-col " + (type === "me" ? "items-end" : "items-start");
+        wrap.innerHTML =
+          '<div class="text-[10px] text-slate-500 mb-0.5">' + sender + '</div>' +
+          '<div class="max-w-xs sm:max-w-sm px-4 py-2.5 rounded-2xl text-sm ' +
+            (type === "me" ? 'bg-rose-500 text-white rounded-tr-none' : 'bg-slate-800 text-slate-200 rounded-tl-none') +
+          '">' + text + '</div>';
+        container.appendChild(wrap);
+        container.scrollTop = container.scrollHeight;
+      }
+
+      document.getElementById("ic-chat-send").addEventListener("click", function () {
+        var input = document.getElementById("ic-chat-input");
+        var msg = input.value.trim();
+        if (!msg) return;
+        input.value = "";
+        handleAnswer(msg);
+      });
+      document.getElementById("ic-chat-input").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") document.getElementById("ic-chat-send").click();
+      });
+
+      function finishChat() {
+        document.getElementById("ic-chat-status").textContent = "Analyzing all signals...";
+        var isHL = state.language === "hinglish";
+        var bye = isHL
+          ? "Accha, sab kuch samajh aa gaya. Ab main analysis bana raha hu. Ruko zara..."
+          : "Got it, I have everything I need. Let me put together the analysis...";
+        addChatMsg("Interest Analyst", bye, "them");
+        setTimeout(showResults, 1500);
+      }
+      function analyzeInterest() {
+        var desc = state.description.toLowerCase();
+        var answers = {};
+        state.chatAnswers.forEach(function (a) { answers[a.question] = a.answer.toLowerCase(); });
+        var rel = state.relationship;
+        var romantic = 40;
+        var mixed = 20;
+        var friendly = 40;
+        var positive = [];
+        var mixedSig = [];
+        var negative = [];
+        var confidence = "Moderate";
+
+        var isInitiating = answers.initiation && (answers.initiation.indexOf("them") > -1 || answers.initiation.indexOf("both") > -1 || answers.initiation.indexOf("wo") > -1 || answers.initiation.indexOf("equally") > -1);
+        if (isInitiating) { romantic += 8; positive.push("They initiate conversations, showing active interest."); }
+        else if (answers.initiation && (answers.initiation.indexOf("me") > -1 || answers.initiation.indexOf("main") > -1)) { friendly += 5; negative.push("You are usually the one starting conversations."); }
+
+        var quickReply = answers.reply_time && (answers.reply_time.indexOf("quick") > -1 || answers.reply_time.indexOf("1-2") > -1 || answers.initiation && answers.initiation.indexOf("jaldi") > -1);
+        if (quickReply) { romantic += 7; positive.push("Quick reply times suggest they prioritize talking to you."); }
+        var lateReply = answers.reply_time && (answers.reply_time.indexOf("very late") > -1 || answers.reply_time.indexOf("12+") > -1 || answers.reply_time.indexOf("bohot late") > -1);
+        if (lateReply) { friendly += 6; mixedSig.push("Long reply times may indicate lower priority or busy schedule."); }
+
+        var aloneTime = answers.alone_time && (answers.alone_time.indexOf("yes") > -1 || answers.alone_time.indexOf("haan") > -1 || answers.alone_time.indexOf("try") > -1);
+        if (aloneTime) { romantic += 10; positive.push("They try to spend alone time with you - a strong romantic signal."); }
+        var noAlone = answers.alone_time && (answers.alone_time.indexOf("group") > -1 || answers.alone_time.indexOf("hamesha") > -1);
+        if (noAlone) { mixed += 5; mixedSig.push("Always meeting in groups may mean they see you as a friend."); }
+
+        var diffBehavior = answers.different_behavior && (answers.different_behavior.indexOf("totally") > -1 || answers.different_behavior.indexOf("alag") > -1 || answers.different_behavior.indexOf("completely") > -1);
+        if (diffBehavior) { romantic += 12; positive.push("They treat you noticeably differently from others - a key sign."); }
+        var sameBehavior = answers.different_behavior && (answers.different_behavior.indexOf("same") > -1 || answers.different_behavior.indexOf("sabke") > -1);
+        if (sameBehavior) { friendly += 8; negative.push("They treat you the same as everyone else."); }
+
+        var deepTalk = answers.deep_convo && (answers.deep_convo.indexOf("yes") > -1 || answers.deep_convo.indexOf("haan") > -1 || answers.deep_convo.indexOf("personal") > -1);
+        if (deepTalk) { romantic += 8; positive.push("They share personal thoughts and deep conversations with you."); }
+        var onlyCasual = answers.deep_convo && (answers.deep_convo.indexOf("casual") > -1 || answers.deep_convo.indexOf("sirf") > -1);
+        if (onlyCasual) { friendly += 5; mixedSig.push("Conversations stay surface-level, which could mean friendship."); }
+
+        var goodBody = answers.body_language && (answers.body_language.indexOf("good") > -1 || answers.body_language.indexOf("eye") > -1 || answers.body_language.indexOf("accha") > -1 || answers.body_language.indexOf("smile") > -1);
+        if (goodBody) { romantic += 8; positive.push("Positive body language like eye contact and smiling."); }
+        var badBody = answers.body_language && (answers.body_language.indexOf("distance") > -1 || answers.body_language.indexOf("door") > -1);
+        if (badBody) { friendly += 6; negative.push("They keep physical distance, suggesting limited romantic interest."); }
+
+        var futurePlans = answers.future_talk && (answers.future_talk.indexOf("yes") > -1 || answers.future_talk.indexOf("haan") > -1 || answers.future_talk.indexOf("include") > -1);
+        if (futurePlans) { romantic += 10; positive.push("They include you in future plans - strong investment signal."); }
+        var noFuture = answers.future_talk && (answers.future_talk.indexOf("no") > -1 || answers.future_talk.indexOf("nahi") > -1 || answers.future_talk.indexOf("themselves") > -1);
+        if (noFuture) { friendly += 5; negative.push("They do not include you in future plans."); }
+
+        var compliments = answers.compliments && (answers.compliments.indexOf("yes") > -1 || answers.compliments.indexOf("haan") > -1 || answers.compliments.indexOf("often") > -1);
+        if (compliments) { romantic += 6; positive.push("They give you compliments regularly."); }
+
+        var mixedSignals = answers.mixed_signals && (answers.mixed_signals.indexOf("yes") > -1 || answers.mixed_signals.indexOf("confused") > -1 || answers.mixed_signals.indexOf("bahut") > -1);
+        if (mixedSignals) { mixed += 10; mixedSig.push("Mixed signals indicate uncertainty - they may be figuring out their feelings."); }
+
+        var activeSocial = answers.social_media && (answers.social_media.indexOf("very") > -1 || answers.social_media.indexOf("bahut") > -1 || answers.social_media.indexOf("active") > -1);
+        if (activeSocial) { romantic += 5; positive.push("Active social media engagement with your content."); }
+
+        var longTexts = answers.texting_style && (answers.texting_style.indexOf("long") > -1 || answers.texting_style.indexOf("emoji") > -1);
+        if (longTexts) { romantic += 5; positive.push("Long messages with emojis show effort and interest."); }
+        var oneWord = answers.texting_style && (answers.texting_style.indexOf("one word") > -1 || answers.texting_style.indexOf("short") > -1);
+        if (oneWord) { friendly += 5; mixedSig.push("Short replies may indicate lower engagement."); }
+
+        var comfortable = answers.comfort_level && (answers.comfort_level.indexOf("very comfortable") > -1 || answers.comfort_level.indexOf("bahut comfortable") > -1 || answers.comfort_level.indexOf("open") > -1);
+        if (comfortable) { romantic += 6; positive.push("They are very comfortable around you, opening up naturally."); }
+
+        if (rel === "dating" || rel === "talking") { romantic += 5; positive.push("You are already in a dating/talking stage - foundation is established."); }
+
+        var d = desc;
+        if (d.indexOf("jealous") > -1 || d.indexOf("possessive") > -1 || d.indexOf("jal") > -1) { romantic += 4; mixedSig.push("Jealousy can indicate romantic interest but also insecurity."); }
+        if (d.indexOf("ignore") > -1 || d.indexOf("avoid") > -1 || d.indexOf("nahi karti") > -1) { friendly += 8; negative.push("They sometimes ignore or avoid you."); }
+        if (d.indexOf("special") > -1 || d.indexOf("khaas") > -1 || d.indexOf("treat") > -1) { romantic += 6; positive.push("They make you feel special in small ways."); }
+
+        romantic = Math.max(5, Math.min(85, romantic));
+        friendly = Math.max(5, Math.min(85, friendly));
+        mixed = Math.max(5, Math.min(50, mixed));
+        var total = romantic + mixed + friendly;
+        romantic = Math.round(romantic / total * 100);
+        mixed = Math.round(mixed / total * 100);
+        friendly = 100 - romantic - mixed;
+
+        if (positive.length >= 5) confidence = "High";
+        else if (positive.length <= 2) confidence = "Low";
+        else confidence = "Moderate";
+
+        if (positive.length === 0) positive.push("Some small positive signs detected in your description.");
+        if (mixedSig.length === 0) mixedSig.push("No major mixed signals identified.");
+        if (negative.length === 0) negative.push("No significant low-interest signs found.");
+
+        return { romantic: romantic, mixed: mixed, friendly: friendly, positive: positive, mixedSig: mixedSig, negative: negative, confidence: confidence };
+      }
+      function showResults() {
+        document.getElementById("ic-chat").classList.add("hidden");
+        document.getElementById("ic-results").classList.remove("hidden");
+
+        var r = analyzeInterest();
+        state.results = r;
+
+        var title, emoji, subtitle;
+        if (r.romantic >= 60) { title = "Looking Promising"; emoji = "\uD83D\uDC40"; subtitle = "Strong signals of romantic interest detected."; }
+        else if (r.romantic >= 40) { title = "Worth Exploring"; emoji = "\uD83D\uDE09"; subtitle = "There are positive signs, but some uncertainty remains."; }
+        else if (r.mixed >= 35) { title = "Mixed Signals"; emoji = "\uD83E\uDD14"; subtitle = "The signals are inconsistent. More clarity is needed."; }
+        else if (r.friendly >= 55) { title = "Probably Friendly"; emoji = "\uD83D\uDCE2"; subtitle = "Most signs point to a genuine friendship rather than romance."; }
+        else { title = "Early to Tell"; emoji = "\u2728"; subtitle = "Not enough signals yet. Keep observing and interacting."; }
+
+        document.getElementById("ic-result-emoji").textContent = emoji;
+        document.getElementById("ic-result-title").textContent = title + " " + emoji;
+        document.getElementById("ic-result-subtitle").textContent = subtitle;
+
+        animatePct("ic-pct-romantic", r.romantic, "text-rose-400");
+        animatePct("ic-pct-mixed", r.mixed, "text-amber-400");
+        animatePct("ic-pct-friendly", r.friendly, "text-blue-400");
+
+        document.getElementById("ic-confidence").textContent = r.confidence + " (based on " + r.positive.length + " positive signals, " + r.mixedSig.length + " mixed, " + r.negative.length + " negative)";
+
+        var sHtml = "";
+        r.positive.forEach(function (s) { sHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-emerald-400 mt-0.5">&#10003;</span>' + s + '</li>'; });
+        document.getElementById("ic-positive").innerHTML = sHtml;
+
+        var mHtml = "";
+        r.mixedSig.forEach(function (s) { mHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-amber-400 mt-0.5">&#9679;</span>' + s + '</li>'; });
+        document.getElementById("ic-mixed-signals").innerHTML = mHtml;
+
+        var nHtml = "";
+        r.negative.forEach(function (s) { nHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-red-400 mt-0.5">&#10007;</span>' + s + '</li>'; });
+        document.getElementById("ic-negative").innerHTML = nHtml;
+
+        var explanation = "";
+        if (r.romantic >= 60) {
+          explanation = "Based on your description and answers, " + state.crushName + " shows several signs of romantic interest. They treat you differently from others, engage in personal conversations, and make efforts to spend time with you. However, always communicate directly for the most accurate understanding.";
+        } else if (r.romantic >= 40) {
+          explanation = "There are positive signals from " + state.crushName + " that suggest possible interest, but also some uncertainty. The mixed signals could mean they are still figuring out their feelings, or there may be other factors at play (busy schedule, shyness, etc.).";
+        } else if (r.mixed >= 35) {
+          explanation = "The signals from " + state.crushName + " are quite inconsistent. This could mean they enjoy your company but may not have romantic feelings, or they could be interested but showing it in confusing ways. More time and observation would help clarify.";
+        } else {
+          explanation = "Most of the signs from " + state.crushName + " suggest a friendly dynamic. This does not mean there is no chance - some people take time to develop romantic feelings. Focus on building genuine connection without pressure.";
+        }
+        document.getElementById("ic-explanation").textContent = explanation;
+
+        var nextMove = "";
+        if (r.romantic >= 60) {
+          nextMove = "The signals are promising. Consider suggesting a casual, specific plan (like coffee or a walk) to spend one-on-one time. This will help you gauge their interest in a real-world setting. Be direct but respectful.";
+        } else if (r.romantic >= 40) {
+          nextMove = "Continue building rapport through consistent, genuine conversations. Try suggesting a low-key activity together. Pay attention to whether they match your effort and initiative.";
+        } else {
+          nextMove = "Focus on being a genuine friend first. Do not rush or pressure. Let the connection develop naturally. If romantic feelings grow on both sides, it will become clearer over time.";
+        }
+        document.getElementById("ic-next-move").textContent = nextMove;
+
+        var whatNot = "";
+        if (r.romantic >= 60) {
+          whatNot = "Do not confess feelings too early - let actions speak first. Do not overanalyze every message. Do not become possessive or check their social media excessively. Trust the process and enjoy the connection.";
+        } else {
+          whatNot = "Do not assume the worst. Do not stop being yourself to impress them. Do not bombard them with messages if they are slow to reply. Give them space and let things flow naturally.";
+        }
+        document.getElementById("ic-what-not").textContent = whatNot;
+
+        pushActivity({
+          type: "Interest Check",
+          name: "Interest analysis for " + state.crushName,
+          detail: title + " | " + r.romantic + "% romantic",
+          score: r.romantic + "% interest",
+          date: new Date().toLocaleString(),
+          crushName: state.crushName,
+          relationship: state.relationship,
+          romantic: r.romantic,
+          mixed: r.mixed,
+          friendly: r.friendly
+        });
+
+        var USER_KEY = "rizzora_user";
+        var user = loadJSON(USER_KEY) || { name: "User" };
+        user.xp = (user.xp || 0) + 75;
+        saveJSON(USER_KEY, user);
+      }
+
+      function animatePct(id, target, colorClass) {
+        var el = document.getElementById(id);
+        var current = 0;
+        var step = Math.ceil(target / 30);
+        var interval = setInterval(function () {
+          current += step;
+          if (current >= target) { current = target; clearInterval(interval); }
+          el.textContent = current + "%";
+        }, 30);
+      }
+
+      // --- Something Changed ---
+      document.getElementById("ic-something-changed").addEventListener("click", function () {
+        document.getElementById("ic-results").classList.add("hidden");
+        document.getElementById("ic-chat").classList.add("hidden");
+        document.getElementById("ic-input").classList.remove("hidden");
+        descEl.value = "";
+        descCount.textContent = "0 / 1000";
+        document.getElementById("ic-messages").innerHTML = "";
+        state.chatAnswers = [];
+        state.currentQuestion = 0;
+        document.getElementById("ic-upload-prompt").classList.remove("hidden");
+        document.getElementById("ic-upload-preview").classList.add("hidden");
+        fileInput.value = "";
+      });
+
+      // --- Check Again ---
+      document.getElementById("ic-check-again").addEventListener("click", function () {
+        document.getElementById("ic-results").classList.add("hidden");
+        document.getElementById("ic-input").classList.remove("hidden");
+        descEl.value = "";
+        descCount.textContent = "0 / 1000";
+        document.getElementById("ic-messages").innerHTML = "";
+        state.chatAnswers = [];
+        state.currentQuestion = 0;
+        document.getElementById("ic-upload-prompt").classList.remove("hidden");
+        document.getElementById("ic-upload-preview").classList.add("hidden");
+        fileInput.value = "";
+      });
+
+      // --- Share Card Modal ---
+      var shareBtn = document.getElementById("ic-share-result");
+      var modal = document.getElementById("ic-modal");
+      var closeBtn = document.getElementById("ic-close-modal");
+      var downloadBtn = document.getElementById("ic-download-btn");
+
+      shareBtn.addEventListener("click", function () {
+        var r = state.results;
+        if (!r) return;
+        document.getElementById("card-ic-emoji").textContent = document.getElementById("ic-result-emoji").textContent;
+        document.getElementById("card-ic-pct").textContent = r.romantic + "%";
+        document.getElementById("card-ic-title").textContent = document.getElementById("ic-result-title").textContent;
+        document.getElementById("card-ic-subtitle").textContent = document.getElementById("ic-result-subtitle").textContent;
+        document.getElementById("card-ic-date").textContent = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+        modal.classList.remove("hidden");
+      });
+
+      closeBtn.addEventListener("click", function () { modal.classList.add("hidden"); });
+      modal.addEventListener("click", function (e) { if (e.target === modal) modal.classList.add("hidden"); });
+
+      downloadBtn.addEventListener("click", function () {
+        var canvas = document.createElement("canvas");
+        canvas.width = 400;
+        canvas.height = 500;
+        var ctx = canvas.getContext("2d");
+        var grad = ctx.createLinearGradient(0, 0, 400, 500);
+        grad.addColorStop(0, "#080d1a");
+        grad.addColorStop(0.5, "#0f172a");
+        grad.addColorStop(1, "#1a0a2e");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 400, 500);
+        ctx.textAlign = "center";
+        ctx.font = "bold 20px sans-serif";
+        ctx.fillStyle = "#db2777";
+        ctx.fillText("Rizzora", 200, 50);
+        ctx.font = "9px sans-serif";
+        ctx.fillStyle = "#64748b";
+        ctx.fillText("INTEREST RESULT", 200, 70);
+        ctx.font = "40px sans-serif";
+        ctx.fillText(document.getElementById("card-ic-emoji").textContent, 200, 160);
+        ctx.font = "bold 52px sans-serif";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(state.results.romantic + "%", 200, 250);
+        ctx.font = "12px sans-serif";
+        ctx.fillStyle = "#94a3b8";
+        ctx.fillText("Estimated Romantic Interest", 200, 275);
+        ctx.font = "bold 18px sans-serif";
+        ctx.fillStyle = "#f1f5f9";
+        ctx.fillText(document.getElementById("ic-result-title").textContent, 200, 330);
+        ctx.font = "11px sans-serif";
+        ctx.fillStyle = "#db2777";
+        ctx.fillText(document.getElementById("ic-result-subtitle").textContent, 200, 355);
+        ctx.strokeStyle = "rgba(30,41,59,0.5)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(80, 385);
+        ctx.lineTo(320, 385);
+        ctx.stroke();
+        ctx.font = "9px sans-serif";
+        ctx.fillStyle = "#64748b";
+        ctx.fillText("Generated on " + new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }), 200, 410);
+        var link = document.createElement("a");
+        link.download = "rizzora-interest-" + state.results.romantic + ".png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    })();
+  </script>
+</Layout>

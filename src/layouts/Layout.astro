@@ -1,0 +1,219 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = "Rizzora | Dating Communication & Confidence Platform", 
+  description = "Improve texting, dating confidence, and genuine connections with personalized advice, practice, and conversation tools." 
+} = Astro.props;
+
+// List of all features for navigation
+const features = [
+  { name: "Crush Mode", href: "/crush-mode", desc: "Step-by-step approach for genuine connection" },
+  { name: "What Should I Text?", href: "/what-should-i-text", desc: "Safe, Playful, Flirty, & Coy suggested replies" },
+  { name: "Flirt Coach", href: "/flirt-coach", desc: "Rewrite messages into natural & confident alternatives" },
+  { name: "Conversation Simulator", href: "/conversation-simulator", desc: "Realistic practice with respect & humor feedback" },
+  { name: "Rizz Score", href: "/rizz-score", desc: "Evaluate your conversational confidence and flow" },
+  { name: "Interest Check / Does She Like Me?", href: "/interest-check", desc: "Contextual behavior & signals analysis" },
+  { name: "First Date Coach & Planner", href: "/date-planner", desc: "Date ideas, starters, prep & tips" },
+  { name: "Dating Profile Coach", href: "/profile-coach", desc: "Bio, prompts, and profile improvements" },
+  { name: "30-Day Dating Challenge", href: "/challenge", desc: "Daily challenges, streaks, and confidence milestones" },
+  { name: "My Progress", href: "/progress", desc: "View your history, milestones & strengths" },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col">
+    <!-- Header/Navbar -->
+    <header class="sticky top-0 z-50 glass border-b border-brand-border/40 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo & Brand -->
+          <div class="flex items-center">
+            <a href="/" class="flex items-center space-x-2">
+              <span class="text-2xl font-black tracking-tight gradient-text">Rizzora</span>
+            </a>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex items-center space-x-6">
+            <a href="/" class="text-sm font-medium text-slate-300 hover:text-white transition">Home</a>
+            <a href="/dashboard" class="text-sm font-medium text-slate-300 hover:text-white transition">Dashboard</a>
+            
+            <!-- Features Dropdown -->
+            <div class="relative group">
+              <button id="features-menu-btn" class="flex items-center text-sm font-medium text-slate-300 hover:text-white focus:outline-none transition space-x-1 cursor-pointer">
+                <span>Features</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <!-- Dropdown Content (shows on hover/click) -->
+              <div class="absolute right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-xl glass border border-brand-border/80 shadow-2xl p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible hover:opacity-100 hover:visible transition-all duration-200 grid grid-cols-1 gap-2 z-50">
+                <div class="px-2 py-1 border-b border-brand-border/40 pb-2 mb-1">
+                  <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">Communication & Confidence tools</span>
+                </div>
+                {features.map((item) => (
+                  <a href={item.href} class="flex flex-col p-2 rounded-lg hover:bg-slate-800/60 transition group/item">
+                    <span class="text-sm font-semibold text-slate-200 group-hover/item:text-rose-400 transition">{item.name}</span>
+                    <span class="text-xs text-slate-400 mt-0.5">{item.desc}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <a href="/about" class="text-sm font-medium text-slate-300 hover:text-white transition">About & FAQ</a>
+            
+            <a href="/dashboard" class="ml-4 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white bg-linear-to-r from-brand-primary to-brand-secondary hover:from-brand-primary-hover hover:to-brand-secondary-hover rounded-full transition shadow-lg shadow-brand-primary/20">
+              Get Started
+            </a>
+          </nav>
+
+          <!-- Mobile menu button -->
+          <div class="md:hidden flex items-center">
+            <button id="mobile-menu-btn" type="button" class="inline-flex items-center justify-center p-3 min-w-11 min-h-11 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary transition" aria-controls="mobile-menu" aria-expanded="false">
+              <span class="sr-only">Open main menu</span>
+              <svg id="hamburger-icon" class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg id="close-icon" class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu, show/hide based on menu state. -->
+      <div class="hidden md:hidden glass border-b border-brand-border/60" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Home</a>
+          <a href="/dashboard" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Dashboard</a>
+          
+          <div class="border-t border-brand-border/40 my-2 pt-2">
+            <div class="px-3 pb-1">
+              <span class="text-xs font-semibold uppercase tracking-wider text-rose-400">Features</span>
+            </div>
+            {features.map((item) => (
+              <a href={item.href} class="block px-6 py-3 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 min-h-11 flex items-center">
+                {item.name}
+              </a>
+            ))}
+          </div>
+
+          <a href="/about" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">About & FAQ</a>
+          
+          <div class="px-3 pt-4 pb-2">
+            <a href="/dashboard" class="block w-full text-center px-4 py-2.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-brand-primary to-brand-secondary rounded-full">
+              Get Started
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950/80 border-t border-brand-border/60 py-12 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <!-- Branding and Mission -->
+          <div class="space-y-4">
+            <div class="text-xl font-black tracking-tight gradient-text">Rizzora</div>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Empowering genuine connections and confidence. We help you master dating communication through science-backed, respectful principles.
+            </p>
+          </div>
+
+          <!-- Platform Links -->
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4">Core Platform</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/dashboard" class="text-slate-400 hover:text-rose-400 transition">My Dashboard</a></li>
+              <li><a href="/crush-mode" class="text-slate-400 hover:text-rose-400 transition">Crush Mode</a></li>
+              <li><a href="/what-should-i-text" class="text-slate-400 hover:text-rose-400 transition">Texting Suggestions</a></li>
+              <li><a href="/challenge" class="text-slate-400 hover:text-rose-400 transition">30-Day Challenge</a></li>
+            </ul>
+          </div>
+
+          <!-- Resource Links -->
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4">Company</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/about" class="text-slate-400 hover:text-rose-400 transition">About Us</a></li>
+              <li><a href="/about#faq" class="text-slate-400 hover:text-rose-400 transition">Frequently Asked Questions</a></li>
+              <li><a href="/about#contact" class="text-slate-400 hover:text-rose-400 transition">Contact Support</a></li>
+            </ul>
+          </div>
+
+          <!-- Legal & Compliance -->
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4">Product Rules</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              We promote honest, respectful, and consensual communication. We do not support manipulation, spam, or bypass of boundaries.
+            </p>
+            <div class="flex space-x-4 text-xs text-slate-500">
+              <a href="/about#privacy" class="hover:text-slate-300">Privacy Policy</a>
+              <span>&bull;</span>
+              <a href="/about#terms" class="hover:text-slate-300">Terms of Service</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-brand-border/20 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+          <p>&copy; {new Date().getFullYear()} Rizzora. All rights reserved.</p>
+          <p class="mt-4 sm:mt-0">Designed for dating communication, confidence, and genuine connections.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Interactive navigation scripts -->
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        if (mobileMenuBtn && mobileMenu) {
+          mobileMenuBtn.addEventListener('click', () => {
+            const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+            mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('hidden');
+            hamburgerIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+          });
+
+          // Close mobile menu when any link inside it is clicked
+          mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+              mobileMenu.classList.add('hidden');
+              hamburgerIcon.classList.remove('hidden');
+              closeIcon.classList.add('hidden');
+              mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,529 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="First Date Coach & Planner | Rizzora">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+    <!-- Header -->
+    <div class="mb-6 sm:mb-8">
+      <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white">First Date Coach & Planner</h1>
+      <p class="text-slate-400 mt-1 text-sm sm:text-base">Plan a fun, low-pressure date with conversation starters and real-time rescue tips.</p>
+    </div>
+
+    <!-- ═══════════ INPUT SCREEN ═══════════ -->
+    <div id="dp-input" class="max-w-3xl mx-auto">
+      <div class="glass p-6 sm:p-8 rounded-2xl space-y-5">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 border-b border-brand-border/40 pb-2">Plan Your Date</h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Your name</label>
+            <input id="dp-my-name" type="text" maxlength="20" placeholder="e.g. Alex" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Date/crush name</label>
+            <input id="dp-date-name" type="text" maxlength="20" placeholder="e.g. Sarah" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">City / Area</label>
+            <input id="dp-city" type="text" maxlength="30" placeholder="e.g. Mumbai, Downtown" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Available time</label>
+            <select id="dp-time" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition">
+              <option value="morning">Morning (9 AM - 12 PM)</option>
+              <option value="afternoon">Afternoon (12 PM - 5 PM)</option>
+              <option value="evening" selected>Evening (5 PM - 9 PM)</option>
+              <option value="night">Night (9 PM onwards)</option>
+              <option value="flexible">Flexible</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Budget -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Budget</label>
+          <div class="grid grid-cols-5 gap-2" id="dp-budget-grid">
+            <button data-budget="free" class="dp-budget-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Free</button>
+            <button data-budget="low" class="dp-budget-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Low ($)</button>
+            <button data-budget="medium" class="dp-budget-btn py-2.5 text-xs font-bold rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">Medium ($$)</button>
+            <button data-budget="premium" class="dp-budget-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Premium ($$$)</button>
+            <button data-budget="custom" class="dp-budget-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Custom</button>
+          </div>
+          <input id="dp-custom-budget" type="text" maxlength="30" placeholder="e.g. Around 2000 INR" class="hidden w-full mt-2 bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+        </div>
+
+        <!-- Date Type -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Date type</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="dp-type-grid">
+            <button data-type="first_date" class="dp-type-btn py-2.5 text-xs font-bold rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">First Date</button>
+            <button data-type="casual" class="dp-type-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Casual Meet</button>
+            <button data-type="coffee" class="dp-type-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Coffee</button>
+            <button data-type="food" class="dp-type-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Food</button>
+            <button data-type="activity" class="dp-type-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Activity</button>
+            <button data-type="romantic" class="dp-type-btn py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Romantic</button>
+            <button data-type="surprise" class="dp-type-btn col-span-2 py-2.5 text-xs font-bold rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Surprise Me</button>
+          </div>
+        </div>
+
+        <!-- Interests -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Interests / Preferences (optional)</label>
+          <input id="dp-interests" type="text" maxlength="100" placeholder="e.g. coffee, art, live music, hiking" class="w-full bg-slate-900/80 border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 transition" />
+        </div>
+
+        <!-- Language -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-2">Language</label>
+          <div class="flex gap-2">
+            <button data-lang="english" class="dp-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 cursor-pointer transition">English</button>
+            <button data-lang="hinglish" class="dp-lang-btn flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border-2 border-brand-border/60 bg-slate-900/40 text-slate-300 cursor-pointer transition">Hinglish</button>
+          </div>
+        </div>
+
+        <button id="dp-generate-btn" class="w-full py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition-all duration-200 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 cursor-pointer active:scale-95">
+          Generate Date Game Plan
+        </button>
+      </div>
+
+      <!-- Date Rescue Quick Tool -->
+      <div class="mt-6 glass p-5 sm:p-6 rounded-2xl">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-amber-400 mb-3">Date Rescue</h3>
+        <p class="text-xs text-slate-400 mb-3">On a date right now? Pick a situation for instant help.</p>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="dp-rescue-grid">
+          <button data-rescue="silence" class="dp-rescue-btn py-2.5 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 transition cursor-pointer">Awkward Silence</button>
+          <button data-rescue="topics" class="dp-rescue-btn py-2.5 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 transition cursor-pointer">Running Out of Topics</button>
+          <button data-rescue="nervous" class="dp-rescue-btn py-2.5 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 transition cursor-pointer">Feeling Nervous</button>
+          <button data-rescue="great" class="dp-rescue-btn py-2.5 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 transition cursor-pointer">Date Going Great</button>
+          <button data-rescue="uninterested" class="dp-rescue-btn py-2.5 text-xs font-semibold rounded-xl border border-brand-border/60 bg-slate-900/40 text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 transition cursor-pointer">Date Seems Uninterested</button>
+        </div>
+        <div id="dp-rescue-output" class="hidden mt-4 p-4 bg-slate-900/60 rounded-xl border border-brand-border/40 text-xs text-slate-300 leading-relaxed"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════ PLAN OUTPUT SCREEN ═══════════ -->
+    <div id="dp-plan" class="hidden max-w-4xl mx-auto space-y-6">
+
+      <!-- Plan Header -->
+      <div class="glass p-6 rounded-2xl text-center">
+        <div class="text-3xl mb-2">&#127752;</div>
+        <h2 id="dp-plan-title" class="text-xl font-extrabold text-white"></h2>
+        <p id="dp-plan-subtitle" class="text-slate-400 mt-1 text-sm"></p>
+      </div>
+
+      <!-- 3 Date Ideas -->
+      <div id="dp-ideas" class="space-y-4"></div>
+
+      <!-- Conversation Starters + Flirty Questions -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400 mb-3">Conversation Starters</h3>
+          <ul id="dp-starters" class="space-y-2"></ul>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-pink-400 mb-3">Fun / Flirty Questions</h3>
+          <ul id="dp-flirty" class="space-y-2"></ul>
+        </div>
+      </div>
+
+      <!-- Topics to Avoid + Awkward Silence -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-red-400 mb-3">Topics to Avoid</h3>
+          <ul id="dp-avoid" class="space-y-2"></ul>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-3">Handling Awkward Silence</h3>
+          <ul id="dp-silence" class="space-y-2"></ul>
+        </div>
+      </div>
+
+      <!-- Prep Checklist + Comfort Reading -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3">Preparation Checklist</h3>
+          <ul id="dp-checklist" class="space-y-2"></ul>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-violet-400 mb-3">Reading Comfort & Boundaries</h3>
+          <ul id="dp-comfort" class="space-y-2"></ul>
+        </div>
+      </div>
+
+      <!-- End Date + Follow-up -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-3">Natural Way to End the Date</h3>
+          <p id="dp-ending" class="text-xs text-slate-300 leading-relaxed"></p>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400 mb-3">Follow-up Text (After Date)</h3>
+          <p id="dp-followup" class="text-xs text-slate-300 leading-relaxed"></p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="dp-save-btn" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition cursor-pointer">Save This Plan</button>
+        <button id="dp-new-btn" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-2xl transition cursor-pointer">Plan Another Date</button>
+        <a href="/dashboard" class="flex-1 py-3 text-sm font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-2xl transition text-center">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+  <script is:inline>
+    (function () {
+      function q(a, b, c) { var s = String.fromCharCode(a); if (b) s += String.fromCharCode(b); if (c) s += String.fromCharCode(c); return s; }
+      var PLAN_KEY = "rizzora_date_plans";
+      var USER_KEY = "rizzora_user";
+      function loadJSON(key) { try { var r = localStorage.getItem(key); return r ? JSON.parse(r) : null; } catch { return null; } }
+      function saveJSON(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+      var state = { myName: "", dateName: "", city: "", time: "evening", budget: "medium", customBudget: "", dateType: "first_date", interests: "", language: "english" };
+
+      // Pre-fill from onboarding
+      try {
+        var user = loadJSON(USER_KEY);
+        if (user && user.name) { document.getElementById("dp-my-name").value = user.name; state.myName = user.name; }
+        if (user && user.crushName) { document.getElementById("dp-date-name").value = user.crushName; state.dateName = user.crushName; }
+      } catch (e) {}
+
+      // Budget buttons
+      document.querySelectorAll(".dp-budget-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".dp-budget-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          state.budget = btn.getAttribute("data-budget");
+          var cb = document.getElementById("dp-custom-budget");
+          if (state.budget === "custom") cb.classList.remove("hidden");
+          else cb.classList.add("hidden");
+        });
+      });
+
+      // Date type buttons
+      document.querySelectorAll(".dp-type-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".dp-type-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          state.dateType = btn.getAttribute("data-type");
+        });
+      });
+
+      // Language
+      document.querySelectorAll(".dp-lang-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".dp-lang-btn").forEach(function (b) {
+            b.classList.remove("border-rose-500", "bg-rose-500/10", "text-rose-400");
+            b.classList.add("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          });
+          btn.classList.add("border-rose-500", "bg-rose-500/10", "text-rose-400");
+          btn.classList.remove("border-brand-border/60", "bg-slate-900/40", "text-slate-300");
+          state.language = btn.getAttribute("data-lang");
+        });
+      });
+
+      // Generate
+      document.getElementById("dp-generate-btn").addEventListener("click", function () {
+        state.myName = document.getElementById("dp-my-name").value.trim() || "You";
+        state.dateName = document.getElementById("dp-date-name").value.trim() || "your date";
+        state.city = document.getElementById("dp-city").value.trim() || "your area";
+        state.time = document.getElementById("dp-time").value;
+        state.interests = document.getElementById("dp-interests").value.trim();
+        state.customBudget = document.getElementById("dp-custom-budget").value.trim();
+        generatePlan();
+      });
+
+      function generatePlan() {
+        var isHL = state.language === "hinglish";
+        var name = state.dateName;
+        var city = state.city;
+        var budget = state.budget === "custom" ? state.customBudget : state.budget;
+        var type = state.dateType;
+        var time = state.time;
+
+        var budgetLabels = { free: "Free", low: "Low budget ($)", medium: "Medium budget ($$)", premium: "Premium ($$$)", custom: state.customBudget || "Custom" };
+        var typeLabels = { first_date: "First Date", casual: "Casual Meet", coffee: "Coffee Date", food: "Food Date", activity: "Activity Date", romantic: "Romantic Date", surprise: "Surprise Date" };
+        var timeLabels = { morning: "morning", afternoon: "afternoon", evening: "evening", night: "late night", flexible: "anytime" };
+
+        document.getElementById("dp-plan-title").textContent = (isHL ? "Tumhara Date Game Plan" : "Your Date Game Plan") + " with " + name;
+        document.getElementById("dp-plan-subtitle").textContent = typeLabels[type] + " | " + budgetLabels[budget] + " | " + timeLabels[time];
+
+        var ideas = generateIdeas(type, budget, time, city, name, isHL);
+        renderIdeas(ideas, isHL);
+        renderStarters(name, isHL);
+        renderFlirty(name, isHL);
+        renderAvoid(isHL);
+        renderSilence(isHL);
+        renderChecklist(type, isHL);
+        renderComfort(isHL);
+        renderEnding(name, isHL);
+        renderFollowup(name, isHL);
+
+        document.getElementById("dp-input").classList.add("hidden");
+        document.getElementById("dp-plan").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function generateIdeas(type, budget, time, city, name, isHL) {
+        var ideas = [];
+        var coffeeIdeas = [
+          { title: isHL ? "Cozy Cafe Date" : "Cozy Coffee Chat", desc: isHL ? "Ek acchi si cafe mein jaake轻松 baat karo. Coffee ke saath conversations flow hoti hain." : "Find a cozy cafe with good ambiance. Coffee naturally keeps conversations flowing.", cost: budget === "free" ? "Free (bring your own)" : budget === "low" ? "Under $" : budget === "premium" ? "$$$ specialty cafe" : "$$", why: isHL ? "Coffee dates low-pressure hote hain. Agar accha jaaye toh extend kar sakte ho." : "Coffee dates are low-pressure. Easy to extend if things go well or exit gracefully.", timeline: isHL ? "1-1.5 hours: Coffee order, 45 min chat, dessert if going well" : "1-1.5 hours: Order, 45 min chat, dessert if going well" },
+          { title: isHL ? "Walk & Talk" : "Walk & Talk", desc: isHL ? "Park ya waterfront pe walk karo. Fresh air se conversations natural hote hain." : "Take a walk in a park or waterfront. Fresh air makes conversations feel natural.", cost: "Free", why: isHL ? "Walking side by side se eye contact ka pressure kam hota hai. Very natural." : "Walking side by side reduces eye contact pressure. Very natural dynamic.", timeline: isHL ? "1 hour: 30 min walk, find a bench, grab chai from a stall" : "1 hour: 30 min walk, find a bench, grab chai from a stall" },
+          { title: isHL ? "Bookstore Adventure" : "Bookstore Adventure", desc: isHL ? "Ek bookstore mein ghoomo. Books ke baare mein baat karna easy conversation starter hai." : "Explore a bookstore together. Books make easy conversation starters.", cost: "Free", why: isHL ? "Books personality reveal karte hain. Great way to know each other." : "Books reveal personality. Great way to learn about each other.", timeline: isHL ? "1-1.5 hours: Browse sections, share favorites, grab coffee nearby" : "1-1.5 hours: Browse sections, share favorites, grab coffee nearby" }
+        ];
+        var foodIdeas = [
+          { title: isHL ? "Street Food Exploration" : "Street Food Crawl", desc: isHL ? "Local street food try karo. Food ke saath baat karna natural hota hai." : "Try local street food together. Food naturally sparks conversation.", cost: budget === "premium" ? "$$" : "$", why: isHL ? "Street food casual hai aur bahut variety milti hai. Share karna bonding hota hai." : "Street food is casual with lots of variety. Sharing food bonds people.", timeline: isHL ? "1.5 hours: Visit 2-3 stalls, share dishes, walk between spots" : "1.5 hours: Visit 2-3 stalls, share dishes, walk between spots" },
+          { title: isHL ? "Hidden Gem Restaurant" : "Hidden Gem Restaurant", desc: isHL ? "Ek unique, cozy restaurant dhoondho. Naya cuisine try karo saath mein." : "Find a unique, cozy restaurant. Try a new cuisine together.", cost: budget === "free" ? "$" : budget === "premium" ? "$$$" : "$$", why: isHL ? "Unique restaurants memorable hote hain. First date ke liye perfect hai." : "Unique restaurants create memories. Perfect for a first date.", timeline: isHL ? "1.5-2 hours: Reservation, dinner, dessert if going well" : "1.5-2 hours: Reservation, dinner, dessert if going well" },
+          { title: isHL ? "Cooking Together" : "Cook Together", desc: isHL ? "Ghar pe saath mein cooking karo. Fun hai aur collaboration dikhta hai." : "Cook a meal together at home. Fun and shows collaboration.", cost: "Free", why: isHL ? "Cooking together bonding hai. Teamwork aur fun dono milta hai." : "Cooking together is bonding. You get teamwork and fun combined.", timeline: isHL ? "2 hours: Pick recipe, shop ingredients, cook, eat together" : "2 hours: Pick recipe, shop ingredients, cook, eat together" }
+        ];
+        var activityIdeas = [
+          { title: isHL ? "Mini Golf / Bowling" : "Mini Golf or Bowling", desc: isHL ? "Mini golf ya bowling khelo. Friendly competition se bond hota hai." : "Play mini golf or bowling. Friendly competition bonds people.", cost: "$$", why: isHL ? "Games se awkward silence nahi hoti. Natural flirting ka mauqa milta hai." : "Games eliminate awkward silence. Natural opportunities for teasing and flirting.", timeline: isHL ? "1.5 hours: Game, grab drinks after, discuss highlights" : "1.5 hours: Game, grab drinks after, discuss highlights" },
+          { title: isHL ? "Museum / Art Gallery" : "Museum or Art Gallery", desc: isHL ? "Art gallery ya museum jaake exhibits ke baare mein discuss karo." : "Visit a museum or gallery and discuss the exhibits together.", cost: budget === "low" ? "$" : "$$", why: isHL ? "Art opinions reveal personality. Great for deep, interesting conversations." : "Art opinions reveal personality. Excellent for deep, interesting conversations.", timeline: isHL ? "1.5-2 hours: Walk through exhibits, stop at favorites, cafe discussion" : "1.5-2 hours: Walk through exhibits, stop at favorites, cafe discussion" },
+          { title: isHL ? "Outdoor Adventure" : "Outdoor Adventure", desc: isHL ? "Hiking, cycling, ya koi outdoor activity karo. Nature mein baat easy hoti hai." : "Go hiking, cycling, or do an outdoor activity. Nature makes talking easy.", cost: "Free - $", why: isHL ? "Outdoor activities se adrenaline aata hai. Shared experience bonding hota hai." : "Outdoor activities create adrenaline. Shared experiences bond people.", timeline: isHL ? "2 hours: Activity, rest stop, chai/snack break" : "2 hours: Activity, rest stop, chai/snack break" }
+        ];
+        var romanticIdeas = [
+          { title: isHL ? "Sunset Point" : "Sunset Spot", desc: isHL ? "Sunset dekhne ka ek acchi jagah dhoondho. Romantic aur memorable." : "Find a great spot to watch the sunset. Romantic and memorable.", cost: "Free", why: isHL ? "Sunset naturally romantic atmosphere banata hai. Bina kuch kiye perfect hai." : "Sunsets create a naturally romantic atmosphere. Perfect without trying.", timeline: isHL ? "1-1.5 hours: Reach before sunset, watch, walk, chai" : "1-1.5 hours: Reach before sunset, watch, walk, chai" },
+          { title: isHL ? "Rooftop Dinner" : "Rooftop Dinner", desc: isHL ? "Rooftop pe dinner karo. Views aur ambiance dono acche hain." : "Have dinner at a rooftop restaurant. Great views and ambiance.", cost: "$$ - $$$", why: isHL ? "Rooftop settings special feel karate hain. Date ko memorable banata hai." : "Rooftop settings feel special. Makes the date memorable.", timeline: isHL ? "2 hours: Reservation, dinner, dessert, enjoy the view" : "2 hours: Reservation, dinner, dessert, enjoy the view" },
+          { title: isHL ? "Live Music Night" : "Live Music Night", desc: isHL ? "Live music venue jaake gaane suno. Music ke saath vibe banata hai." : "Visit a live music venue. Music creates a great vibe together.", cost: "$$", why: isHL ? "Music emotional connection banata hai. Share karna accha lagta hai." : "Music creates emotional connection. Sharing the experience bonds you.", timeline: isHL ? "2 hours: Show, discuss favorite songs, grab drinks" : "2 hours: Show, discuss favorite songs, grab drinks" }
+        ];
+        var generalIdeas = [
+          { title: isHL ? "Explore Local Market" : "Explore Local Market", desc: isHL ? "Local market ya bazaar ghoomo. Naye cheezein dekhna aur discuss karna fun hai." : "Explore a local market or bazaar. Seeing and discussing new things is fun.", cost: budget === "premium" ? "$$" : "$", why: isHL ? "Markets vibrant hote hain. Har stall pe naya topic milta hai." : "Markets are vibrant. Every stall gives you a new topic to discuss.", timeline: isHL ? "1.5 hours: Browse, stop at interesting stalls, grab street food" : "1.5 hours: Browse, stop at interesting stalls, grab street food" },
+          { title: isHL ? "Coffee + Bookstore Combo" : "Coffee + Bookstore Combo", desc: isHL ? "Pehle coffee, phir bookstore. Do activities se date naturally flow hoti hai." : "Coffee first, then bookstore. Two activities make the date flow naturally.", cost: "$", why: isHL ? "Two activities se agar ek boring lage toh doosra save kar leta hai." : "Two activities mean if one gets boring, the other saves the date.", timeline: isHL ? "1.5-2 hours: 45 min coffee, 45 min bookstore, walk" : "1.5-2 hours: 45 min coffee, 45 min bookstore, walk" },
+          { title: isHL ? "Gaming Arcade" : "Gaming Arcade", desc: isHL ? "Arcade games khelo. Nostalgia aur fun dono milta hai." : "Play arcade games. Nostalgia and fun combined.", cost: "$$", why: isHL ? "Games se naturally competitive flirting hoti hai. Bahut maza aata hai." : "Games create natural competitive flirting. Loads of fun.", timeline: isHL ? "1.5 hours: Play games, grab snacks, compete for high scores" : "1.5 hours: Play games, grab snacks, compete for high scores" }
+        ];
+
+        var pool = [];
+        if (type === "coffee" || type === "casual") pool = coffeeIdeas;
+        else if (type === "food") pool = foodIdeas;
+        else if (type === "activity") pool = activityIdeas;
+        else if (type === "romantic") pool = romanticIdeas;
+        else if (type === "surprise") pool = [].concat(coffeeIdeas, foodIdeas, activityIdeas, romanticIdeas, generalIdeas).sort(function () { return 0.5 - Math.random(); });
+        else pool = [].concat(coffeeIdeas, generalIdeas);
+
+        var shuffled = pool.sort(function () { return 0.5 - Math.random(); });
+        ideas = shuffled.slice(0, 3);
+        return ideas;
+      }
+      function renderIdeas(ideas, isHL) {
+        var container = document.getElementById("dp-ideas");
+        container.innerHTML = "";
+        ideas.forEach(function (idea, idx) {
+          var card = document.createElement("div");
+          card.className = "glass p-5 sm:p-6 rounded-2xl border border-brand-border/60";
+          card.innerHTML =
+            '<div class="flex items-start gap-3 mb-3">' +
+              '<span class="w-8 h-8 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-sm font-bold text-rose-400 shrink-0">' + (idx + 1) + '</span>' +
+              '<div>' +
+                '<h4 class="text-sm font-bold text-slate-200">' + idea.title + '</h4>' +
+                '<p class="text-xs text-slate-400 mt-1">' + idea.desc + '</p>' +
+              '</div>' +
+            '</div>' +
+            '<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">' +
+              '<div class="p-3 bg-slate-900/60 rounded-xl border border-brand-border/40">' +
+                '<span class="text-[10px] font-bold text-amber-400 uppercase">' + (isHL ? "Budget" : "Cost") + '</span>' +
+                '<p class="text-xs text-slate-300 mt-1">' + idea.cost + '</p>' +
+              '</div>' +
+              '<div class="p-3 bg-slate-900/60 rounded-xl border border-brand-border/40">' +
+                '<span class="text-[10px] font-bold text-emerald-400 uppercase">' + (isHL ? "Kyun" : "Why It Fits") + '</span>' +
+                '<p class="text-xs text-slate-300 mt-1">' + idea.why + '</p>' +
+              '</div>' +
+              '<div class="p-3 bg-slate-900/60 rounded-xl border border-brand-border/40">' +
+                '<span class="text-[10px] font-bold text-blue-400 uppercase">' + (isHL ? "Timeline" : "Timeline") + '</span>' +
+                '<p class="text-xs text-slate-300 mt-1">' + idea.timeline + '</p>' +
+              '</div>' +
+            '</div>';
+          container.appendChild(card);
+        });
+      }
+
+      function renderStarters(name, isHL) {
+        var starters = isHL
+          ? [name + " se pucho: 'Tumhara perfect weekend kaisa dikhta hai?'", "'Sabse spontaneous cheez kya ki hai abhi?'", "'Agar ek din free ho toh kya karti ho?'", "'Tumhe kya cheezein excited karti hain?'", "'Last time kab hasi itni ki pet dukhne laga?'"]
+          : ["Ask " + name + ": 'What does your perfect weekend look like?'", "'What is the most spontaneous thing you have done recently?'", "'If you had a completely free day, what would you do?'", "'What gets you genuinely excited?'", "'When was the last time you laughed so hard your stomach hurt?'"];
+        var el = document.getElementById("dp-starters");
+        el.innerHTML = "";
+        starters.forEach(function (s) {
+          var li = document.createElement("li");
+          li.className = "p-3 bg-slate-900/60 rounded-xl border border-brand-border/40 text-xs text-slate-300";
+          li.innerHTML = '&#128172; "' + s + '"';
+          el.appendChild(li);
+        });
+      }
+
+      function renderFlirty(name, isHL) {
+        var qs = isHL
+          ? ["'Tumhari smile dekh ke pata chalta hai ki tu kabhi boring nahi hai.'", "'Agar hum dono ek Road Trip pe jaayein toh pehla gaana kya hoga?'", "'Tujhe pata hai, tu interesting hai. Main notice kar raha hu.'", "'Tu mujhe batati nahi hai... par main figure out kar lunga.'", "'Hum dono mein sabse acchi cheez kya hai according to you?'"]
+          : ["'Your smile tells me you are never boring.'", "'If we went on a road trip, what would be the first song you play?'", "'You know what, you are interesting. I am noticing that.'", "'You are not telling me everything... but I will figure it out.'", "'What is the best thing about us, according to you?'"];
+        var el = document.getElementById("dp-flirty");
+        el.innerHTML = "";
+        qs.forEach(function (s) {
+          var li = document.createElement("li");
+          li.className = "p-3 bg-slate-900/60 rounded-xl border border-pink-500/10 text-xs text-slate-300";
+          li.innerHTML = '&#10024; ' + s;
+          el.appendChild(li);
+        });
+      }
+
+      function renderAvoid(isHL) {
+        var items = isHL
+          ? ["Exes ke baare mein baat karna", "Pehli date pe politics ya religion", "Apni salary ya wealth flex karna", "Unka phone check karna ya photos maangna", "Negative ya complaining energy lana", "Doosron ko compare karna"]
+          : ["Talking about exes on a first date", "Politics or religion discussions early on", "Flexing your salary or wealth", "Checking their phone or asking for photos", "Bringing negative or complaining energy", "Comparing them to other people"];
+        var el = document.getElementById("dp-avoid");
+        el.innerHTML = "";
+        items.forEach(function (item) {
+          var li = document.createElement("li");
+          li.className = "flex items-start gap-2 text-xs text-slate-300";
+          li.innerHTML = '<span class="text-red-400 mt-0.5">&#10007;</span>' + item;
+          el.appendChild(li);
+        });
+      }
+
+      function renderSilence(isHL) {
+        var tips = isHL
+          ? ["Environment ke baare mein comment karo: music, decor, ya crowd.", "Unse pucho: 'Tumhare favourite restaurants kaun se hain?'", "Kuch funny share karo apne baare mein - ek embarrassing moment ya quirky fact.", "Phone nahi uthao. Silence natural hai, awkward nahi.", "Simple pucho: 'Aaj ka sabse accha part kya raha?'"]
+          : ["Comment on the environment: music, decor, or the crowd around you.", "Ask them: 'What are your favorite restaurants around here?'", "Share something funny about yourself - an embarrassing moment or quirky fact.", "Do not reach for your phone. Silence is natural, not awkward.", "Simply ask: 'What has been the best part of your day?'"];
+        var el = document.getElementById("dp-silence");
+        el.innerHTML = "";
+        tips.forEach(function (tip) {
+          var li = document.createElement("li");
+          li.className = "flex items-start gap-2 text-xs text-slate-300";
+          li.innerHTML = '<span class="text-amber-400 mt-0.5">&#10148;</span>' + tip;
+          el.appendChild(li);
+        });
+      }
+
+      function renderChecklist(type, isHL) {
+        var items = isHL
+          ? ["Public, well-lit location choose karo", "1.5 - 2 hours se zyada plan mat karo", "Transportation ya parking pehle check karo", "Acche se dress up karo par overthink mat karo", "Phone silent pe rakho, fully present raho", "Ek backup plan rakho (nearby cafe ya restaurant)", "Pehle se ek topic list yaad rakho"]
+          : ["Choose a public, well-lit location", "Keep duration under 1.5 - 2 hours", "Check transportation or parking beforehand", "Dress well but do not overthink it", "Keep phone on silent, be fully present", "Have a backup plan nearby (cafe or restaurant)", "Keep a few topic ideas ready in your mind"];
+        if (type === "first_date") items.push(isHL ? "Pehli date pe gift mat lao - pressure hota hai" : "Do not bring a gift on a first date - it creates pressure");
+        var el = document.getElementById("dp-checklist");
+        el.innerHTML = "";
+        items.forEach(function (item) {
+          var li = document.createElement("li");
+          li.className = "flex items-start gap-2 text-xs text-slate-300";
+          li.innerHTML = '<span class="text-emerald-400 mt-0.5">&#10003;</span>' + item;
+          el.appendChild(li);
+        });
+      }
+
+      function renderComfort(isHL) {
+        var items = isHL
+          ? ["Agar wo crossed arms rakhti hai ya door hati hai, space do.", "Eye contact avoid karti hai toh conversation change karo.", "Short replies de rahi hai toh deeper question pucho.", "Phone baar baar dekh rahi hai toh politely pucho kuch important hai kya.", "Agar wo smili hai aur engaged hai - great sign, keep going!"]
+          : ["If they cross arms or lean away, give them space.", "If they avoid eye contact, change the topic.", "If replies are short, ask a deeper question.", "If they keep checking their phone, politely ask if something is up.", "If they are smiling and engaged - great sign, keep the energy going!"];
+        var el = document.getElementById("dp-comfort");
+        el.innerHTML = "";
+        items.forEach(function (item) {
+          var li = document.createElement("li");
+          li.className = "flex items-start gap-2 text-xs text-slate-300";
+          li.innerHTML = '<span class="text-violet-400 mt-0.5">&#9679;</span>' + item;
+          el.appendChild(li);
+        });
+      }
+
+      function renderEnding(name, isHL) {
+        var text = isHL
+          ? "Date khatam karte waqt seedha bolo: 'Maza aaya aaj. Tumhe ghar tak pahunchna hai ya main drop karun?' Agar wo kehti hai ki wo manage kar legi, toh politely goodbye bolo aur ek smile do. Ghar jaake ek casual text bhejo: 'Pahunch gayi? Maza aaya aaj.'"
+          : "At the end of the date, be direct: 'I had a great time today. Do you need a ride or can you manage?' If they say they are fine, say goodbye warmly with a smile. Send a casual text after getting home: 'Did you get home safe? I really enjoyed today.'";
+        document.getElementById("dp-ending").textContent = text;
+      }
+
+      function renderFollowup(name, isHL) {
+        var text = isHL
+          ? "Ghar pahunchne ke baad 30-60 minutes mein ek casual text bhejo: 'Hey! Aaj ka din accha tha. Tumhare saath baat karna genuinely enjoy kiya. Kabhi phir milte hain?' Agar wo positive reply de, toh plan karo. Agar late ya one-word reply aaye, toh 2-3 din wait karo aur phir ek light message bhejo."
+          : "Send a casual text within 30-60 minutes of getting home: 'Hey! Today was really fun. I genuinely enjoyed talking with you. Let us do this again sometime?' If they reply positively, plan the next one. If the reply is late or one-word, wait 2-3 days and send a light message.";
+        document.getElementById("dp-followup").textContent = text;
+      }
+      // --- Date Rescue ---
+      var rescueData = {
+        silence: {
+          en: ["Comment on the music playing: 'Have you heard this song before?'", "Look around and say: 'This place has interesting decor. What do you think?'", "Share a funny observation about something happening nearby.", "Ask: 'What is the best meal you have had recently?'", "Simply smile and say: 'I am enjoying this. No need to fill every silence.'"],
+          hi: ["Music pe comment karo: 'Ye gaana suna hai pehle?'", "Aas paas dekh ke bolo: 'Yahan ka decor interesting hai. Kya sochte ho?'", "Kuch funny observe karo jo ho raha hai paas mein.", "Pucho: 'Tumne abhi tak kya accha khaya hai?'", "Bas smile karo aur bolo: 'Maza aa raha hai. Har silence fill karne ki zaroorat nahi.'"]
+        },
+        topics: {
+          en: ["Ask about their childhood: 'What was your favorite thing to do as a kid?'", "Discuss travel dreams: 'If you could go anywhere tomorrow, where?'", "Talk about food preferences: 'Are you adventurous with food or a picky eater?'", "Ask about their passions: 'What could you talk about for hours?'", "Share a recent funny moment and ask theirs."],
+          hi: ["Unki childhood ke baare mein pucho: 'Bachpan mein kya karna sabse zyada pasand tha?'", "Travel dreams discuss karo: 'Kal kahin ja sako toh kahan jaogi?'", "Food preferences pe baat karo: 'Tum adventurous ho food mein ya picky?'", "Unke passions pucho: 'Kya hai jo tum ghanton baat kar sakti ho?'", "Apna ek funny moment share karo aur unka pucho."]
+        },
+        nervous: {
+          en: ["Take a deep breath. They are probably nervous too.", "Focus on them, not on yourself. Ask genuine questions.", "It is okay to say: 'I am a bit nervous, I like you.' Honesty is attractive.", "Ground yourself: feel your feet on the floor, take a sip of your drink.", "Remember: they said yes to this date. They want to be here."],
+          hi: ["Deep breath lo. Wo bhi nervous ho sakti hain.", "Apne baare mein mat socho, unpe focus karo. Genuine questions pucho.", "Keh sakte ho: 'Thoda nervous hu, pasand aaya tu.' Honesty attractive hai.", "Khud ko ground karo: pair feel karo, ek sip lo drink ki.", "Yaad rakho: unhone haan bola is date ke liye. Wo yahan rehna chahti hain."]
+        },
+        great: {
+          en: ["Keep the energy going. Do not overthink it - just be present.", "Suggest extending: 'Want to grab dessert or take a walk?'", "Add light, flirty comments: 'I knew this would be fun with you.'", "Be genuinely curious. Ask follow-up questions about what they share.", "End with warmth: 'This was the best part of my day.'"],
+          hi: ["Energy maintain karo. Overthink mat karo - bas present raho.", "Extend karne bolo: 'Dessert ya walk karna hai?'", "Light, flirty comments daalo: 'Pata tha tumhare saath maza aayega.'", "Genuinely curious raho. Jo wo boli uske follow-up questions pucho.", "Warmly end karo: 'Aaj ka ye best part tha.'"]
+        },
+        uninterested: {
+          en: ["Do not take it personally. Not every connection is meant to be.", "Try one more engaging question. If still flat, accept the energy.", "Do not try harder - it creates pressure. Stay relaxed.", "End the date respectfully: 'I had a nice time. Take care.'", "Some people are just not compatible. It says nothing about your worth."],
+          hi: ["Personally mat lo. Har connection meant nahi hota.", "Ek aur engaging question pucho. Agar phir bhi flat hai, accept karo.", "Zyada mat karo - pressure banta hai. Relaxed raho.", "Respectfully end karo: 'Accha laga. Take care.'", "Kuch log compatible nahi hote. Tumhari worth pe kuch nahi kehta."]
+        }
+      };
+
+      document.querySelectorAll(".dp-rescue-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var key = btn.getAttribute("data-rescue");
+          var data = state.language === "hinglish" ? rescueData[key].hi : rescueData[key].en;
+          var output = document.getElementById("dp-rescue-output");
+          output.classList.remove("hidden");
+          var html = '<span class="font-bold text-amber-400 block mb-2">' + btn.textContent + ' - Quick Help:</span>';
+          data.forEach(function (tip) {
+            html += '<div class="flex items-start gap-2 mb-2"><span class="text-amber-400 mt-0.5 shrink-0">&#10148;</span><span>' + tip + '</span></div>';
+          });
+          output.innerHTML = html;
+          output.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+      });
+
+      // --- Save Plan ---
+      document.getElementById("dp-save-btn").addEventListener("click", function () {
+        var plans = loadJSON(PLAN_KEY) || [];
+        var plan = {
+          myName: state.myName,
+          dateName: state.dateName,
+          city: state.city,
+          budget: state.budget,
+          dateType: state.dateType,
+          time: state.time,
+          date: new Date().toLocaleString(),
+          timestamp: Date.now()
+        };
+        plans.unshift(plan);
+        saveJSON(PLAN_KEY, plans.slice(0, 20));
+
+        var user = loadJSON(USER_KEY) || { name: "User" };
+        user.xp = (user.xp || 0) + 60;
+        saveJSON(USER_KEY, user);
+
+        var btn = document.getElementById("dp-save-btn");
+        btn.textContent = "Saved!";
+        btn.classList.add("bg-emerald-500");
+        setTimeout(function () { btn.textContent = "Save This Plan"; btn.classList.remove("bg-emerald-500"); }, 2000);
+      });
+
+      // --- New Plan ---
+      document.getElementById("dp-new-btn").addEventListener("click", function () {
+        document.getElementById("dp-plan").classList.add("hidden");
+        document.getElementById("dp-input").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    })();
+  </script>
+</Layout>

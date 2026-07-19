@@ -1,0 +1,425 @@
+---
+export const prerender = true;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Rizz Score | Rizzora">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+    <!-- Header -->
+    <div class="mb-6 sm:mb-8">
+      <a href="/dashboard" class="text-xs font-semibold text-rose-400 hover:underline flex items-center gap-1 mb-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Dashboard
+      </a>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Rizz Score Report</h1>
+      <p class="text-slate-400 mt-1 text-sm sm:text-base">Your comprehensive dating communication evaluation.</p>
+    </div>
+
+    <!-- No session fallback -->
+    <div id="rs-empty" class="hidden max-w-lg mx-auto text-center glass p-10 sm:p-14 rounded-2xl">
+      <div class="text-5xl mb-4">🎯</div>
+      <h3 class="text-lg font-bold text-slate-300">No session found</h3>
+      <p class="text-sm text-slate-500 mt-2">Complete a Conversation Simulator session to get your Rizz Score.</p>
+      <a href="/conversation-simulator" class="inline-block mt-6 px-6 py-3 text-sm font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-2xl transition">Start a Simulation</a>
+    </div>
+
+    <!-- Score content -->
+    <div id="rs-content" class="hidden space-y-6">
+
+      <!-- Top: Score + Info -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Big Score Gauge -->
+        <div class="glass p-6 sm:p-8 rounded-2xl border border-brand-border/60 text-center flex flex-col items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-400">Overall Rizz Score</span>
+            <div class="my-6 relative inline-flex items-center justify-center">
+              <svg class="w-36 h-36 sm:w-40 sm:h-40 transform -rotate-90">
+                <circle cx="72" cy="72" r="60" stroke="#1f2e4d" stroke-width="8" fill="transparent" />
+                <circle id="rs-gauge" cx="72" cy="72" r="60" stroke="#db2777" stroke-width="8" fill="transparent" stroke-dasharray="377" stroke-dashoffset="377" />
+              </svg>
+              <div class="absolute">
+                <div id="rs-score-num" class="text-4xl font-black text-white">0</div>
+                <div class="text-xs text-slate-400">/100</div>
+              </div>
+            </div>
+            <h3 id="rs-title" class="text-lg font-bold text-slate-200">Calculating...</h3>
+            <p id="rs-subtitle" class="text-xs text-slate-400 mt-1"></p>
+          </div>
+          <div class="w-full mt-6 space-y-2">
+            <button id="rs-share-btn" class="w-full py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 hover:from-rose-600 hover:to-violet-600 rounded-xl transition cursor-pointer">Share Score Card</button>
+            <a href="/conversation-simulator" class="block w-full py-2.5 text-xs font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-xl transition text-center">Try Again</a>
+          </div>
+        </div>
+
+        <!-- Category Scores -->
+        <div class="lg:col-span-2 glass p-5 sm:p-6 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 border-b border-brand-border/40 pb-2">Skills Breakdown</h3>
+          <div id="rs-categories" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </div>
+      </div>
+
+      <!-- Strengths + Mistakes -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-400 mb-3">Strengths</h3>
+          <ul id="rs-strengths" class="space-y-2"></ul>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-amber-400 mb-3">Areas to Improve</h3>
+          <ul id="rs-improvements" class="space-y-2"></ul>
+        </div>
+      </div>
+
+      <!-- Mistakes -->
+      <div class="glass p-5 rounded-2xl">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-red-400 mb-3">Key Mistakes</h3>
+        <ul id="rs-mistakes" class="space-y-2"></ul>
+      </div>
+
+      <!-- Tips + Recommended Action -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-violet-400 mb-3">Improvement Tips</h3>
+          <ul id="rs-tips" class="space-y-2"></ul>
+        </div>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-blue-400 mb-3">Recommended Next Action</h3>
+          <div id="rs-action" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <!-- Session Info -->
+      <div class="glass p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <p class="text-xs text-slate-400">Session: <span id="rs-session-info" class="text-slate-200 font-semibold"></span></p>
+          <p class="text-xs text-slate-400 mt-1">XP Earned: <span id="rs-xp" class="text-amber-400 font-bold"></span></p>
+        </div>
+        <div class="flex gap-2">
+          <a href="/progress" class="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 border border-brand-border rounded-lg transition">View Progress</a>
+          <a href="/dashboard" class="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white bg-rose-500 hover:bg-rose-600 rounded-lg transition">Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shareable Card Modal -->
+  <div id="rs-modal" class="hidden fixed inset-0 z-[100] bg-brand-dark/90 backdrop-blur-sm flex items-center justify-center px-4">
+    <div class="w-full max-w-sm">
+      <div id="rs-card" class="rounded-3xl overflow-hidden border border-brand-border/60 shadow-2xl" style="background: linear-gradient(135deg, #080d1a 0%, #0f172a 50%, #1a0a2e 100%);">
+        <div class="p-8 text-center">
+          <div class="text-xl font-black tracking-tight gradient-text mb-1">Rizzora</div>
+          <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-6">Rizz Score Card</div>
+          <div class="w-28 h-28 mx-auto rounded-full border-4 border-rose-500/30 flex items-center justify-center mb-4" style="background: radial-gradient(circle, rgba(219,39,119,0.15) 0%, transparent 70%);">
+            <div class="text-center">
+              <div id="card-score" class="text-4xl font-black text-white">0</div>
+              <div class="text-[10px] text-slate-400">/100</div>
+            </div>
+          </div>
+          <h3 id="card-title" class="text-lg font-bold text-slate-100"></h3>
+          <p id="card-level" class="text-xs text-rose-400 font-semibold mt-1"></p>
+          <div class="mt-6 pt-4 border-t border-brand-border/40">
+            <p class="text-[10px] text-slate-500">Generated on <span id="card-date"></span></p>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-4">
+        <button id="rs-download-btn" class="flex-1 py-3 text-xs font-bold uppercase tracking-wider text-white bg-linear-to-r from-rose-500 to-violet-500 rounded-xl cursor-pointer transition">Download Card</button>
+        <button id="rs-close-modal" class="flex-1 py-3 text-xs font-bold uppercase tracking-wider text-slate-300 bg-slate-800 border border-brand-border rounded-xl cursor-pointer transition">Close</button>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+  <script is:inline>
+    (function () {
+      function q(a, b, c) { var s = String.fromCharCode(a); if (b) s += String.fromCharCode(b); if (c) s += String.fromCharCode(c); return s; }
+
+      var SCORE_KEY = "rizzora_score_history";
+      var USER_KEY = "rizzora_user";
+      var SIM_KEY = "rizzora_simulator";
+
+      function loadJSON(key) { try { var r = localStorage.getItem(key); return r ? JSON.parse(r) : null; } catch { return null; } }
+      function saveJSON(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+      var levels = [
+        { min: 0, max: 25, title: "Beginner", subtitle: "Everyone starts somewhere. Keep practicing!", color: "text-slate-400", badge: "bg-slate-500/20 text-slate-300" },
+        { min: 26, max: 50, title: "Improving", subtitle: "You are building real skills. The vibe is forming.", color: "text-amber-400", badge: "bg-amber-500/20 text-amber-300" },
+        { min: 51, max: 75, title: "Smooth Talker", subtitle: "Natural flow and confidence. People enjoy talking to you.", color: "text-blue-400", badge: "bg-blue-500/20 text-blue-300" },
+        { min: 76, max: 100, title: "Rizz Master", subtitle: "Elite communication. You make connections feel effortless.", color: "text-rose-400", badge: "bg-rose-500/20 text-rose-300" }
+      ];
+
+      function getLevel(score) {
+        for (var i = 0; i < levels.length; i++) {
+          if (score >= levels[i].min && score <= levels[i].max) return levels[i];
+        }
+        return levels[levels.length - 1];
+      }
+
+      var categoryInfo = {
+        confidence: { name: "Confidence", icon: "💪", color: "bg-rose-500", strong: "Spoke with conviction and clarity.", improve: "Add more personality and detail to your messages." },
+        humor: { name: "Humor", icon: "😄", color: "bg-amber-500", strong: "Added playful energy to keep the vibe fun.", improve: "Try situational humor or light teasing to break the ice." },
+        flow: { name: "Conversation Flow", icon: "🌊", color: "bg-blue-500", strong: "Smooth transitions between topics.", improve: "Use follow-up questions and the FORD method to sustain flow." },
+        listening: { name: "Active Listening", icon: "👂", color: "bg-indigo-500", strong: "Referenced details they shared, showing genuine interest.", improve: "Ask more follow-up questions about what they say." },
+        flirting: { name: "Flirting", icon: "✨", color: "bg-pink-500", strong: "Compliments felt natural and genuine.", improve: "Add subtle compliments that go beyond appearance." },
+        respect: { name: "Respect", icon: "🤝", color: "bg-emerald-500", strong: "Gave space and never came across as pushy.", improve: "Watch for messages that might feel demanding or intense." }
+      };
+
+      // --- Get latest session ---
+      var simData = loadJSON(SIM_KEY);
+      var latestSession = null;
+      if (simData && simData.length > 0) {
+        latestSession = simData[0];
+      }
+
+      if (!latestSession) {
+        document.getElementById("rs-empty").classList.remove("hidden");
+        return;
+      }
+
+      document.getElementById("rs-content").classList.remove("hidden");
+
+      var metrics = latestSession.metrics || { confidence: 50, humor: 30, flow: 50, listening: 40, flirting: 25, respect: 70 };
+      var overall = Math.round((metrics.confidence + metrics.humor + metrics.flow + metrics.listening + metrics.flirting + metrics.respect) / 6);
+      var level = getLevel(overall);
+      var scenario = latestSession.scenario || "first_meeting";
+      var personality = latestSession.personality || "friendly";
+      var theirName = latestSession.theirName || "Alex";
+      var msgCount = latestSession.messages || 0;
+      // --- Render Score Gauge ---
+      var gauge = document.getElementById("rs-gauge");
+      var scoreNum = document.getElementById("rs-score-num");
+      var circumference = 377;
+      var offset = circumference - (circumference * overall / 100);
+      setTimeout(function () {
+        gauge.style.transition = "stroke-dashoffset 1.5s ease-out";
+        gauge.setAttribute("stroke-dashoffset", offset);
+        animateCounter(scoreNum, 0, overall, 1500);
+      }, 200);
+      scoreNum.className = "text-4xl font-black " + level.color;
+
+      function animateCounter(el, start, end, duration) {
+        var startTime = null;
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          var progress = Math.min((timestamp - startTime) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.round(start + (end - start) * eased);
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      document.getElementById("rs-title").textContent = level.title;
+      document.getElementById("rs-title").className = "text-lg font-bold " + level.color;
+      document.getElementById("rs-subtitle").textContent = level.subtitle;
+
+      // --- Render Categories ---
+      var catContainer = document.getElementById("rs-categories");
+      var keys = ["confidence", "humor", "flow", "listening", "flirting", "respect"];
+      keys.forEach(function (k) {
+        var info = categoryInfo[k];
+        var val = Math.round(metrics[k]);
+        var card = document.createElement("div");
+        card.className = "bg-slate-900/60 p-4 rounded-xl border border-brand-border/40";
+        card.innerHTML =
+          '<div class="flex justify-between items-center mb-1">' +
+            '<div class="flex items-center gap-2"><span>' + info.icon + '</span><span class="text-xs font-bold text-slate-200">' + info.name + '</span></div>' +
+            '<span class="text-xs font-black ' + level.color + '">' + val + '%</span>' +
+          '</div>' +
+          '<div class="w-full bg-slate-950 rounded-full h-1.5 mb-2"><div class="' + info.color + ' h-1.5 rounded-full transition-all duration-1000" style="width: ' + val + '%"></div></div>' +
+          '<p class="text-[10px] text-slate-400">' + (val >= 60 ? info.strong : info.improve) + '</p>';
+        catContainer.appendChild(card);
+      });
+
+      // --- Strengths ---
+      var strengths = [];
+      if (metrics.respect >= 70) strengths.push("Showed genuine respect and gave your partner space throughout.");
+      if (metrics.listening >= 60) strengths.push("Asked thoughtful follow-up questions and engaged with their replies.");
+      if (metrics.confidence >= 65) strengths.push("Communicated with conviction and clear expression.");
+      if (metrics.humor >= 50) strengths.push("Added humor and lightness to keep the vibe fun and engaging.");
+      if (metrics.flirting >= 50) strengths.push("Flirted naturally without being pushy or overwhelming.");
+      if (metrics.flow >= 60) strengths.push("Maintained smooth conversation flow with natural transitions.");
+      if (strengths.length === 0) strengths.push("You completed the session. That takes courage and initiative.");
+      var sHtml = "";
+      strengths.forEach(function (s) { sHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-emerald-400 mt-0.5">&#10003;</span>' + s + '</li>'; });
+      document.getElementById("rs-strengths").innerHTML = sHtml;
+
+      // --- Improvements ---
+      var improvements = [];
+      if (metrics.respect < 60) improvements.push("Some messages felt pushy. Focus on giving space and reading their comfort level.");
+      if (metrics.listening < 55) improvements.push("Ask more questions about what they share instead of redirecting to yourself.");
+      if (metrics.confidence < 55) improvements.push("Messages were too short or uncertain. Add more detail and personality.");
+      if (metrics.humor < 40) improvements.push("The conversation lacked lightness. Try situational humor or playful energy.");
+      if (metrics.flirting < 40) improvements.push("Add subtle, genuine compliments that feel natural, not forced.");
+      if (metrics.flow < 55) improvements.push("Practice the FORD method: Family, Occupation, Recreation, Dreams.");
+      if (improvements.length === 0) improvements.push("Your skills are strong. Focus on consistency and real-world practice.");
+      var iHtml = "";
+      improvements.forEach(function (m) { iHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-amber-400 mt-0.5">&#9679;</span>' + m + '</li>'; });
+      document.getElementById("rs-improvements").innerHTML = iHtml;
+
+      // --- Mistakes ---
+      var mistakes = [];
+      if (metrics.respect < 50) mistakes.push("Messages came across as demanding or disrespectful. Always prioritize comfort.");
+      if (msgCount < 6) mistakes.push("The conversation ended too quickly. Work on sustaining the flow longer.");
+      if (metrics.humor < 25 && metrics.flirting < 25) mistakes.push("The conversation was too serious. Adding playfulness makes interactions memorable.");
+      if (metrics.confidence < 40) mistakes.push("Messages lacked personality. Speak with conviction, even in casual chats.");
+      if (mistakes.length === 0) mistakes.push("No major mistakes. You kept the conversation respectful and engaging.");
+      var mHtml = "";
+      mistakes.forEach(function (m) { mHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-red-400 mt-0.5">&#10007;</span>' + m + '</li>'; });
+      document.getElementById("rs-mistakes").innerHTML = mHtml;
+      // --- Tips ---
+      var tips = [];
+      if (metrics.flow < 60) tips.push("Use the FORD method (Family, Occupation, Recreation, Dreams) to keep conversations flowing naturally.");
+      if (metrics.humor < 50) tips.push("Practice situational humor. Comment on the environment or share a funny observation instead of forced jokes.");
+      if (metrics.flirting < 50) tips.push("Add subtle compliments about specific things they say, not just appearance. It feels more genuine.");
+      if (metrics.listening < 60) tips.push("Reflect back what they share: 'Oh, you like hiking? What trails have you tried?' It shows real interest.");
+      if (metrics.confidence < 60) tips.push("Replace uncertain phrases like 'I guess' with 'Absolutely' or 'That sounds great'.");
+      tips.push("After 5-6 good exchanges, suggest moving to another platform or meeting in person if the vibe is right.");
+      var tHtml = "";
+      tips.forEach(function (t) { tHtml += '<li class="flex items-start gap-2 text-xs text-slate-300"><span class="text-violet-400 mt-0.5">&#10148;</span>' + t + '</li>'; });
+      document.getElementById("rs-tips").innerHTML = tHtml;
+
+      // --- Recommended Action ---
+      var actionHtml = "";
+      if (overall < 40) {
+        actionHtml = '<a href="/what-should-i-text" class="block p-3 bg-sky-500/10 border border-sky-500/20 rounded-xl hover:bg-sky-500/20 transition">' +
+          '<span class="text-sm font-bold text-sky-400 block">Start with What Should I Text?</span>' +
+          '<span class="text-[10px] text-slate-400">Get safe, playful, and flirty reply suggestions to build your texting confidence.</span></a>' +
+          '<a href="/flirt-coach" class="block p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl hover:bg-amber-500/20 transition">' +
+          '<span class="text-sm font-bold text-amber-400 block">Try Flirt Coach</span>' +
+          '<span class="text-[10px] text-slate-400">Rewrite your dry or awkward messages into natural alternatives.</span></a>';
+      } else if (overall < 65) {
+        actionHtml = '<a href="/conversation-simulator" class="block p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl hover:bg-emerald-500/20 transition">' +
+          '<span class="text-sm font-bold text-emerald-400 block">Practice with Conversation Simulator</span>' +
+          '<span class="text-[10px] text-slate-400">Try a different personality type to challenge yourself.</span></a>' +
+          '<a href="/flirt-coach" class="block p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl hover:bg-amber-500/20 transition">' +
+          '<span class="text-sm font-bold text-amber-400 block">Level Up with Flirt Coach</span>' +
+          '<span class="text-[10px] text-slate-400">Refine your messaging style for specific situations.</span></a>';
+      } else {
+        actionHtml = '<a href="/conversation-simulator" class="block p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl hover:bg-rose-500/20 transition">' +
+          '<span class="text-sm font-bold text-rose-400 block">Challenge Yourself</span>' +
+          '<span class="text-[10px] text-slate-400">Try the Hard to Read personality to test your adaptability.</span></a>' +
+          '<a href="/crush-mode" class="block p-3 bg-violet-500/10 border border-violet-500/20 rounded-xl hover:bg-violet-500/20 transition">' +
+          '<span class="text-sm font-bold text-violet-400 block">Plan Your Next Move</span>' +
+          '<span class="text-[10px] text-slate-400">Use Crush Mode for a strategic approach to someone special.</span></a>';
+      }
+      document.getElementById("rs-action").innerHTML = actionHtml;
+
+      // --- Session Info ---
+      var scenarioLabels = { first_meeting: "First Meeting", crush: "Talking to Crush", dating_app: "Dating App", first_date: "First Date", custom: "Custom" };
+      document.getElementById("rs-session-info").textContent = scenarioLabels[scenario] + " with " + theirName + " | " + msgCount + " messages";
+
+      // --- Award XP & Save History ---
+      var xpEarned = Math.round(overall * 1.5 + msgCount * 5);
+      document.getElementById("rs-xp").textContent = "+" + xpEarned + " XP";
+
+      var user = loadJSON(USER_KEY) || { name: "User", crushName: "" };
+      var scoreHistory = loadJSON(SCORE_KEY) || [];
+      var scoreEntry = {
+        overall: overall,
+        level: level.title,
+        metrics: metrics,
+        scenario: scenario,
+        personality: personality,
+        theirName: theirName,
+        messages: msgCount,
+        xp: xpEarned,
+        date: new Date().toLocaleString(),
+        timestamp: Date.now()
+      };
+      scoreHistory.unshift(scoreEntry);
+      saveJSON(SCORE_KEY, scoreHistory.slice(0, 50));
+
+      if (user) {
+        user.xp = (user.xp || 0) + xpEarned;
+        user.lastScore = overall;
+        user.lastLevel = level.title;
+        saveJSON(USER_KEY, user);
+      }
+      // --- Share Card Modal ---
+      var shareBtn = document.getElementById("rs-share-btn");
+      var modal = document.getElementById("rs-modal");
+      var closeBtn = document.getElementById("rs-close-modal");
+      var downloadBtn = document.getElementById("rs-download-btn");
+
+      shareBtn.addEventListener("click", function () {
+        document.getElementById("card-score").textContent = overall;
+        document.getElementById("card-title").textContent = level.title;
+        document.getElementById("card-level").textContent = level.subtitle;
+        document.getElementById("card-date").textContent = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+        modal.classList.remove("hidden");
+      });
+
+      closeBtn.addEventListener("click", function () { modal.classList.add("hidden"); });
+      modal.addEventListener("click", function (e) { if (e.target === modal) modal.classList.add("hidden"); });
+
+      downloadBtn.addEventListener("click", function () {
+        var card = document.getElementById("rs-card");
+        var canvas = document.createElement("canvas");
+        canvas.width = 400;
+        canvas.height = 500;
+        var ctx = canvas.getContext("2d");
+
+        var grad = ctx.createLinearGradient(0, 0, 400, 500);
+        grad.addColorStop(0, "#080d1a");
+        grad.addColorStop(0.5, "#0f172a");
+        grad.addColorStop(1, "#1a0a2e");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 400, 500);
+
+        ctx.textAlign = "center";
+        ctx.font = "bold 20px sans-serif";
+        ctx.fillStyle = "#db2777";
+        ctx.fillText("Rizzora", 200, 50);
+        ctx.font = "9px sans-serif";
+        ctx.fillStyle = "#64748b";
+        ctx.fillText("RIZZ SCORE CARD", 200, 70);
+
+        ctx.beginPath();
+        ctx.arc(200, 200, 70, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(219,39,119,0.3)";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(200, 200, 60, -Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 * overall / 100));
+        ctx.strokeStyle = "#db2777";
+        ctx.lineWidth = 6;
+        ctx.stroke();
+
+        ctx.font = "bold 48px sans-serif";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(overall, 200, 210);
+        ctx.font = "12px sans-serif";
+        ctx.fillStyle = "#94a3b8";
+        ctx.fillText("/100", 200, 230);
+
+        ctx.font = "bold 18px sans-serif";
+        ctx.fillStyle = "#f1f5f9";
+        ctx.fillText(level.title, 200, 310);
+        ctx.font = "11px sans-serif";
+        ctx.fillStyle = "#db2777";
+        ctx.fillText(level.subtitle, 200, 335);
+
+        ctx.strokeStyle = "rgba(30,41,59,0.5)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(80, 370);
+        ctx.lineTo(320, 370);
+        ctx.stroke();
+
+        ctx.font = "9px sans-serif";
+        ctx.fillStyle = "#64748b";
+        ctx.fillText("Generated on " + new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }), 200, 395);
+
+        var link = document.createElement("a");
+        link.download = "rizzora-score-" + overall + ".png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    })();
+  </script>
+</Layout>
