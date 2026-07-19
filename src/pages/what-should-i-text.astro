@@ -119,6 +119,18 @@ import Layout from "../layouts/Layout.astro";
 
       var selectedLang = "english";
       var lastRequest = null;
+      var lastGenTime = 0;
+      var COOLDOWN_MS = 5000;
+
+      function getUserId() {
+        var key = "rizzora_uid";
+        var id = localStorage.getItem(key);
+        if (id) return id;
+        id = crypto.randomUUID();
+        localStorage.setItem(key, id);
+        return id;
+      }
+      var userId = getUserId();
 
       try {
         var user = JSON.parse(localStorage.getItem("rizzora_user"));
@@ -154,7 +166,7 @@ import Layout from "../layouts/Layout.astro";
       async function callGenerateAPI(msg, draft, name, lang) {
         var res = await fetch("/api/generate-reply", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "X-User-Id": userId },
           body: JSON.stringify({ message: msg, draft: draft, name: name, language: lang })
         });
         var data = await res.json();
@@ -163,6 +175,12 @@ import Layout from "../layouts/Layout.astro";
       }
 
       async function generate(msg, draft, name, lang) {
+        var now = Date.now();
+        if (now - lastGenTime < COOLDOWN_MS) {
+          showError("Please wait a few seconds before generating again.");
+          return;
+        }
+        lastGenTime = now;
         showLoading();
         setBtnLoading(true);
         try {
@@ -292,6 +310,13 @@ import Layout from "../layouts/Layout.astro";
 
         document.querySelectorAll(".wsti-regen-btn").forEach(function(btn) {
           btn.addEventListener("click", async function() {
+            var now = Date.now();
+            if (now - lastGenTime < COOLDOWN_MS) {
+              btn.textContent = "Wait...";
+              setTimeout(function() { btn.textContent = "Regenerate"; }, 1500);
+              return;
+            }
+            lastGenTime = now;
             var idx = parseInt(btn.getAttribute("data-idx"));
             var tones = ["safe", "playful", "flirty"];
             var toneLabels = [

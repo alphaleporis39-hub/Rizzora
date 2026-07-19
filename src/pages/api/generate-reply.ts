@@ -1,33 +1,14 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
+import { Redis } from "@upstash/redis";
+
+const redis = Redis.fromEnv();
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile";
-
-// Simple in-memory rate limiter (per-IP, resets on server restart)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_WINDOW = 60_000;
-const RATE_LIMIT_MAX = 8;
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
-    return true;
-  }
-  if (entry.count >= RATE_LIMIT_MAX) return false;
-  entry.count++;
-  return true;
-}
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, val] of rateLimitMap) {
-    if (now > val.resetAt) rateLimitMap.delete(key);
-  }
-}, 60_000);
+const DAILY_LIMIT = 20;
+const DAILY_TTL = 86400;
 
 const SYSTEM_PROMPT = `You are Rizzora's texting assistant. You help people craft natural, respectful dating replies.
 
@@ -54,20 +35,32 @@ flirty: Expresses clear interest, charming but respectful
 
 Return ONLY the JSON object, no markdown, no explanation.`;
 
-export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const ip = clientAddress || request.headers.get("x-forwarded-for") || "unknown";
-
-  if (!checkRateLimit(ip)) {
-    return new Response(JSON.stringify({ error: "Too many requests. Please wait a moment and try again." }), {
-      status: 429,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
+export const POST: APIRoute = async ({ request }) => {
   const apiKey = import.meta.env.GROQ_API_KEY;
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "AI service is not configured. Please contact support." }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const userId = request.headers.get("x-user-id");
+  if (!userId || typeof userId !== "string" || userId.length < 10 || userId.length > 80) {
+    return new Response(JSON.stringify({ error: "Invalid request. Please reload the page and try again." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `gen:${userId}:${today}`;
+  const count = await redis.incr(key);
+  if (count === 1) {
+    await redis.expire(key, DAILY_TTL);
+  }
+  if (count > DAILY_LIMIT) {
+    return new Response(JSON.stringify({ error: "You've used all 20 free generations for today. Come back tomorrow!" }), {
+      status: 429,
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -123,7 +116,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
           { role: "user", content: userPrompt },
         ],
         temperature: 0.85,
-        max_tokens: 300,
+        max_tokens: 400,
       }),
     });
 
