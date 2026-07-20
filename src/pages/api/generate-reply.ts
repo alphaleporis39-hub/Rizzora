@@ -1,14 +1,27 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
-import { Redis } from "@upstash/redis";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const redis = Redis.fromEnv();
+let supabaseClient: SupabaseClient | null = null;
+
+function getSupabase(): SupabaseClient {
+  if (supabaseClient) return supabaseClient;
+
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+  }
+
+  supabaseClient = createClient(url, key);
+  return supabaseClient;
+}
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile";
 const DAILY_LIMIT = 20;
-const DAILY_TTL = 86400;
 
 const SYSTEM_PROMPT = `You are Rizzora's texting assistant. You help people craft natural, respectful dating replies.
 
@@ -36,10 +49,21 @@ flirty: Expresses clear interest, charming but respectful
 Return ONLY the JSON object, no markdown, no explanation.`;
 
 export const POST: APIRoute = async ({ request }) => {
-  const apiKey = import.meta.env.GROQ_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY || import.meta.env.GROQ_API_KEY;
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "AI service is not configured. Please contact support." }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  let supabase: SupabaseClient;
+  try {
+    supabase = getSupabase();
+  } catch (err) {
+    console.error("[generate-reply] Supabase init failed:", err);
+    return new Response(JSON.stringify({ error: "Usage tracking service is temporarily unavailable. Please try again later." }), {
+      status: 503,
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -53,21 +77,28 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const today = new Date().toISOString().slice(0, 10);
-  const key = `gen:${userId}:${today}`;
 
-  let count = 0;
-  try {
-    count = await redis.incr(key);
-    if (count === 1) {
-      await redis.expire(key, DAILY_TTL);
-    }
-  } catch (redisErr) {
-    // TEMP BYPASS: Redis usage tracking disabled — allow request to proceed
-    console.error("Upstash Redis error (tracking bypassed):", redisErr);
+  let currentCount = 0;
+  const { data: existingRow, error: readErr } = await supabase
+    .from("ai_usage")
+    .select("count")
+    .eq("user_id", userId)
+    .eq("usage_date", today)
+    .maybeSingle();
+
+  if (readErr) {
+    console.error("[generate-reply] Supabase read error:", readErr.message, readErr.code, readErr.details);
+    return new Response(JSON.stringify({ error: "Usage tracking service is temporarily unavailable. Please try again later." }), {
+      status: 503,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  if (count > DAILY_LIMIT) {
-    return new Response(JSON.stringify({ error: "You've used all 20 free generations for today. Come back tomorrow!" }), {
+  currentCount = existingRow?.count ?? 0;
+  console.log("[generate-reply] Current usage for", userId, "on", today, ":", currentCount);
+
+  if (currentCount >= DAILY_LIMIT) {
+    return new Response(JSON.stringify({ error: "You've reached your daily limit of 20 AI generations. Please try again tomorrow." }), {
       status: 429,
       headers: { "Content-Type": "application/json" },
     });
@@ -182,6 +213,49 @@ export const POST: APIRoute = async ({ request }) => {
         status: 502,
         headers: { "Content-Type": "application/json" },
       });
+    }
+
+    const newCount = currentCount + 1;
+
+    if (existingRow) {
+      const { data: updateData, error: updateErr } = await supabase
+        .from("ai_usage")
+        .update({ count: newCount, updated_at: new Date().toISOString() })
+        .eq("user_id", userId)
+        .eq("usage_date", today)
+        .select("count");
+
+      if (updateErr) {
+        console.error("[generate-reply] Supabase update failed:", updateErr.message, updateErr.code, updateErr.details);
+      } else {
+        console.log("[generate-reply] Usage updated:", userId, today, "count:", newCount, "response:", JSON.stringify(updateData));
+      }
+    } else {
+      const { data: insertData, error: insertErr } = await supabase
+        .from("ai_usage")
+        .insert({ user_id: userId, usage_date: today, count: newCount });
+
+      if (insertErr) {
+        if (insertErr.code === "23505") {
+          console.log("[generate-reply] Unique violation on insert, falling back to update for:", userId, today);
+          const { data: retryData, error: retryErr } = await supabase
+            .from("ai_usage")
+            .update({ count: newCount, updated_at: new Date().toISOString() })
+            .eq("user_id", userId)
+            .eq("usage_date", today)
+            .select("count");
+
+          if (retryErr) {
+            console.error("[generate-reply] Supabase fallback update failed:", retryErr.message, retryErr.code, retryErr.details);
+          } else {
+            console.log("[generate-reply] Usage updated via fallback:", userId, today, "count:", newCount, "response:", JSON.stringify(retryData));
+          }
+        } else {
+          console.error("[generate-reply] Supabase insert failed:", insertErr.message, insertErr.code, insertErr.details);
+        }
+      } else {
+        console.log("[generate-reply] Usage inserted:", userId, today, "count:", newCount, "response:", JSON.stringify(insertData));
+      }
     }
 
     return new Response(JSON.stringify({ replies: parsed }), {

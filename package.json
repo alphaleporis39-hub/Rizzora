@@ -15,7 +15,7 @@
     "@astrojs/node": "^11.0.2",
     "@astrojs/vercel": "^11.0.3",
     "@tailwindcss/vite": "^4.3.3",
-    "@upstash/redis": "^1.38.0",
+    "@supabase/supabase-js": "^2.49.1",
     "astro": "^7.1.1",
     "tailwindcss": "^4.3.3"
   }
